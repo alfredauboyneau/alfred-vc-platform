@@ -1,0 +1,314 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { supabase } from "@/lib/supabase";
+import { toast } from "@/components/ui/use-toast";
+import { ArrowLeft, Loader2, Zap } from "lucide-react";
+import Link from "next/link";
+import { useLanguage, LanguageToggle } from "@/lib/i18n";
+
+const ALL_SECTORS = [
+  // Tech & Digital
+  "SaaS / Logiciel",
+  "FinTech",
+  "HealthTech / MedTech",
+  "DeepTech / IA",
+  "GreenTech / CleanTech",
+  "EdTech",
+  "Cybersécurité",
+  "Marketplace",
+  "InsurTech / Assurance",
+  "LegalTech / RegTech",
+  "RH / Recrutement",
+  // Commerce & Consumer
+  "E-commerce / Retail",
+  "Mode / Luxe",
+  "Cosmétique / Beauté",
+  "Sport & Lifestyle",
+  "Médias / Divertissement",
+  "Gaming / Jeux Vidéo",
+  // Food & Agriculture
+  "Restauration / FoodService",
+  "FoodTech / AgriTech",
+  // Real Estate & Mobility
+  "PropTech / Immobilier",
+  "Mobilité / Transport",
+  "BTP / Construction",
+  // Services & Industry
+  "Tourisme / Hôtellerie",
+  "Services B2B",
+  "Industrie / Manufacturing",
+  "Énergie",
+  // All
+  "Tous secteurs",
+];
+
+const ALL_STAGES = ["Pre-seed", "Seed", "Série A", "Série B", "Série B+"];
+
+export default function VCRegisterPage() {
+  const router = useRouter();
+  const { t } = useLanguage();
+  const r = t.vcRegister;
+  const [loading, setLoading] = useState(false);
+  const [selectedSectors, setSelectedSectors] = useState<string[]>([]);
+  const [selectedStages, setSelectedStages] = useState<string[]>([]);
+  const [form, setForm] = useState({
+    name: "",
+    description: "",
+    website: "",
+    contact_email: "",
+    ticket_min: "",
+    ticket_max: "",
+    investment_thesis: "",
+    notable_investments: "",
+  });
+
+  const set = (field: keyof typeof form) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setForm((f) => ({ ...f, [field]: e.target.value }));
+
+  const toggleSector = (s: string) =>
+    setSelectedSectors((prev) =>
+      prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
+    );
+
+  const toggleStage = (s: string) =>
+    setSelectedStages((prev) =>
+      prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
+    );
+
+  const isValid =
+    form.name &&
+    form.contact_email &&
+    form.investment_thesis &&
+    selectedSectors.length > 0 &&
+    selectedStages.length > 0 &&
+    form.ticket_min &&
+    form.ticket_max;
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!isValid) return;
+    setLoading(true);
+
+    try {
+      const { data, error } = await supabase
+        .from("venture_capitals")
+        .insert({
+          name: form.name,
+          description: form.description,
+          website: form.website || null,
+          contact_email: form.contact_email,
+          sectors: selectedSectors,
+          stages: selectedStages,
+          ticket_min: Number(form.ticket_min),
+          ticket_max: Number(form.ticket_max),
+          investment_thesis: form.investment_thesis,
+          notable_investments: form.notable_investments || null,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      toast({
+        title: r.toastSuccess,
+        description: r.toastSuccessDesc,
+      });
+
+      router.push(`/vc/dashboard?id=${data.id}`);
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: r.toastError,
+        description: r.toastErrorDesc,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <nav className="border-b border-gray-100 bg-white sticky top-0 z-50">
+        <div className="max-w-3xl mx-auto px-4 h-14 flex items-center gap-4">
+          <Link href="/">
+            <Button variant="ghost" size="icon">
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          </Link>
+          <div className="flex items-center gap-2 flex-1">
+            <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
+              <Zap className="w-4 h-4 text-white" />
+            </div>
+            <span className="font-semibold text-sm">{r.navTitle}</span>
+          </div>
+          <LanguageToggle />
+        </div>
+      </nav>
+
+      <div className="max-w-3xl mx-auto px-4 py-10">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">{r.title}</h1>
+          <p className="text-gray-500">{r.subtitle}</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>{r.generalInfo}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label>{r.fields.name}</Label>
+                  <Input
+                    placeholder={r.placeholders.name}
+                    value={form.name}
+                    onChange={set("name")}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>{r.fields.email}</Label>
+                  <Input
+                    type="email"
+                    placeholder={r.placeholders.email}
+                    value={form.contact_email}
+                    onChange={set("contact_email")}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label>{r.fields.desc}</Label>
+                <Textarea
+                  placeholder={r.placeholders.desc}
+                  value={form.description}
+                  onChange={set("description")}
+                  rows={2}
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label>{r.fields.website}</Label>
+                <Input
+                  placeholder={r.placeholders.website}
+                  value={form.website}
+                  onChange={set("website")}
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label>{r.fields.notable}</Label>
+                <Input
+                  placeholder={r.placeholders.notable}
+                  value={form.notable_investments}
+                  onChange={set("notable_investments")}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>{r.thesis}</CardTitle>
+              <CardDescription>{r.thesisDesc}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              <div className="space-y-1.5">
+                <Label>{r.fields.sectors}</Label>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {ALL_SECTORS.map((s) => (
+                    <button
+                      type="button"
+                      key={s}
+                      onClick={() => toggleSector(s)}
+                      className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        selectedSectors.includes(s)
+                          ? "bg-blue-600 text-white border-blue-600"
+                          : "bg-white text-gray-700 border-gray-200 hover:border-blue-300"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label>{r.fields.stages}</Label>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {ALL_STAGES.map((s) => (
+                    <button
+                      type="button"
+                      key={s}
+                      onClick={() => toggleStage(s)}
+                      className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        selectedStages.includes(s)
+                          ? "bg-blue-600 text-white border-blue-600"
+                          : "bg-white text-gray-700 border-gray-200 hover:border-blue-300"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label>{r.fields.ticketMin}</Label>
+                  <Input
+                    type="number"
+                    placeholder={r.placeholders.ticketMin}
+                    value={form.ticket_min}
+                    onChange={set("ticket_min")}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>{r.fields.ticketMax}</Label>
+                  <Input
+                    type="number"
+                    placeholder={r.placeholders.ticketMax}
+                    value={form.ticket_max}
+                    onChange={set("ticket_max")}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label>{r.fields.thesisDetail}</Label>
+                <Textarea
+                  placeholder={r.placeholders.thesisDetail}
+                  value={form.investment_thesis}
+                  onChange={set("investment_thesis")}
+                  rows={6}
+                />
+                <p className="text-xs text-gray-400 mt-1">{r.thesisHint}</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="flex justify-end">
+            <Button type="submit" disabled={!isValid || loading} className="gap-2" size="lg">
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" /> {r.submitting}
+                </>
+              ) : (
+                r.submitBtn
+              )}
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
