@@ -13,44 +13,7 @@ import { toast } from "@/components/ui/use-toast";
 import { ArrowLeft, Loader2, Zap } from "lucide-react";
 import Link from "next/link";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
-
-const ALL_SECTORS = [
-  { value: "SaaS / Logiciel", fr: "SaaS / Logiciel", en: "SaaS / Software" },
-  { value: "FinTech", fr: "FinTech", en: "FinTech" },
-  { value: "HealthTech / MedTech", fr: "HealthTech / MedTech", en: "HealthTech / MedTech" },
-  { value: "DeepTech / IA", fr: "DeepTech / IA", en: "DeepTech / AI" },
-  { value: "GreenTech / CleanTech", fr: "GreenTech / CleanTech", en: "GreenTech / CleanTech" },
-  { value: "EdTech", fr: "EdTech", en: "EdTech" },
-  { value: "Cybersécurité", fr: "Cybersécurité", en: "Cybersecurity" },
-  { value: "Marketplace", fr: "Marketplace", en: "Marketplace" },
-  { value: "InsurTech / Assurance", fr: "InsurTech / Assurance", en: "InsurTech / Insurance" },
-  { value: "LegalTech / RegTech", fr: "LegalTech / RegTech", en: "LegalTech / RegTech" },
-  { value: "RH / Recrutement", fr: "RH / Recrutement", en: "HR / Recruiting" },
-  { value: "E-commerce / Retail", fr: "E-commerce / Retail", en: "E-commerce / Retail" },
-  { value: "Mode / Luxe", fr: "Mode / Luxe", en: "Fashion / Luxury" },
-  { value: "Cosmétique / Beauté", fr: "Cosmétique / Beauté", en: "Cosmetics / Beauty" },
-  { value: "Sport & Lifestyle", fr: "Sport & Lifestyle", en: "Sport & Lifestyle" },
-  { value: "Médias / Divertissement", fr: "Médias / Divertissement", en: "Media / Entertainment" },
-  { value: "Gaming / Jeux Vidéo", fr: "Gaming / Jeux Vidéo", en: "Gaming / Video Games" },
-  { value: "Restauration / FoodService", fr: "Restauration / FoodService", en: "Restaurant / FoodService" },
-  { value: "FoodTech / AgriTech", fr: "FoodTech / AgriTech", en: "FoodTech / AgriTech" },
-  { value: "PropTech / Immobilier", fr: "PropTech / Immobilier", en: "PropTech / Real Estate" },
-  { value: "Mobilité / Transport", fr: "Mobilité / Transport", en: "Mobility / Transport" },
-  { value: "BTP / Construction", fr: "BTP / Construction", en: "Construction / Building" },
-  { value: "Tourisme / Hôtellerie", fr: "Tourisme / Hôtellerie", en: "Tourism / Hospitality" },
-  { value: "Services B2B", fr: "Services B2B", en: "B2B Services" },
-  { value: "Industrie / Manufacturing", fr: "Industrie / Manufacturing", en: "Industry / Manufacturing" },
-  { value: "Énergie", fr: "Énergie", en: "Energy" },
-  { value: "Tous secteurs", fr: "Tous secteurs", en: "All sectors" },
-];
-
-const ALL_STAGES = [
-  { value: "Pre-seed", fr: "Pre-seed", en: "Pre-seed" },
-  { value: "Seed", fr: "Seed", en: "Seed" },
-  { value: "Série A", fr: "Série A", en: "Series A" },
-  { value: "Série B", fr: "Série B", en: "Series B" },
-  { value: "Série B+", fr: "Série B+", en: "Series B+" },
-];
+import { getLocalizedOptions, SECTOR_OPTIONS, STAGE_OPTIONS } from "@/lib/taxonomy";
 
 export default function VCRegisterPage() {
   const router = useRouter();
@@ -67,14 +30,8 @@ export default function VCRegisterPage() {
   }, [user, authLoading, router]);
   const [selectedSectors, setSelectedSectors] = useState<string[]>([]);
   const [selectedStages, setSelectedStages] = useState<string[]>([]);
-  const sectorOptions = ALL_SECTORS.map((sector) => ({
-    value: sector.value,
-    label: lang === "en" ? sector.en : sector.fr,
-  }));
-  const stageOptions = ALL_STAGES.map((stage) => ({
-    value: stage.value,
-    label: lang === "en" ? stage.en : stage.fr,
-  }));
+  const sectorOptions = getLocalizedOptions(SECTOR_OPTIONS, lang);
+  const stageOptions = getLocalizedOptions(STAGE_OPTIONS, lang);
   const [form, setForm] = useState({
     name: "",
     description: "",

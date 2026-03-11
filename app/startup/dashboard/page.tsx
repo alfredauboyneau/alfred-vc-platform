@@ -28,6 +28,7 @@ import Link from "next/link";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
+import { getNumberLocale, localizeSector, localizeStage } from "@/lib/taxonomy";
 
 /* ────────────────────────────────── helpers ── */
 
@@ -132,7 +133,7 @@ function NoStartupState() {
 /* ────────────────────────────────── tab: analyse ── */
 
 function AnalyseTab({ startup }: { startup: Startup }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const d = t.startupDash;
   const fa = startup.financial_analysis;
 
@@ -183,7 +184,7 @@ function AnalyseTab({ startup }: { startup: Startup }) {
               <p className="text-sm font-semibold text-slate-700 mb-1">{d.unitEco}</p>
               <p className="text-base font-bold text-slate-900">
                 {fa.unit_economics.ltv_cac_ratio !== null
-                  ? `Ratio LTV/CAC : ${fa.unit_economics.ltv_cac_ratio}x — ${fa.unit_economics.assessment}`
+                  ? `${fa.unit_economics.ltv_cac_ratio}x — ${fa.unit_economics.assessment}`
                   : d.insufficientData}
               </p>
               <p className="text-sm text-slate-500 mt-1">{fa.unit_economics.comment}</p>
@@ -228,8 +229,9 @@ function AnalyseTab({ startup }: { startup: Startup }) {
 /* ────────────────────────────────── tab: matchs ── */
 
 function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const d = t.startupDash;
+  const numberLocale = getNumberLocale(lang);
 
   if (matches.length === 0) {
     return (
@@ -264,16 +266,16 @@ function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup })
                   {vc && (
                     <div className="flex flex-wrap gap-1 mb-2">
                       {vc.sectors?.slice(0, 3).map((s: string) => (
-                        <Badge key={s} variant="outline" className="text-xs">{s}</Badge>
+                        <Badge key={s} variant="outline" className="text-xs">{localizeSector(s, lang)}</Badge>
                       ))}
                       {vc.stages?.slice(0, 2).map((s: string) => (
-                        <Badge key={s} variant="secondary" className="text-xs">{s}</Badge>
+                        <Badge key={s} variant="secondary" className="text-xs">{localizeStage(s, lang)}</Badge>
                       ))}
                     </div>
                   )}
                   {vc && (
                     <p className="text-xs text-slate-400">
-                      {d.ticket} : {vc.ticket_min?.toLocaleString("fr-FR")} € — {vc.ticket_max?.toLocaleString("fr-FR")} €
+                      {d.ticket} : {vc.ticket_min?.toLocaleString(numberLocale)} € — {vc.ticket_max?.toLocaleString(numberLocale)} €
                     </p>
                   )}
                 </div>
@@ -305,16 +307,17 @@ function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup })
 /* ────────────────────────────────── tab: profil ── */
 
 function ProfilTab({ startup }: { startup: Startup }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const d = t.startupDash;
+  const numberLocale = getNumberLocale(lang);
 
   const fields = [
-    { label: d.sectorLabel, value: startup.sector },
-    { label: d.stageLabel, value: startup.stage },
-    { label: d.amountLabel, value: startup.amount_sought ? `${startup.amount_sought.toLocaleString("fr-FR")} €` : null },
+    { label: d.sectorLabel, value: localizeSector(startup.sector, lang) },
+    { label: d.stageLabel, value: localizeStage(startup.stage, lang) },
+    { label: d.amountLabel, value: startup.amount_sought ? `${startup.amount_sought.toLocaleString(numberLocale)} €` : null },
     { label: d.foundedLabel, value: (startup as any).founded_year },
     { label: d.teamLabel, value: (startup as any).team_size ? `${(startup as any).team_size} ${d.teamSize}` : null },
-    { label: d.mrrLabel, value: (startup as any).mrr ? `${Number((startup as any).mrr).toLocaleString("fr-FR")} €${d.perMonth}` : null },
+    { label: d.mrrLabel, value: (startup as any).mrr ? `${Number((startup as any).mrr).toLocaleString(numberLocale)} €${d.perMonth}` : null },
     { label: d.websiteLabel, value: startup.website },
     { label: d.emailLabel, value: startup.contact_email },
   ];
@@ -331,8 +334,8 @@ function ProfilTab({ startup }: { startup: Startup }) {
               <h2 className="text-xl font-bold text-slate-900">{startup.name}</h2>
               <p className="text-slate-500 mt-1">{startup.tagline}</p>
               <div className="flex flex-wrap gap-2 mt-3">
-                <Badge variant="secondary">{startup.sector}</Badge>
-                <Badge variant="outline">{startup.stage}</Badge>
+                <Badge variant="secondary">{localizeSector(startup.sector, lang)}</Badge>
+                <Badge variant="outline">{localizeStage(startup.stage, lang)}</Badge>
               </div>
             </div>
           </div>

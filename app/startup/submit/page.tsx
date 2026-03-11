@@ -21,44 +21,7 @@ import { ArrowLeft, ArrowRight, Loader2, Zap, CheckCircle2, Upload, FileText, X 
 import Link from "next/link";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
-
-const SECTORS = [
-  { value: "SaaS / Logiciel", fr: "SaaS / Logiciel", en: "SaaS / Software" },
-  { value: "FinTech", fr: "FinTech", en: "FinTech" },
-  { value: "HealthTech / MedTech", fr: "HealthTech / MedTech", en: "HealthTech / MedTech" },
-  { value: "DeepTech / IA", fr: "DeepTech / IA", en: "DeepTech / AI" },
-  { value: "GreenTech / CleanTech", fr: "GreenTech / CleanTech", en: "GreenTech / CleanTech" },
-  { value: "Cybersécurité", fr: "Cybersécurité", en: "Cybersecurity" },
-  { value: "Marketplace", fr: "Marketplace", en: "Marketplace" },
-  { value: "EdTech", fr: "EdTech", en: "EdTech" },
-  { value: "InsurTech / Assurance", fr: "InsurTech / Assurance", en: "InsurTech / Insurance" },
-  { value: "LegalTech / RegTech", fr: "LegalTech / RegTech", en: "LegalTech / RegTech" },
-  { value: "RH / Recrutement", fr: "RH / Recrutement", en: "HR / Recruiting" },
-  { value: "E-commerce / Retail", fr: "E-commerce / Retail", en: "E-commerce / Retail" },
-  { value: "Mode / Luxe", fr: "Mode / Luxe", en: "Fashion / Luxury" },
-  { value: "Cosmétique / Beauté", fr: "Cosmétique / Beauté", en: "Cosmetics / Beauty" },
-  { value: "Sport & Lifestyle", fr: "Sport & Lifestyle", en: "Sport & Lifestyle" },
-  { value: "Médias / Divertissement", fr: "Médias / Divertissement", en: "Media / Entertainment" },
-  { value: "Gaming / Jeux Vidéo", fr: "Gaming / Jeux Vidéo", en: "Gaming / Video Games" },
-  { value: "Restauration / FoodService", fr: "Restauration / FoodService", en: "Restaurant / FoodService" },
-  { value: "FoodTech / AgriTech", fr: "FoodTech / AgriTech", en: "FoodTech / AgriTech" },
-  { value: "PropTech / Immobilier", fr: "PropTech / Immobilier", en: "PropTech / Real Estate" },
-  { value: "Mobilité / Transport", fr: "Mobilité / Transport", en: "Mobility / Transport" },
-  { value: "BTP / Construction", fr: "BTP / Construction", en: "Construction / Building" },
-  { value: "Tourisme / Hôtellerie", fr: "Tourisme / Hôtellerie", en: "Tourism / Hospitality" },
-  { value: "Services B2B", fr: "Services B2B", en: "B2B Services" },
-  { value: "Industrie / Manufacturing", fr: "Industrie / Manufacturing", en: "Industry / Manufacturing" },
-  { value: "Énergie", fr: "Énergie", en: "Energy" },
-  { value: "Autre", fr: "Autre", en: "Other" },
-];
-
-const STAGES = [
-  { value: "Pre-seed", fr: "Pre-seed", en: "Pre-seed" },
-  { value: "Seed", fr: "Seed", en: "Seed" },
-  { value: "Série A", fr: "Série A", en: "Series A" },
-  { value: "Série B", fr: "Série B", en: "Series B" },
-  { value: "Série B+", fr: "Série B+", en: "Series B+" },
-];
+import { getLocalizedOptions, SECTOR_OPTIONS, STAGE_OPTIONS } from "@/lib/taxonomy";
 
 type FormData = {
   // Étape 1 — Infos générales
@@ -124,14 +87,8 @@ export default function StartupSubmitPage() {
   const [loading, setLoading] = useState(false);
   const [pitchFile, setPitchFile] = useState<File | null>(null);
   const [uploadingPitch, setUploadingPitch] = useState(false);
-  const sectorOptions = SECTORS.map((sector) => ({
-    value: sector.value,
-    label: lang === "en" ? sector.en : sector.fr,
-  }));
-  const stageOptions = STAGES.map((stage) => ({
-    value: stage.value,
-    label: lang === "en" ? stage.en : stage.fr,
-  }));
+  const sectorOptions = getLocalizedOptions(SECTOR_OPTIONS, lang);
+  const stageOptions = getLocalizedOptions(STAGE_OPTIONS, lang);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -424,7 +381,7 @@ export default function StartupSubmitPage() {
               <div className="space-y-1.5">
                 <Label>{s.fields.market}</Label>
                 <Input
-                  placeholder="ex: Marché français des PME, ~50Md€"
+                  placeholder={s.placeholders.market}
                   value={form.market_size}
                   onChange={set("market_size")}
                 />
@@ -433,7 +390,7 @@ export default function StartupSubmitPage() {
               <div className="space-y-1.5">
                 <Label>{s.fields.traction}</Label>
                 <Textarea
-                  placeholder="Chiffres clés, contrats signés, pilotes en cours, croissance..."
+                  placeholder={s.placeholders.traction}
                   value={form.traction}
                   onChange={set("traction")}
                   rows={2}

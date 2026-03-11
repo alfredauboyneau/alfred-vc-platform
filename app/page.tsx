@@ -118,7 +118,7 @@ export default function Home() {
       <section className="bg-slate-50 py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <p className="text-blue-600 text-xs font-bold tracking-[0.2em] uppercase mb-4">Process</p>
+            <p className="text-blue-600 text-xs font-bold tracking-[0.2em] uppercase mb-4">{l.processLabel}</p>
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4 tracking-tight">{l.howTitle}</h2>
             <p className="text-slate-500 max-w-xl mx-auto">{l.howSubtitle}</p>
             <Link href="/how-it-works" className="inline-flex items-center gap-1.5 mt-5 text-sm text-blue-600 hover:text-blue-700 font-medium">

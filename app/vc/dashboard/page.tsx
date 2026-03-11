@@ -33,6 +33,7 @@ import Link from "next/link";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
+import { getNumberLocale, localizeSector, localizeStage } from "@/lib/taxonomy";
 
 /* ────────────────────────────────── helpers ── */
 
@@ -136,8 +137,9 @@ function NoVCState() {
 /* ────────────────────────────────── tab: deal flow ── */
 
 function DealFlowTab({ matches }: { matches: Match[] }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const d = t.vcDash;
+  const numberLocale = getNumberLocale(lang);
   const [filterStage, setFilterStage] = useState("all");
   const [filterSector, setFilterSector] = useState("all");
   const [filterReadiness, setFilterReadiness] = useState("all");
@@ -214,7 +216,7 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{d.filterAll}</SelectItem>
-                  {stages.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                  {stages.map((s) => <SelectItem key={s} value={s}>{localizeStage(s, lang)}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
@@ -226,7 +228,7 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{d.filterAll}</SelectItem>
-                  {sectors.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                  {sectors.map((s) => <SelectItem key={s} value={s}>{localizeSector(s, lang)}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
@@ -278,10 +280,10 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
                         </div>
                         <p className="text-sm text-slate-500 mb-2">{startup?.tagline}</p>
                         <div className="flex flex-wrap gap-1 mb-2">
-                          <Badge variant="secondary" className="text-xs">{startup?.sector}</Badge>
-                          <Badge variant="outline" className="text-xs">{startup?.stage}</Badge>
+                          <Badge variant="secondary" className="text-xs">{localizeSector(startup?.sector, lang)}</Badge>
+                          <Badge variant="outline" className="text-xs">{localizeStage(startup?.stage, lang)}</Badge>
                           <Badge variant="info" className="text-xs">
-                            {startup?.amount_sought?.toLocaleString("fr-FR")} €
+                            {startup?.amount_sought?.toLocaleString(numberLocale)} €
                           </Badge>
                         </div>
                         <p className="text-sm text-slate-600 italic">&ldquo;{match.analysis}&rdquo;</p>
@@ -369,8 +371,9 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
 /* ────────────────────────────────── tab: profil ── */
 
 function ProfilVCTab({ vc }: { vc: any }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const d = t.vcDash;
+  const numberLocale = getNumberLocale(lang);
   return (
     <div className="space-y-5">
       <Card>
@@ -400,7 +403,7 @@ function ProfilVCTab({ vc }: { vc: any }) {
               <p className="text-xs text-slate-400 mb-2">{d.sectors}</p>
               <div className="flex flex-wrap gap-1.5">
                 {vc.sectors.map((s: string) => (
-                  <Badge key={s} variant="secondary">{s}</Badge>
+                  <Badge key={s} variant="secondary">{localizeSector(s, lang)}</Badge>
                 ))}
               </div>
             </div>
@@ -410,7 +413,7 @@ function ProfilVCTab({ vc }: { vc: any }) {
               <p className="text-xs text-slate-400 mb-2">{d.stages}</p>
               <div className="flex flex-wrap gap-1.5">
                 {vc.stages.map((s: string) => (
-                  <Badge key={s} variant="outline">{s}</Badge>
+                  <Badge key={s} variant="outline">{localizeStage(s, lang)}</Badge>
                 ))}
               </div>
             </div>
@@ -419,7 +422,7 @@ function ProfilVCTab({ vc }: { vc: any }) {
             <div>
               <p className="text-xs text-slate-400 mb-1">{d.ticket}</p>
               <p className="text-sm font-medium text-slate-800">
-                {vc.ticket_min?.toLocaleString("fr-FR")} € — {vc.ticket_max?.toLocaleString("fr-FR")} €
+                {vc.ticket_min?.toLocaleString(numberLocale)} € — {vc.ticket_max?.toLocaleString(numberLocale)} €
               </p>
             </div>
           )}

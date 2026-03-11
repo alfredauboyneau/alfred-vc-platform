@@ -80,6 +80,7 @@ export async function POST(req: NextRequest) {
           startup,
           matches: fullMatches ?? [],
           financial_analysis: financialAnalysis,
+          lang,
         }),
       });
     } catch (emailErr) {

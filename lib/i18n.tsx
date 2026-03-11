@@ -41,6 +41,7 @@ export const translations = {
         ai: "Analyse financière",
         matching: "Matching ciblé",
       },
+      processLabel: "Processus",
       howTitle: "Comment ça marche",
       howSubtitle: "De la soumission de votre profil au contact avec les investisseurs, tout est automatisé et piloté par l'IA.",
       steps: [
@@ -584,6 +585,7 @@ export const translations = {
         ai: "Financial analysis",
         matching: "Targeted matching",
       },
+      processLabel: "Process",
       howTitle: "How it works",
       howSubtitle: "From submitting your profile to contacting investors, everything is automated and AI-driven.",
       steps: [
