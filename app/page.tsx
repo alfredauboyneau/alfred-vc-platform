@@ -107,6 +107,10 @@ export default function Home() {
           risks: "Key risks",
           fit: "VC shortlist",
           fitDesc: "Ranked by score, stage fit, sector fit and ticket range.",
+          scorecard: "Alfred scorecard",
+          topFunds: "3 top funds",
+          strengthItems: ["MoM growth +14%", "LTV/CAC above 3x", "B2B SaaS gross margin 78%"],
+          riskItems: ["Runway under 12 months", "Ticket fit concentrated on Seed funds"],
           bullets: [
             "0-100 financial health score",
             "Short rationale for each recommended fund",
@@ -122,6 +126,10 @@ export default function Home() {
           risks: "Points de vigilance",
           fit: "Shortlist VC",
           fitDesc: "Classement par score, adequation stade, secteur et ticket.",
+          scorecard: "Scorecard Alfred",
+          topFunds: "3 fonds prioritaires",
+          strengthItems: ["Croissance mensuelle +14 %", "LTV/CAC superieur a 3x", "Marge brute SaaS B2B de 78 %"],
+          riskItems: ["Runway inferieure a 12 mois", "Fit ticket concentre sur des fonds Seed"],
           bullets: [
             "Score de sante financiere de 0 a 100",
             "Justification courte pour chaque fonds recommande",
@@ -262,7 +270,7 @@ export default function Home() {
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">
                     {previewCopy.report}
                   </p>
-                  <p className="mt-2 text-lg font-semibold text-slate-900">Alfred scorecard</p>
+                  <p className="mt-2 text-lg font-semibold text-slate-900">{previewCopy.scorecard}</p>
                 </div>
                 <div className="rounded-2xl bg-emerald-50 px-4 py-3 text-right">
                   <p className="text-xs text-emerald-700">{previewCopy.score}</p>
@@ -276,9 +284,12 @@ export default function Home() {
                     {previewCopy.strengths}
                   </p>
                   <ul className="mt-3 space-y-2 text-sm text-slate-700">
-                    <li className="flex gap-2"><CheckCircle2 className="mt-0.5 w-4 h-4 text-emerald-600 shrink-0" /><span>MoM growth +14%</span></li>
-                    <li className="flex gap-2"><CheckCircle2 className="mt-0.5 w-4 h-4 text-emerald-600 shrink-0" /><span>LTV/CAC above 3x</span></li>
-                    <li className="flex gap-2"><CheckCircle2 className="mt-0.5 w-4 h-4 text-emerald-600 shrink-0" /><span>B2B SaaS gross margin 78%</span></li>
+                    {previewCopy.strengthItems.map((item) => (
+                      <li key={item} className="flex gap-2">
+                        <CheckCircle2 className="mt-0.5 w-4 h-4 text-emerald-600 shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
 
@@ -287,8 +298,12 @@ export default function Home() {
                     {previewCopy.risks}
                   </p>
                   <ul className="mt-3 space-y-2 text-sm text-slate-700">
-                    <li className="flex gap-2"><Target className="mt-0.5 w-4 h-4 text-amber-600 shrink-0" /><span>Runway under 12 months</span></li>
-                    <li className="flex gap-2"><Target className="mt-0.5 w-4 h-4 text-amber-600 shrink-0" /><span>Ticket fit concentrated on Seed funds</span></li>
+                    {previewCopy.riskItems.map((item) => (
+                      <li key={item} className="flex gap-2">
+                        <Target className="mt-0.5 w-4 h-4 text-amber-600 shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -302,7 +317,7 @@ export default function Home() {
                     <p className="mt-1 text-sm text-slate-700">{previewCopy.fitDesc}</p>
                   </div>
                   <div className="shrink-0 rounded-full bg-white px-3 py-1 text-sm font-semibold text-blue-700 shadow-sm">
-                    3 top funds
+                    {previewCopy.topFunds}
                   </div>
                 </div>
                 <div className="mt-4 space-y-2">
