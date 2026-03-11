@@ -65,6 +65,27 @@ export async function POST(req: NextRequest) {
 
     if (insertError) throw insertError;
 
+    // 7. Envoyer le rapport par email (non-bloquant)
+    try {
+      const { data: fullMatches } = await supabase
+        .from("matches")
+        .select("*, venture_capital:venture_capitals(*)")
+        .eq("startup_id", startup_id)
+        .order("score", { ascending: false });
+
+      await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/api/send-report`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          startup,
+          matches: fullMatches ?? [],
+          financial_analysis: financialAnalysis,
+        }),
+      });
+    } catch (emailErr) {
+      console.warn("[match] Email non envoyé (non-bloquant):", emailErr);
+    }
+
     return NextResponse.json({
       success: true,
       matches_count: matchResults.length,

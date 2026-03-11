@@ -17,7 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/lib/supabase";
 import { toast } from "@/components/ui/use-toast";
-import { ArrowLeft, ArrowRight, Loader2, Zap, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, Zap, CheckCircle2, Upload, FileText, X } from "lucide-react";
 import Link from "next/link";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
 
@@ -120,6 +120,8 @@ export default function StartupSubmitPage() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormData>(initialForm);
   const [loading, setLoading] = useState(false);
+  const [pitchFile, setPitchFile] = useState<File | null>(null);
+  const [uploadingPitch, setUploadingPitch] = useState(false);
 
   const set = (field: keyof FormData) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -141,6 +143,26 @@ export default function StartupSubmitPage() {
   async function handleSubmit() {
     setLoading(true);
     try {
+      // 0. Upload pitch deck si présent
+      let pitch_deck_url: string | null = null;
+      if (pitchFile) {
+        setUploadingPitch(true);
+        const fileName = `${Date.now()}-${pitchFile.name.replace(/\s+/g, "-")}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from("pitch-decks")
+          .upload(fileName, pitchFile, { contentType: "application/pdf" });
+
+        if (uploadError) {
+          console.warn("Upload pitch deck échoué:", uploadError.message);
+        } else {
+          const { data: urlData } = supabase.storage
+            .from("pitch-decks")
+            .getPublicUrl(uploadData.path);
+          pitch_deck_url = urlData.publicUrl;
+        }
+        setUploadingPitch(false);
+      }
+
       // 1. Insérer la startup en base
       const payload = {
         name: form.name,
@@ -166,6 +188,7 @@ export default function StartupSubmitPage() {
         gross_margin: form.gross_margin ? Number(form.gross_margin) : null,
         active_customers: form.active_customers ? Number(form.active_customers) : null,
         revenue_last_year: form.revenue_last_year ? Number(form.revenue_last_year) : null,
+        pitch_deck_url,
       };
 
       const { data: startup, error } = await supabase
@@ -399,6 +422,36 @@ export default function StartupSubmitPage() {
                 />
               </div>
 
+              {/* Upload Pitch Deck */}
+              <div className="space-y-1.5">
+                <Label>Pitch deck <span className="text-slate-400 font-normal">(optionnel · PDF uniquement)</span></Label>
+                {!pitchFile ? (
+                  <label className="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-slate-200 rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 hover:border-blue-300 transition-colors">
+                    <Upload className="w-6 h-6 text-slate-400 mb-2" />
+                    <span className="text-sm text-slate-500">Glisse ton PDF ici ou <span className="text-blue-600 font-medium">clique pour choisir</span></span>
+                    <span className="text-xs text-slate-400 mt-1">Max 10 Mo</span>
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file && file.size <= 10 * 1024 * 1024) setPitchFile(file);
+                        else if (file) alert("Le fichier dépasse 10 Mo");
+                      }}
+                    />
+                  </label>
+                ) : (
+                  <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-blue-200 bg-blue-50">
+                    <FileText className="w-5 h-5 text-blue-600 shrink-0" />
+                    <span className="text-sm text-blue-800 font-medium flex-1 truncate">{pitchFile.name}</span>
+                    <button onClick={() => setPitchFile(null)} className="text-slate-400 hover:text-red-500 transition-colors">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <div className="flex justify-end pt-2">
                 <Button
                   onClick={() => setStep(2)}
@@ -581,7 +634,7 @@ export default function StartupSubmitPage() {
                   {loading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      {s.btnAnalyzing}
+                      {uploadingPitch ? "Upload du pitch deck..." : s.btnAnalyzing}
                     </>
                   ) : (
                     <>
