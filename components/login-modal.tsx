@@ -46,19 +46,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     const role = data.user?.user_metadata?.role as "startup" | "vc" | undefined;
 
     if (role === "vc") {
-      const { data: vc } = await supabase
-        .from("venture_capitals")
-        .select("id")
-        .eq("user_id", data.user.id)
-        .single();
-      router.push(vc ? `/vc/dashboard?id=${vc.id}` : "/vc/register");
+      router.push("/vc/dashboard");
     } else {
-      const { data: startup } = await supabase
-        .from("startups")
-        .select("id")
-        .eq("user_id", data.user.id)
-        .single();
-      router.push(startup ? `/startup/dashboard?id=${startup.id}` : "/startup/submit");
+      router.push("/startup/dashboard");
     }
 
     setLoading(false);

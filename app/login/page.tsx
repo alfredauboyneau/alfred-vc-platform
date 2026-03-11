@@ -35,31 +35,9 @@ export default function LoginPage() {
     const role = data.user?.user_metadata?.role as "startup" | "vc" | undefined;
 
     if (role === "vc") {
-      // Chercher le VC lié à ce user
-      const { data: vc } = await supabase
-        .from("venture_capitals")
-        .select("id")
-        .eq("user_id", data.user.id)
-        .single();
-
-      if (vc) {
-        router.push(`/vc/dashboard?id=${vc.id}`);
-      } else {
-        router.push("/vc/register");
-      }
+      router.push("/vc/dashboard");
     } else {
-      // Chercher la startup liée à ce user
-      const { data: startup } = await supabase
-        .from("startups")
-        .select("id")
-        .eq("user_id", data.user.id)
-        .single();
-
-      if (startup) {
-        router.push(`/startup/dashboard?id=${startup.id}`);
-      } else {
-        router.push("/startup/submit");
-      }
+      router.push("/startup/dashboard");
     }
 
     setLoading(false);
