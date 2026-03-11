@@ -8,9 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Zap, Rocket, Building2, CheckCircle2 } from "lucide-react";
+import { useLanguage } from "@/lib/i18n";
 
 export default function SignupPage() {
   const router = useRouter();
+  const { t } = useLanguage();
+  const s = t.signup;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -24,11 +28,11 @@ export default function SignupPage() {
     setError("");
 
     if (password !== confirmPassword) {
-      setError("Les mots de passe ne correspondent pas.");
+      setError(s.errorPasswords);
       return;
     }
     if (password.length < 8) {
-      setError("Le mot de passe doit faire au moins 8 caractères.");
+      setError(s.errorLength);
       return;
     }
 
@@ -57,13 +61,12 @@ export default function SignupPage() {
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-8 h-8 text-green-600" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-3">Vérifie ta boîte mail !</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-3">{s.successTitle}</h2>
           <p className="text-slate-500 text-sm leading-relaxed mb-6">
-            On t'a envoyé un lien de confirmation à <strong>{email}</strong>.
-            Clique dessus pour activer ton compte et accéder à la plateforme.
+            {s.successDesc} <strong>{email}</strong>. {s.successDesc2}
           </p>
           <Link href="/login">
-            <Button variant="outline" className="w-full">Retour à la connexion</Button>
+            <Button variant="outline" className="w-full">{s.backToLogin}</Button>
           </Link>
         </div>
       </div>
@@ -81,8 +84,8 @@ export default function SignupPage() {
             </div>
             <span className="font-bold text-xl tracking-tight text-slate-900">Alfred</span>
           </Link>
-          <h1 className="text-2xl font-bold text-slate-900 mt-6 mb-1">Créer un compte</h1>
-          <p className="text-slate-500 text-sm">Rejoins la plateforme IA de matching VC</p>
+          <h1 className="text-2xl font-bold text-slate-900 mt-6 mb-1">{s.title}</h1>
+          <p className="text-slate-500 text-sm">{s.subtitle}</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
@@ -90,7 +93,7 @@ export default function SignupPage() {
 
             {/* Sélection du rôle */}
             <div>
-              <Label className="text-sm font-medium text-slate-700 mb-3 block">Je suis...</Label>
+              <Label className="text-sm font-medium text-slate-700 mb-3 block">{s.iAm}</Label>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
@@ -102,7 +105,7 @@ export default function SignupPage() {
                   }`}
                 >
                   <Rocket className="w-5 h-5" />
-                  <span className="text-sm font-medium">Une startup</span>
+                  <span className="text-sm font-medium">{s.aStartup}</span>
                 </button>
                 <button
                   type="button"
@@ -114,7 +117,7 @@ export default function SignupPage() {
                   }`}
                 >
                   <Building2 className="w-5 h-5" />
-                  <span className="text-sm font-medium">Un VC / Investisseur</span>
+                  <span className="text-sm font-medium">{s.aVC}</span>
                 </button>
               </div>
             </div>
@@ -125,7 +128,7 @@ export default function SignupPage() {
               <Input
                 id="email"
                 type="email"
-                placeholder="toi@exemple.com"
+                placeholder={t.login.emailPlaceholder}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -135,11 +138,11 @@ export default function SignupPage() {
 
             {/* Password */}
             <div>
-              <Label htmlFor="password" className="text-sm font-medium text-slate-700">Mot de passe</Label>
+              <Label htmlFor="password" className="text-sm font-medium text-slate-700">{s.passwordLabel}</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="8 caractères minimum"
+                placeholder={s.passwordPlaceholder}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -149,11 +152,11 @@ export default function SignupPage() {
 
             {/* Confirm Password */}
             <div>
-              <Label htmlFor="confirm" className="text-sm font-medium text-slate-700">Confirmer le mot de passe</Label>
+              <Label htmlFor="confirm" className="text-sm font-medium text-slate-700">{s.confirmLabel}</Label>
               <Input
                 id="confirm"
                 type="password"
-                placeholder="Répète ton mot de passe"
+                placeholder={s.confirmPlaceholder}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
@@ -166,14 +169,14 @@ export default function SignupPage() {
             )}
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Création du compte..." : "Créer mon compte →"}
+              {loading ? s.submitting : s.submitBtn}
             </Button>
           </form>
 
           <p className="text-center text-sm text-slate-500 mt-5">
-            Déjà un compte ?{" "}
+            {s.alreadyAccount}{" "}
             <Link href="/login" className="text-blue-600 font-medium hover:underline">
-              Se connecter
+              {s.signIn}
             </Link>
           </p>
         </div>

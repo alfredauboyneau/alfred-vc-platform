@@ -14,6 +14,7 @@ import { supabase } from "@/lib/supabase";
 import { Loader2, Zap } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/lib/i18n";
 
 interface LoginModalProps {
   open: boolean;
@@ -22,6 +23,9 @@ interface LoginModalProps {
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const router = useRouter();
+  const { t } = useLanguage();
+  const l = t.login;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -38,7 +42,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     });
 
     if (loginError) {
-      setError("Email ou mot de passe incorrect.");
+      setError(l.errorMsg);
       setLoading(false);
       return;
     }
@@ -67,7 +71,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
             <DialogTitle className="text-white text-xl font-bold tracking-tight">Alfred</DialogTitle>
           </div>
           <p className="text-blue-100 text-sm leading-snug">
-            Connecte-toi à ton espace startup ou investisseur
+            {l.subtitle}
           </p>
         </div>
 
@@ -81,7 +85,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
               <Input
                 id="modal-email"
                 type="email"
-                placeholder="toi@exemple.com"
+                placeholder={l.emailPlaceholder}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -92,12 +96,12 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
             <div>
               <Label htmlFor="modal-password" className="text-sm font-medium text-slate-700">
-                Mot de passe
+                {l.passwordLabel}
               </Label>
               <Input
                 id="modal-password"
                 type="password"
-                placeholder="Ton mot de passe"
+                placeholder={l.passwordPlaceholder}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -119,22 +123,22 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  Connexion...
+                  {l.submitting}
                 </>
               ) : (
-                "Se connecter →"
+                l.submitBtn
               )}
             </Button>
           </form>
 
           <p className="text-center text-sm text-slate-500 mt-4">
-            Pas encore de compte ?{" "}
+            {l.noAccount}{" "}
             <Link
               href="/signup"
               onClick={() => onOpenChange(false)}
               className="text-blue-600 font-medium hover:underline"
             >
-              Créer un compte
+              {l.createAccount}
             </Link>
           </p>
         </div>
