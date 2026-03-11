@@ -15,10 +15,41 @@ import {
 } from "lucide-react";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
 import { NavbarLoginButton } from "@/components/navbar-login-button";
+import { MarketingFooter } from "@/components/marketing-footer";
 
 export default function AboutPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const a = t.about;
+  const operatingPrinciples =
+    lang === "en"
+      ? [
+          {
+            title: "Explainable by design",
+            desc: "Alfred is meant to produce output a founder or investor can read, challenge and reuse.",
+          },
+          {
+            title: "Focused on the French market",
+            desc: "The product is designed around French VC theses, stages and ticket logic before broader expansion.",
+          },
+          {
+            title: "Qualification before outreach",
+            desc: "The goal is not to automate more noise, but to improve relevance before any contact happens.",
+          },
+        ]
+      : [
+          {
+            title: "Explicable par construction",
+            desc: "Alfred doit produire un rendu qu'un fondateur ou un investisseur peut lire, challenger et reutiliser.",
+          },
+          {
+            title: "Concu d'abord pour le marche francais",
+            desc: "Le produit est pense autour des theses VC francaises, des stades et des logiques de ticket avant toute extension.",
+          },
+          {
+            title: "Qualifier avant de prospecter",
+            desc: "L'objectif n'est pas d'automatiser plus de bruit, mais d'ameliorer la pertinence avant toute prise de contact.",
+          },
+        ];
 
   return (
     <div className="min-h-screen bg-white">
@@ -214,6 +245,25 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <section className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <p className="text-xs font-semibold tracking-widest text-blue-600 uppercase mb-3">
+            {lang === "en" ? "Operating principles" : "Principes de fonctionnement"}
+          </p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+            {lang === "en" ? "A product built to stay readable and useful" : "Un produit pense pour rester lisible et utile"}
+          </h2>
+        </div>
+        <div className="grid gap-5 md:grid-cols-3">
+          {operatingPrinciples.map((item) => (
+            <div key={item.title} className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">
+              <h3 className="text-lg font-semibold text-slate-900">{item.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-slate-600">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── L'équipe ── */}
       <section className="bg-slate-50 py-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -264,23 +314,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── Footer ── */}
-      <footer className="border-t border-slate-100 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
-              <Zap className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-semibold text-sm">Alfred</span>
-          </div>
-          <p className="text-xs text-slate-400">{t.landing.footerCopyright}</p>
-          <div className="flex gap-4 text-xs text-slate-400">
-            <Link href="/about" className="hover:text-slate-700">{t.nav.about}</Link>
-            <Link href="/startup/submit" className="hover:text-slate-700">{t.landing.footerStartups}</Link>
-            <Link href="/vc/register" className="hover:text-slate-700">{t.landing.footerInvestors}</Link>
-          </div>
-        </div>
-      </footer>
+      <MarketingFooter />
     </div>
   );
 }

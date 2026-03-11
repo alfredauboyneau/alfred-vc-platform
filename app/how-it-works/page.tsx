@@ -17,6 +17,7 @@ import {
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
 import { useState } from "react";
 import { NavbarLoginButton } from "@/components/navbar-login-button";
+import { MarketingFooter } from "@/components/marketing-footer";
 
 const ICONS: Record<string, React.ReactNode> = {
   BarChart3: <BarChart3 className="w-7 h-7 text-blue-600" />,
@@ -173,24 +174,7 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
-      <footer className="border-t border-slate-100 bg-slate-50 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-              <Zap className="w-3.5 h-3.5 text-white" />
-            </div>
-            <span className="font-semibold text-sm text-slate-700">Alfred</span>
-          </div>
-          <p className="text-xs text-slate-400">{t.landing.footerCopyright}</p>
-          <div className="flex gap-5 text-xs text-slate-500">
-            <Link href="/how-it-works" className="hover:text-slate-900 transition-colors">{t.nav.howItWorks}</Link>
-            <Link href="/about" className="hover:text-slate-900 transition-colors">{t.nav.about}</Link>
-            <Link href="/startup/submit" className="hover:text-slate-900 transition-colors">{t.landing.footerStartups}</Link>
-            <Link href="/vc/register" className="hover:text-slate-900 transition-colors">{t.landing.footerInvestors}</Link>
-          </div>
-        </div>
-      </footer>
+      <MarketingFooter />
     </div>
   );
 }
