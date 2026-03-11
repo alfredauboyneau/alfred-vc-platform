@@ -35,7 +35,7 @@ export default function HowItWorksPage() {
     <div className="min-h-screen bg-white">
 
       {/* ── NAVBAR ── */}
-      <nav className="sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 border-b border-slate-100/80 bg-white/80 backdrop-blur-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-sm">
@@ -69,13 +69,13 @@ export default function HowItWorksPage() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="bg-gradient-to-b from-slate-50 to-white pt-20 pb-16 text-center">
+      <section className="marketing-surface pt-20 pb-16 text-center">
         <div className="max-w-3xl mx-auto px-4">
-          <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full border border-blue-200 bg-blue-50 text-blue-700 text-xs font-semibold tracking-widest uppercase">
+          <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full border border-blue-200 bg-white/90 text-blue-700 text-xs font-semibold tracking-widest uppercase shadow-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             {h.badge}
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 tracking-tight mb-5">{h.title}</h1>
+          <h1 className="headline-balance text-4xl sm:text-5xl font-bold text-slate-900 tracking-tight mb-5">{h.title}</h1>
           <p className="text-lg text-slate-500 leading-relaxed max-w-2xl mx-auto">{h.subtitle}</p>
         </div>
       </section>
@@ -99,7 +99,7 @@ export default function HowItWorksPage() {
               </div>
 
               {/* Content */}
-              <div className="flex-1 min-w-0 pt-1">
+              <div className="premium-card flex-1 min-w-0 rounded-[28px] border border-slate-200/70 p-7 pt-6">
                 <div className="flex flex-wrap items-center gap-3 mb-3">
                   <h2 className="text-2xl font-bold text-slate-900 tracking-tight">{step.title}</h2>
                   <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-medium">
@@ -111,7 +111,7 @@ export default function HowItWorksPage() {
                 <p className="text-slate-600 leading-relaxed mb-5">{step.desc}</p>
 
                 {/* Detail points */}
-                <div className="rounded-xl border border-slate-100 bg-slate-50 p-5 mb-4">
+                <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5 mb-4">
                   <ul className="space-y-2.5">
                     {step.details.map((detail, i) => (
                       <li key={i} className="flex items-start gap-3">
@@ -123,7 +123,7 @@ export default function HowItWorksPage() {
                 </div>
 
                 {/* Tip */}
-                <div className="flex items-start gap-3 px-4 py-3 rounded-lg bg-amber-50 border border-amber-100">
+                <div className="flex items-start gap-3 px-4 py-3 rounded-2xl bg-amber-50 border border-amber-100">
                   <Lightbulb className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
                   <p className="text-sm text-amber-700">{step.tip}</p>
                 </div>
@@ -134,12 +134,12 @@ export default function HowItWorksPage() {
       </section>
 
       {/* ── FAQ ── */}
-      <section className="bg-slate-50 py-20">
+      <section className="bg-slate-50/80 py-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 text-center mb-10 tracking-tight">{h.faqTitle}</h2>
+          <h2 className="headline-balance text-2xl sm:text-3xl font-bold text-slate-900 text-center mb-10 tracking-tight">{h.faqTitle}</h2>
           <div className="space-y-3">
             {h.faq.map((item, idx) => (
-              <div key={idx} className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+              <div key={idx} className="premium-card rounded-2xl border border-slate-200/70 overflow-hidden">
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                   className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-slate-50 transition-colors"
@@ -162,9 +162,10 @@ export default function HowItWorksPage() {
       </section>
 
       {/* ── CTA FINAL ── */}
-      <section className="bg-blue-600 py-20 text-center">
+      <section className="relative overflow-hidden bg-blue-600 py-20 text-center">
+        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.24) 1px, transparent 1px), linear-gradient(to right, rgba(255,255,255,0.2) 1px, transparent 1px)", backgroundSize: "52px 52px" }} />
         <div className="max-w-xl mx-auto px-4">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight">{h.ctaTitle}</h2>
+          <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight">{h.ctaTitle}</h2>
           <p className="text-blue-100 mb-10 leading-relaxed">{h.ctaDesc}</p>
           <Link href="/startup/submit">
             <Button size="lg" className="gap-2 px-10 h-12 text-base bg-white text-blue-700 hover:bg-blue-50 border-0 font-semibold shadow-lg">

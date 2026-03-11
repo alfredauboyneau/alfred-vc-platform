@@ -55,7 +55,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-white">
 
       {/* ── Navbar ── */}
-      <nav className="sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 border-b border-slate-100/80 bg-white/80 backdrop-blur-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-sm">
@@ -89,18 +89,18 @@ export default function AboutPage() {
       </nav>
 
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 to-white pt-20 pb-24">
+      <section className="relative overflow-hidden marketing-surface pt-20 pb-24">
         <div className="absolute inset-0 opacity-[0.35]"
           style={{ backgroundImage: "linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(to right, #e2e8f0 1px, transparent 1px)", backgroundSize: "64px 64px" }} />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[250px] bg-blue-100/60 rounded-full blur-[80px] pointer-events-none" />
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 mb-8 px-4 py-1.5 rounded-full border border-blue-200 bg-blue-50 text-blue-700 text-xs font-semibold tracking-widest uppercase">
+          <div className="inline-flex items-center gap-2 mb-8 px-4 py-1.5 rounded-full border border-blue-200 bg-white/90 text-blue-700 text-xs font-semibold tracking-widest uppercase shadow-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             {a.heroBadge}
           </div>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 mb-6 leading-[1.05]">
+          <h1 className="headline-balance text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 mb-6 leading-[1.03]">
             {a.heroTitle}{" "}
             <span className="text-blue-600">{a.heroTitleHighlight}</span>
           </h1>
@@ -137,8 +137,8 @@ export default function AboutPage() {
       {/* ── Ce qu'Alfred simplifie ── */}
       <section className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
-          <p className="text-xs font-semibold tracking-widest text-blue-600 uppercase mb-3">{a.simplifiesBadge}</p>
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+          <p className="eyebrow mb-3">{a.simplifiesBadge}</p>
+          <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
             {a.simplifiesTitle}
           </h2>
         </div>
@@ -151,8 +151,8 @@ export default function AboutPage() {
               <Brain key={2} className="w-6 h-6 text-blue-600" />,
             ];
             return (
-              <div key={i} className="group bg-white rounded-2xl border border-slate-100 p-7 shadow-sm hover:shadow-md hover:border-blue-100 transition-all">
-                <div className="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-blue-100 transition-colors">
+              <div key={i} className="premium-card group rounded-[26px] border border-slate-200/70 p-7 transition-all hover:-translate-y-0.5 hover:border-blue-100">
+                <div className="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-blue-100 transition-colors ring-1 ring-blue-100">
                   {icons[i]}
                 </div>
                 <h3 className="font-bold text-slate-900 mb-2 text-lg">{item.title}</h3>
@@ -164,17 +164,17 @@ export default function AboutPage() {
       </section>
 
       {/* ── Avant / Après ── */}
-      <section className="bg-slate-50 py-20">
+      <section className="bg-slate-50/80 py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <p className="text-xs font-semibold tracking-widest text-blue-600 uppercase mb-3">{a.problemBadge}</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+            <p className="eyebrow mb-3">{a.problemBadge}</p>
+            <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
               {a.problemTitle}
             </h2>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-6">
-            <div className="bg-white border border-red-100 rounded-2xl p-8 shadow-sm">
+            <div className="premium-card rounded-[28px] border border-red-100/80 p-8">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center">
                   <XCircle className="w-5 h-5 text-red-500" />
@@ -194,7 +194,7 @@ export default function AboutPage() {
               </ul>
             </div>
 
-            <div className="bg-blue-600 rounded-2xl p-8 shadow-sm">
+            <div className="rounded-[28px] bg-blue-600 p-8 shadow-[0_24px_60px_rgba(37,99,235,0.28)]">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
                   <CheckCircle2 className="w-5 h-5 text-white" />
@@ -219,7 +219,7 @@ export default function AboutPage() {
 
       {/* ── Temps économisé ── */}
       <section className="py-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-slate-900 rounded-3xl p-10 sm:p-14 text-center">
+        <div className="section-frame bg-slate-900 rounded-[32px] p-10 sm:p-14 text-center shadow-[0_30px_80px_rgba(15,23,42,0.22)]">
           <Clock className="w-10 h-10 text-blue-400 mx-auto mb-6" />
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-5 tracking-tight">
             {a.timeBadge}
@@ -247,16 +247,16 @@ export default function AboutPage() {
 
       <section className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <p className="text-xs font-semibold tracking-widest text-blue-600 uppercase mb-3">
+          <p className="eyebrow mb-3">
             {lang === "en" ? "Operating principles" : "Principes de fonctionnement"}
           </p>
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+          <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
             {lang === "en" ? "A product built to stay readable and useful" : "Un produit pense pour rester lisible et utile"}
           </h2>
         </div>
         <div className="grid gap-5 md:grid-cols-3">
           {operatingPrinciples.map((item) => (
-            <div key={item.title} className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">
+            <div key={item.title} className="premium-card rounded-[26px] border border-slate-200/70 p-7">
               <h3 className="text-lg font-semibold text-slate-900">{item.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-slate-600">{item.desc}</p>
             </div>
@@ -265,14 +265,14 @@ export default function AboutPage() {
       </section>
 
       {/* ── L'équipe ── */}
-      <section className="bg-slate-50 py-20">
+      <section className="bg-slate-50/80 py-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <p className="text-xs font-semibold tracking-widest text-blue-600 uppercase mb-3">{a.teamBadge}</p>
-            <h2 className="text-3xl font-bold text-slate-900 tracking-tight">{a.teamTitle}</h2>
+            <p className="eyebrow mb-3">{a.teamBadge}</p>
+            <h2 className="headline-balance text-3xl font-bold text-slate-900 tracking-tight">{a.teamTitle}</h2>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 flex flex-col sm:flex-row items-center sm:items-start gap-8">
+          <div className="premium-card rounded-[28px] border border-slate-200/70 p-8 flex flex-col sm:flex-row items-center sm:items-start gap-8">
             <div className="shrink-0">
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-md">
                 <span className="text-white text-2xl font-bold">AA</span>
