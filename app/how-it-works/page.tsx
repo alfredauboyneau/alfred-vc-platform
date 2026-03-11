@@ -55,7 +55,7 @@ export default function HowItWorksPage() {
           </div>
           <div className="flex items-center gap-2">
             <LanguageToggle />
-            <NavbarLoginButton className="text-slate-600 hover:text-slate-900 hidden sm:flex" />
+            <NavbarLoginButton className="text-slate-600 hover:text-slate-900" />
             <Link href="/startup/submit">
               <Button size="sm" className="hidden sm:flex gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-sm">
                 {t.landing.ctaStartup} <ArrowRight className="w-3.5 h-3.5" />
