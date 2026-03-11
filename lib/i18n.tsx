@@ -37,6 +37,7 @@ export const translations = {
       stats: {
         vcs: "VCs référencés",
         time: "Pour être analysé",
+        aiValue: "IA",
         ai: "Analyse financière",
         matching: "Matching ciblé",
       },
@@ -579,6 +580,7 @@ export const translations = {
       stats: {
         vcs: "Indexed VCs",
         time: "To be analyzed",
+        aiValue: "AI",
         ai: "Financial analysis",
         matching: "Targeted matching",
       },

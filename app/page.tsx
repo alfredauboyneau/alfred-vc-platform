@@ -102,7 +102,7 @@ export default function Home() {
             {[
               { value: "98+", label: l.stats.vcs },
               { value: "< 5 min", label: l.stats.time },
-              { value: "IA", label: l.stats.ai },
+              { value: l.stats.aiValue, label: l.stats.ai },
               { value: "100%", label: l.stats.matching },
             ].map((stat) => (
               <div key={stat.label} className="py-10 text-center">

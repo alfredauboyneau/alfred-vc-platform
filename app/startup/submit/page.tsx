@@ -23,42 +23,42 @@ import { useLanguage, LanguageToggle } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
 
 const SECTORS = [
-  // 🖥️ Tech & Digital
-  "SaaS / Logiciel",
-  "FinTech",
-  "HealthTech / MedTech",
-  "DeepTech / IA",
-  "GreenTech / CleanTech",
-  "Cybersécurité",
-  "Marketplace",
-  "EdTech",
-  "InsurTech / Assurance",
-  "LegalTech / RegTech",
-  "RH / Recrutement",
-  // 🛍️ Commerce & Consumer
-  "E-commerce / Retail",
-  "Mode / Luxe",
-  "Cosmétique / Beauté",
-  "Sport & Lifestyle",
-  "Médias / Divertissement",
-  "Gaming / Jeux Vidéo",
-  // 🍽️ Food & Agriculture
-  "Restauration / FoodService",
-  "FoodTech / AgriTech",
-  // 🏙️ Real Estate & Mobility
-  "PropTech / Immobilier",
-  "Mobilité / Transport",
-  "BTP / Construction",
-  // 🌍 Tourisme & Services
-  "Tourisme / Hôtellerie",
-  "Services B2B",
-  "Industrie / Manufacturing",
-  "Énergie",
-  // Autre
-  "Autre",
+  { value: "SaaS / Logiciel", fr: "SaaS / Logiciel", en: "SaaS / Software" },
+  { value: "FinTech", fr: "FinTech", en: "FinTech" },
+  { value: "HealthTech / MedTech", fr: "HealthTech / MedTech", en: "HealthTech / MedTech" },
+  { value: "DeepTech / IA", fr: "DeepTech / IA", en: "DeepTech / AI" },
+  { value: "GreenTech / CleanTech", fr: "GreenTech / CleanTech", en: "GreenTech / CleanTech" },
+  { value: "Cybersécurité", fr: "Cybersécurité", en: "Cybersecurity" },
+  { value: "Marketplace", fr: "Marketplace", en: "Marketplace" },
+  { value: "EdTech", fr: "EdTech", en: "EdTech" },
+  { value: "InsurTech / Assurance", fr: "InsurTech / Assurance", en: "InsurTech / Insurance" },
+  { value: "LegalTech / RegTech", fr: "LegalTech / RegTech", en: "LegalTech / RegTech" },
+  { value: "RH / Recrutement", fr: "RH / Recrutement", en: "HR / Recruiting" },
+  { value: "E-commerce / Retail", fr: "E-commerce / Retail", en: "E-commerce / Retail" },
+  { value: "Mode / Luxe", fr: "Mode / Luxe", en: "Fashion / Luxury" },
+  { value: "Cosmétique / Beauté", fr: "Cosmétique / Beauté", en: "Cosmetics / Beauty" },
+  { value: "Sport & Lifestyle", fr: "Sport & Lifestyle", en: "Sport & Lifestyle" },
+  { value: "Médias / Divertissement", fr: "Médias / Divertissement", en: "Media / Entertainment" },
+  { value: "Gaming / Jeux Vidéo", fr: "Gaming / Jeux Vidéo", en: "Gaming / Video Games" },
+  { value: "Restauration / FoodService", fr: "Restauration / FoodService", en: "Restaurant / FoodService" },
+  { value: "FoodTech / AgriTech", fr: "FoodTech / AgriTech", en: "FoodTech / AgriTech" },
+  { value: "PropTech / Immobilier", fr: "PropTech / Immobilier", en: "PropTech / Real Estate" },
+  { value: "Mobilité / Transport", fr: "Mobilité / Transport", en: "Mobility / Transport" },
+  { value: "BTP / Construction", fr: "BTP / Construction", en: "Construction / Building" },
+  { value: "Tourisme / Hôtellerie", fr: "Tourisme / Hôtellerie", en: "Tourism / Hospitality" },
+  { value: "Services B2B", fr: "Services B2B", en: "B2B Services" },
+  { value: "Industrie / Manufacturing", fr: "Industrie / Manufacturing", en: "Industry / Manufacturing" },
+  { value: "Énergie", fr: "Énergie", en: "Energy" },
+  { value: "Autre", fr: "Autre", en: "Other" },
 ];
 
-const STAGES = ["Pre-seed", "Seed", "Série A", "Série B", "Série B+"];
+const STAGES = [
+  { value: "Pre-seed", fr: "Pre-seed", en: "Pre-seed" },
+  { value: "Seed", fr: "Seed", en: "Seed" },
+  { value: "Série A", fr: "Série A", en: "Series A" },
+  { value: "Série B", fr: "Série B", en: "Series B" },
+  { value: "Série B+", fr: "Série B+", en: "Series B+" },
+];
 
 type FormData = {
   // Étape 1 — Infos générales
@@ -124,6 +124,14 @@ export default function StartupSubmitPage() {
   const [loading, setLoading] = useState(false);
   const [pitchFile, setPitchFile] = useState<File | null>(null);
   const [uploadingPitch, setUploadingPitch] = useState(false);
+  const sectorOptions = SECTORS.map((sector) => ({
+    value: sector.value,
+    label: lang === "en" ? sector.en : sector.fr,
+  }));
+  const stageOptions = STAGES.map((stage) => ({
+    value: stage.value,
+    label: lang === "en" ? stage.en : stage.fr,
+  }));
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -300,7 +308,7 @@ export default function StartupSubmitPage() {
                 <div className="space-y-1.5">
                   <Label>{s.fields.name}</Label>
                   <Input
-                    placeholder="ex: Klark"
+                    placeholder={s.placeholders.name}
                     value={form.name}
                     onChange={set("name")}
                   />
@@ -309,7 +317,7 @@ export default function StartupSubmitPage() {
                   <Label>{s.fields.email}</Label>
                   <Input
                     type="email"
-                    placeholder="founder@startup.fr"
+                    placeholder={s.placeholders.email}
                     value={form.contact_email}
                     onChange={set("contact_email")}
                   />
@@ -319,7 +327,7 @@ export default function StartupSubmitPage() {
               <div className="space-y-1.5">
                 <Label>{s.fields.tagline}</Label>
                 <Input
-                  placeholder="ex: Le CRM IA pour les PME françaises"
+                  placeholder={s.placeholders.tagline}
                   value={form.tagline}
                   onChange={set("tagline")}
                 />
@@ -328,7 +336,7 @@ export default function StartupSubmitPage() {
               <div className="space-y-1.5">
                 <Label>{s.fields.website}</Label>
                 <Input
-                  placeholder="https://..."
+                  placeholder={s.placeholders.website}
                   value={form.website}
                   onChange={set("website")}
                 />
@@ -342,8 +350,8 @@ export default function StartupSubmitPage() {
                       <SelectValue placeholder={s.placeholders.sector} />
                     </SelectTrigger>
                     <SelectContent>
-                      {SECTORS.map((s) => (
-                        <SelectItem key={s} value={s}>{s}</SelectItem>
+                      {sectorOptions.map((sector) => (
+                        <SelectItem key={sector.value} value={sector.value}>{sector.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -355,8 +363,8 @@ export default function StartupSubmitPage() {
                       <SelectValue placeholder={s.placeholders.stage} />
                     </SelectTrigger>
                     <SelectContent>
-                      {STAGES.map((s) => (
-                        <SelectItem key={s} value={s}>{s}</SelectItem>
+                      {stageOptions.map((stage) => (
+                        <SelectItem key={stage.value} value={stage.value}>{stage.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
