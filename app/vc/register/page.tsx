@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -55,7 +56,15 @@ export default function VCRegisterPage() {
   const router = useRouter();
   const { t } = useLanguage();
   const r = t.vcRegister;
+  const { user, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(false);
+
+  // Guard : redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/login");
+    }
+  }, [user, authLoading, router]);
   const [selectedSectors, setSelectedSectors] = useState<string[]>([]);
   const [selectedStages, setSelectedStages] = useState<string[]>([]);
   const [form, setForm] = useState({
@@ -111,6 +120,7 @@ export default function VCRegisterPage() {
           ticket_max: Number(form.ticket_max),
           investment_thesis: form.investment_thesis,
           notable_investments: form.notable_investments || null,
+          user_id: user?.id ?? null,
         })
         .select()
         .single();

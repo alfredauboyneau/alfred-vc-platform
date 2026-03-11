@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,7 @@ import { toast } from "@/components/ui/use-toast";
 import { ArrowLeft, ArrowRight, Loader2, Zap, CheckCircle2, Upload, FileText, X } from "lucide-react";
 import Link from "next/link";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth-context";
 
 const SECTORS = [
   // 🖥️ Tech & Digital
@@ -117,11 +118,19 @@ export default function StartupSubmitPage() {
   const router = useRouter();
   const { t } = useLanguage();
   const s = t.submit;
+  const { user, loading: authLoading } = useAuth();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormData>(initialForm);
   const [loading, setLoading] = useState(false);
   const [pitchFile, setPitchFile] = useState<File | null>(null);
   const [uploadingPitch, setUploadingPitch] = useState(false);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/login");
+    }
+  }, [user, authLoading, router]);
 
   const set = (field: keyof FormData) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -189,6 +198,7 @@ export default function StartupSubmitPage() {
         active_customers: form.active_customers ? Number(form.active_customers) : null,
         revenue_last_year: form.revenue_last_year ? Number(form.revenue_last_year) : null,
         pitch_deck_url,
+        user_id: user?.id ?? null,
       };
 
       const { data: startup, error } = await supabase

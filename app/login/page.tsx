@@ -5,14 +5,15 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Zap, Loader2, Mail, CheckCircle2, ArrowLeft } from "lucide-react";
+import { Zap, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
@@ -20,18 +21,47 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.signInWithOtp({
+    const { data, error: loginError } = await supabase.auth.signInWithPassword({
       email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/startup/dashboard`,
-      },
+      password,
     });
 
-    if (error) {
-      setError("Erreur : " + error.message);
-    } else {
-      setSent(true);
+    if (loginError) {
+      setError("Email ou mot de passe incorrect.");
+      setLoading(false);
+      return;
     }
+
+    const role = data.user?.user_metadata?.role as "startup" | "vc" | undefined;
+
+    if (role === "vc") {
+      // Chercher le VC lié à ce user
+      const { data: vc } = await supabase
+        .from("venture_capitals")
+        .select("id")
+        .eq("user_id", data.user.id)
+        .single();
+
+      if (vc) {
+        router.push(`/vc/dashboard?id=${vc.id}`);
+      } else {
+        router.push("/vc/register");
+      }
+    } else {
+      // Chercher la startup liée à ce user
+      const { data: startup } = await supabase
+        .from("startups")
+        .select("id")
+        .eq("user_id", data.user.id)
+        .single();
+
+      if (startup) {
+        router.push(`/startup/dashboard?id=${startup.id}`);
+      } else {
+        router.push("/startup/submit");
+      }
+    }
+
     setLoading(false);
   }
 
@@ -57,76 +87,63 @@ export default function LoginPage() {
       {/* Contenu */}
       <div className="flex-1 flex items-center justify-center px-4 py-16">
         <div className="w-full max-w-md">
-          {!sent ? (
-            <Card className="shadow-lg border-slate-200">
-              <CardHeader className="text-center pb-4">
-                <div className="w-14 h-14 rounded-2xl bg-blue-50 border-2 border-blue-100 flex items-center justify-center mx-auto mb-4">
-                  <Zap className="w-7 h-7 text-blue-600" />
-                </div>
-                <CardTitle className="text-2xl font-bold text-slate-900">
-                  Connecte-toi à Alfred
-                </CardTitle>
-                <CardDescription className="text-slate-500">
-                  Entre ton email — on t'envoie un lien magique, sans mot de passe.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="email">Adresse email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="toi@startup.fr"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      autoFocus
-                    />
-                  </div>
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
+            <div className="text-center mb-7">
+              <div className="w-12 h-12 rounded-xl bg-blue-50 border-2 border-blue-100 flex items-center justify-center mx-auto mb-4">
+                <Zap className="w-6 h-6 text-blue-600" />
+              </div>
+              <h1 className="text-2xl font-bold text-slate-900">Connecte-toi à Alfred</h1>
+              <p className="text-slate-500 text-sm mt-1">Accède à ton espace startup ou investisseur</p>
+            </div>
 
-                  {error && (
-                    <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>
-                  )}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <Label htmlFor="email" className="text-sm font-medium text-slate-700">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="toi@exemple.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoFocus
+                  className="mt-1"
+                />
+              </div>
 
-                  <Button type="submit" className="w-full gap-2 bg-blue-600 hover:bg-blue-700" disabled={loading}>
-                    {loading ? (
-                      <><Loader2 className="w-4 h-4 animate-spin" /> Envoi en cours...</>
-                    ) : (
-                      <><Mail className="w-4 h-4" /> Recevoir mon lien de connexion</>
-                    )}
-                  </Button>
-                </form>
+              <div>
+                <Label htmlFor="password" className="text-sm font-medium text-slate-700">Mot de passe</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Ton mot de passe"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="mt-1"
+                />
+              </div>
 
-                <div className="mt-6 text-center">
-                  <p className="text-xs text-slate-400">
-                    Pas encore de compte ? Il sera créé automatiquement.
-                  </p>
-                  <Link href="/startup/submit" className="text-xs text-blue-600 hover:underline mt-1 inline-block">
-                    Analyser ma startup gratuitement →
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card className="shadow-lg border-slate-200">
-              <CardContent className="pt-10 pb-10 text-center space-y-4">
-                <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto">
-                  <CheckCircle2 className="w-8 h-8 text-green-600" />
-                </div>
-                <h2 className="text-xl font-bold text-slate-900">Email envoyé !</h2>
-                <p className="text-slate-500 text-sm">
-                  Consulte ta boîte mail <strong>{email}</strong> et clique sur le lien pour accéder à ton espace.
-                </p>
-                <p className="text-xs text-slate-400">
-                  Le lien expire dans 60 minutes. Vérifie aussi tes spams.
-                </p>
-                <Button variant="outline" size="sm" onClick={() => setSent(false)}>
-                  Renvoyer un autre email
-                </Button>
-              </CardContent>
-            </Card>
-          )}
+              {error && (
+                <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</p>
+              )}
+
+              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={loading}>
+                {loading ? (
+                  <><Loader2 className="w-4 h-4 animate-spin mr-2" />Connexion...</>
+                ) : (
+                  "Se connecter →"
+                )}
+              </Button>
+            </form>
+
+            <p className="text-center text-sm text-slate-500 mt-5">
+              Pas encore de compte ?{" "}
+              <Link href="/signup" className="text-blue-600 font-medium hover:underline">
+                Créer un compte
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

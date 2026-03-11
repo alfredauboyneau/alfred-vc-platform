@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth-context";
+import { useRouter } from "next/navigation";
 
 function ScoreBadge({ score }: { score: number }) {
   const color =
@@ -58,6 +60,15 @@ function DashboardContent() {
   const [loading, setLoading] = useState(true);
   const { t } = useLanguage();
   const d = t.dashboard;
+  const { user, loading: authLoading, signOut } = useAuth();
+  const router = useRouter();
+
+  // Guard : redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/login");
+    }
+  }, [user, authLoading, router]);
 
   useEffect(() => {
     if (!id) return;
@@ -278,26 +289,38 @@ function DashboardContent() {
   );
 }
 
-export default function StartupDashboardPage() {
+function DashboardNavbar() {
   const { t } = useLanguage();
+  const { signOut } = useAuth();
+  return (
+    <nav className="border-b border-gray-100 bg-white sticky top-0 z-50">
+      <div className="max-w-4xl mx-auto px-4 h-14 flex items-center gap-4">
+        <Link href="/">
+          <Button variant="ghost" size="icon">
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+        </Link>
+        <div className="flex items-center gap-2 flex-1">
+          <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
+            <Zap className="w-4 h-4 text-white" />
+          </div>
+          <span className="font-semibold text-sm">{t.nav.dashboardStartup}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <LanguageToggle />
+          <Button variant="ghost" size="sm" onClick={signOut} className="text-slate-500 text-xs">
+            Se déconnecter
+          </Button>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+export default function StartupDashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="border-b border-gray-100 bg-white sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-4 h-14 flex items-center gap-4">
-          <Link href="/">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-          </Link>
-          <div className="flex items-center gap-2 flex-1">
-            <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
-              <Zap className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-semibold text-sm">{t.nav.dashboardStartup}</span>
-          </div>
-          <LanguageToggle />
-        </div>
-      </nav>
+      <DashboardNavbar />
       <Suspense fallback={
         <div className="flex items-center justify-center min-h-[60vh]">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
