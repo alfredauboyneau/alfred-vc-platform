@@ -23,25 +23,32 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* ── Navbar ── */}
-      <nav className="border-b border-slate-100 sticky top-0 bg-white/90 backdrop-blur-md z-50">
+      <nav className="sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Zap className="w-5 h-5 text-white" />
+          <Link href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-sm">
+              <Zap className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-xl tracking-tight">Alfred</span>
+            <span className="font-bold text-lg text-slate-900 tracking-tight">Alfred</span>
           </Link>
-          <div className="flex items-center gap-3">
-            <LanguageToggle />
+          <div className="hidden sm:flex items-center gap-1">
+            <Link href="/how-it-works">
+              <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900">{t.nav.howItWorks}</Button>
+            </Link>
             <Link href="/about">
               <Button variant="ghost" size="sm" className="text-blue-600 font-medium">{t.nav.about}</Button>
             </Link>
             <Link href="/vc/register">
-              <Button variant="ghost" size="sm">{t.nav.isVC}</Button>
+              <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900">{t.nav.isVC}</Button>
             </Link>
+          </div>
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
             <NavbarLoginButton />
             <Link href="/startup/submit">
-              <Button size="sm">Analyser ma startup</Button>
+              <Button size="sm" className="hidden sm:flex gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-sm">
+                Analyser ma startup <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
             </Link>
           </div>
         </div>
