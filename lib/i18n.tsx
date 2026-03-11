@@ -515,6 +515,7 @@ export const translations = {
       notReadyLabel: "Pas encore prête",
     },
     login: {
+      title: "Connecte-toi à Alfred",
       subtitle: "Connecte-toi à ton espace startup ou investisseur",
       emailPlaceholder: "toi@exemple.com",
       passwordLabel: "Mot de passe",
@@ -1021,6 +1022,7 @@ export const translations = {
       allSectors: "All sectors",
     },
     login: {
+      title: "Sign in to Alfred",
       subtitle: "Sign in to your startup or investor space",
       emailPlaceholder: "you@example.com",
       passwordLabel: "Password",

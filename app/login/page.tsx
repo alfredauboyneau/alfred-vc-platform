@@ -8,9 +8,12 @@ import { Label } from "@/components/ui/label";
 import { Zap, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/lib/i18n";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t } = useLanguage();
+  const l = t.login;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,7 +30,7 @@ export default function LoginPage() {
     });
 
     if (loginError) {
-      setError("Email ou mot de passe incorrect.");
+      setError(l.errorMsg);
       setLoading(false);
       return;
     }
@@ -70,8 +73,8 @@ export default function LoginPage() {
               <div className="w-12 h-12 rounded-xl bg-blue-50 border-2 border-blue-100 flex items-center justify-center mx-auto mb-4">
                 <Zap className="w-6 h-6 text-blue-600" />
               </div>
-              <h1 className="text-2xl font-bold text-slate-900">Connecte-toi à Alfred</h1>
-              <p className="text-slate-500 text-sm mt-1">Accède à ton espace startup ou investisseur</p>
+              <h1 className="text-2xl font-bold text-slate-900">{l.title}</h1>
+              <p className="text-slate-500 text-sm mt-1">{l.subtitle}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -80,7 +83,7 @@ export default function LoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="toi@exemple.com"
+                  placeholder={l.emailPlaceholder}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -90,11 +93,11 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <Label htmlFor="password" className="text-sm font-medium text-slate-700">Mot de passe</Label>
+                <Label htmlFor="password" className="text-sm font-medium text-slate-700">{l.passwordLabel}</Label>
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Ton mot de passe"
+                  placeholder={l.passwordPlaceholder}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -108,17 +111,17 @@ export default function LoginPage() {
 
               <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={loading}>
                 {loading ? (
-                  <><Loader2 className="w-4 h-4 animate-spin mr-2" />Connexion...</>
+                  <><Loader2 className="w-4 h-4 animate-spin mr-2" />{l.submitting}</>
                 ) : (
-                  "Se connecter →"
+                  l.submitBtn
                 )}
               </Button>
             </form>
 
             <p className="text-center text-sm text-slate-500 mt-5">
-              Pas encore de compte ?{" "}
+              {l.noAccount}{" "}
               <Link href="/signup" className="text-blue-600 font-medium hover:underline">
-                Créer un compte
+                {l.createAccount}
               </Link>
             </p>
           </div>
