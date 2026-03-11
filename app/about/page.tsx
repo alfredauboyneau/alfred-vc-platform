@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, CheckCircle2, XCircle, Zap, Users } from "lucide-react";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
+import { NavbarLoginButton } from "@/components/navbar-login-button";
 
 export default function AboutPage() {
   const { t } = useLanguage();
@@ -30,6 +31,7 @@ export default function AboutPage() {
             <Link href="/vc/register">
               <Button variant="ghost" size="sm">{t.nav.isVC}</Button>
             </Link>
+            <NavbarLoginButton />
             <Link href="/startup/submit">
               <Button size="sm">{a.ctaStartup}</Button>
             </Link>

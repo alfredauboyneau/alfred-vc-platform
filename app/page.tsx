@@ -12,6 +12,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
+import { NavbarLoginButton } from "@/components/navbar-login-button";
 
 export default function Home() {
   const { t } = useLanguage();
@@ -40,8 +41,9 @@ export default function Home() {
               <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900">{t.nav.isVC}</Button>
             </Link>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <LanguageToggle />
+            <NavbarLoginButton className="text-slate-600 hover:text-slate-900 hidden sm:flex" />
             <Link href="/startup/submit">
               <Button size="sm" className="hidden sm:flex gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-sm">
                 {l.ctaStartup} <ArrowRight className="w-3.5 h-3.5" />

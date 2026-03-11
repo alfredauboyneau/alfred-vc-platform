@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
 import { useState } from "react";
+import { NavbarLoginButton } from "@/components/navbar-login-button";
 
 const ICONS: Record<string, React.ReactNode> = {
   BarChart3: <BarChart3 className="w-7 h-7 text-blue-600" />,
@@ -52,8 +53,9 @@ export default function HowItWorksPage() {
               <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900">{t.nav.isVC}</Button>
             </Link>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <LanguageToggle />
+            <NavbarLoginButton className="text-slate-600 hover:text-slate-900 hidden sm:flex" />
             <Link href="/startup/submit">
               <Button size="sm" className="hidden sm:flex gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-sm">
                 {t.landing.ctaStartup} <ArrowRight className="w-3.5 h-3.5" />
