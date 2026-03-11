@@ -148,7 +148,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { data, error } = await resend.emails.send({
-      from: "Alfred <noreply@alfred-vc.fr>",
+      from: process.env.RESEND_FROM_EMAIL ?? "Alfred <onboarding@resend.dev>",
       to: [startup.contact_email],
       subject: `⚡ ${startup.name} — Ton analyse IA + ${matches.length} VCs matchés`,
       html: buildEmailHTML(startup, matches, financial_analysis),
