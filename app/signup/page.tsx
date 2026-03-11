@@ -38,7 +38,7 @@ export default function SignupPage() {
       password,
       options: {
         data: { role },
-        emailRedirectTo: `${window.location.origin}/${role === "startup" ? "startup/dashboard" : "vc/dashboard"}`,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
