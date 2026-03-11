@@ -517,6 +517,7 @@ export const translations = {
     login: {
       title: "Connecte-toi à Alfred",
       subtitle: "Connecte-toi à ton espace startup ou investisseur",
+      emailLabel: "Email",
       emailPlaceholder: "toi@exemple.com",
       passwordLabel: "Mot de passe",
       passwordPlaceholder: "Ton mot de passe",
@@ -1024,6 +1025,7 @@ export const translations = {
     login: {
       title: "Sign in to Alfred",
       subtitle: "Sign in to your startup or investor space",
+      emailLabel: "Email",
       emailPlaceholder: "you@example.com",
       passwordLabel: "Password",
       passwordPlaceholder: "Your password",

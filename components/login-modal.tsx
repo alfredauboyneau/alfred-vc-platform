@@ -80,7 +80,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="modal-email" className="text-sm font-medium text-slate-700">
-                Email
+                {l.emailLabel}
               </Label>
               <Input
                 id="modal-email"

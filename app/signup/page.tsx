@@ -124,7 +124,7 @@ export default function SignupPage() {
 
             {/* Email */}
             <div>
-              <Label htmlFor="email" className="text-sm font-medium text-slate-700">Email</Label>
+              <Label htmlFor="email" className="text-sm font-medium text-slate-700">{t.login.emailLabel}</Label>
               <Input
                 id="email"
                 type="email"
