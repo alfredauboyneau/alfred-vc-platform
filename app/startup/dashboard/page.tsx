@@ -183,7 +183,7 @@ function AnalyseTab({ startup }: { startup: Startup }) {
               <p className="text-sm font-semibold text-slate-700 mb-1">{d.unitEco}</p>
               <p className="text-base font-bold text-slate-900">
                 {fa.unit_economics.ltv_cac_ratio !== null
-                  ? `${d.ratio} LTV/CAC : ${fa.unit_economics.ltv_cac_ratio}x — ${fa.unit_economics.assessment}`
+                  ? `Ratio LTV/CAC : ${fa.unit_economics.ltv_cac_ratio}x — ${fa.unit_economics.assessment}`
                   : d.insufficientData}
               </p>
               <p className="text-sm text-slate-500 mt-1">{fa.unit_economics.comment}</p>
