@@ -183,7 +183,7 @@ function AnalyseTab({ startup }: { startup: Startup }) {
               <p className="text-sm font-semibold text-slate-700 mb-1">{d.unitEco}</p>
               <p className="text-base font-bold text-slate-900">
                 {fa.unit_economics.ltv_cac_ratio !== null
-                  ? `Ratio LTV/CAC : ${fa.unit_economics.ltv_cac_ratio}x — ${fa.unit_economics.assessment}`
+                  ? `${d.ratio} LTV/CAC : ${fa.unit_economics.ltv_cac_ratio}x — ${fa.unit_economics.assessment}`
                   : d.insufficientData}
               </p>
               <p className="text-sm text-slate-500 mt-1">{fa.unit_economics.comment}</p>
@@ -314,7 +314,7 @@ function ProfilTab({ startup }: { startup: Startup }) {
     { label: d.amountLabel, value: startup.amount_sought ? `${startup.amount_sought.toLocaleString("fr-FR")} €` : null },
     { label: d.foundedLabel, value: (startup as any).founded_year },
     { label: d.teamLabel, value: (startup as any).team_size ? `${(startup as any).team_size} ${d.teamSize}` : null },
-    { label: d.mrrLabel, value: (startup as any).mrr ? `${Number((startup as any).mrr).toLocaleString("fr-FR")} €/mois` : null },
+    { label: d.mrrLabel, value: (startup as any).mrr ? `${Number((startup as any).mrr).toLocaleString("fr-FR")} €${d.perMonth}` : null },
     { label: d.websiteLabel, value: startup.website },
     { label: d.emailLabel, value: startup.contact_email },
   ];

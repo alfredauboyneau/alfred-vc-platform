@@ -116,7 +116,7 @@ const initialForm: FormData = {
 
 export default function StartupSubmitPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const s = t.submit;
   const { user, loading: authLoading } = useAuth();
   const [step, setStep] = useState(1);
@@ -213,7 +213,7 @@ export default function StartupSubmitPage() {
       const res = await fetch("/api/match", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ startup_id: startup.id }),
+        body: JSON.stringify({ startup_id: startup.id, lang }),
       });
 
       if (!res.ok) throw new Error("Erreur lors du matching");

@@ -390,6 +390,7 @@ export const translations = {
       soonLabel: "Bientôt prêt",
       notReadyLabel: "Pas encore prêt",
       teamSize: "personnes",
+      perMonth: " / mois",
     },
     vcDash: {
       tabDealflow: "Deal Flow",
@@ -929,6 +930,7 @@ export const translations = {
       soonLabel: "Almost ready",
       notReadyLabel: "Not yet ready",
       teamSize: "people",
+      perMonth: " / month",
     },
     vcDash: {
       tabDealflow: "Deal Flow",

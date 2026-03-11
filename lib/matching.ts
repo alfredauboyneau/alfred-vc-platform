@@ -61,7 +61,8 @@ function preFilterVCs(startup: Startup, vcs: VentureCapital[]): VentureCapital[]
 export async function matchStartupWithVCs(
   startup: Startup,
   vcs: VentureCapital[],
-  financialAnalysis: FinancialAnalysis
+  financialAnalysis: FinancialAnalysis,
+  lang: "fr" | "en" = "fr"
 ): Promise<MatchResult[]> {
   // Pré-filtrer pour n'envoyer que les VCs les plus pertinents à Claude
   const relevantVCs = preFilterVCs(startup, vcs);
@@ -106,7 +107,31 @@ Thèse : ${vc.investment_thesis.slice(0, 250)}`
     messages: [
       {
         role: "user",
-        content: `Tu es un expert en venture capital français. Évalue la compatibilité de cette startup avec chaque fonds de VC.
+        content: lang === "en"
+          ? `You are an expert in French venture capital. Evaluate the compatibility of this startup with each VC fund.
+
+=== STARTUP PROFILE ===
+${startupProfile}
+
+=== VC LIST (${relevantVCs.length} pre-selected funds) ===
+${vcsFormatted}
+
+For each VC, evaluate compatibility taking into account:
+1. Sector / investment thesis alignment (50% of score)
+2. Stage and ticket requested vs. what the VC invests (30% of score)
+3. Financial attractiveness and startup maturity (20% of score)
+
+Reply ONLY with valid JSON (no markdown, no backticks) in this exact format:
+[
+  {
+    "vc_id": "<exact VC id>",
+    "score": <integer between 0 and 100>,
+    "analysis": "<2-3 sentences explaining why this VC matches (or not) this startup, in English>"
+  }
+]
+
+Include ALL ${relevantVCs.length} VCs in the response, sorted by descending score.`
+          : `Tu es un expert en venture capital français. Évalue la compatibilité de cette startup avec chaque fonds de VC.
 
 === PROFIL STARTUP ===
 ${startupProfile}

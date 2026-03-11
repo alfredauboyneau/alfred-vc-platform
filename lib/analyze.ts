@@ -2,7 +2,8 @@ import { anthropic } from "./claude";
 import type { Startup, FinancialAnalysis } from "./supabase";
 
 export async function analyzeStartupFinancials(
-  startup: Partial<Startup>
+  startup: Partial<Startup>,
+  lang: "fr" | "en" = "fr"
 ): Promise<FinancialAnalysis> {
   const financialData = `
 Startup : ${startup.name}
@@ -35,7 +36,27 @@ Traction : ${startup.traction}
     messages: [
       {
         role: "user",
-        content: `Tu es un analyste financier spécialisé en venture capital. Analyse cette startup et produis un rapport financier structuré destiné aux investisseurs.
+        content: lang === "en"
+          ? `You are a financial analyst specialized in venture capital. Analyze this startup and produce a structured financial report for investors.
+
+${financialData}
+
+Reply ONLY with valid JSON (no markdown, no backticks) in this exact format:
+{
+  "financial_health_score": <number between 0 and 100>,
+  "growth_trajectory": "<weak|moderate|strong|exceptional>",
+  "unit_economics": {
+    "ltv_cac_ratio": <number or null if data missing>,
+    "assessment": "<short assessment e.g.: Excellent (>5), Healthy (3-5), Weak (<1)>",
+    "comment": "<1-2 sentences of explanation>"
+  },
+  "burn_efficiency": "<1-2 sentences on cash burn efficiency>",
+  "key_strengths": ["<strength 1>", "<strength 2>", "<strength 3 max>"],
+  "key_risks": ["<risk 1>", "<risk 2>", "<risk 3 max>"],
+  "investment_readiness": "<not_ready|soon|ready>",
+  "summary": "<Narrative summary of 3-4 sentences for a VC investor, objective and factual>"
+}`
+          : `Tu es un analyste financier spécialisé en venture capital. Analyse cette startup et produis un rapport financier structuré destiné aux investisseurs.
 
 ${financialData}
 

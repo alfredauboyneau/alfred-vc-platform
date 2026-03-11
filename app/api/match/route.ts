@@ -5,7 +5,7 @@ import { matchStartupWithVCs } from "@/lib/matching";
 
 export async function POST(req: NextRequest) {
   try {
-    const { startup_id } = await req.json();
+    const { startup_id, lang = "fr" } = await req.json();
 
     if (!startup_id) {
       return NextResponse.json({ error: "startup_id requis" }, { status: 400 });
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     // 2. Analyse financière (si pas encore faite)
     let financialAnalysis = startup.financial_analysis;
     if (!financialAnalysis) {
-      financialAnalysis = await analyzeStartupFinancials(startup);
+      financialAnalysis = await analyzeStartupFinancials(startup, lang);
       await supabase
         .from("startups")
         .update({ financial_analysis: financialAnalysis })
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 4. Matching IA
-    const matchResults = await matchStartupWithVCs(startup, vcs, financialAnalysis);
+    const matchResults = await matchStartupWithVCs(startup, vcs, financialAnalysis, lang);
 
     // 5. Supprimer les anciens matches pour cette startup
     await supabase.from("matches").delete().eq("startup_id", startup_id);
