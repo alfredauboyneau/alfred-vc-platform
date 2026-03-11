@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { LoginModal } from "@/components/login-modal";
+import { useLanguage } from "@/lib/i18n";
 
 export function NavbarLoginButton({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <>
@@ -15,7 +17,7 @@ export function NavbarLoginButton({ className }: { className?: string }) {
         onClick={() => setOpen(true)}
         className={className ?? "text-slate-600 hover:text-slate-900"}
       >
-        Se connecter
+        {t.nav.signIn}
       </Button>
       <LoginModal open={open} onOpenChange={setOpen} />
     </>

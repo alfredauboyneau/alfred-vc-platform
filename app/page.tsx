@@ -43,12 +43,12 @@ export default function Home() {
             <NavbarLoginButton className="text-slate-600 hover:text-slate-900" />
             <Link href="/startup/submit">
               <Button variant="outline" size="sm" className="hidden sm:flex gap-1.5 border-blue-200 text-blue-700 hover:bg-blue-50 font-semibold">
-                Je suis une startup
+                {t.nav.isStartup}
               </Button>
             </Link>
             <Link href="/vc/register">
               <Button size="sm" className="hidden sm:flex gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-sm">
-                Je suis un VC
+                {t.nav.isVC}
               </Button>
             </Link>
           </div>
@@ -122,7 +122,7 @@ export default function Home() {
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4 tracking-tight">{l.howTitle}</h2>
             <p className="text-slate-500 max-w-xl mx-auto">{l.howSubtitle}</p>
             <Link href="/how-it-works" className="inline-flex items-center gap-1.5 mt-5 text-sm text-blue-600 hover:text-blue-700 font-medium">
-              Voir le processus détaillé <ArrowRight className="w-3.5 h-3.5" />
+              {t.nav.seeProcess} <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
           <div className="grid sm:grid-cols-3 gap-5">

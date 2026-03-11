@@ -434,12 +434,12 @@ export default function StartupSubmitPage() {
 
               {/* Upload Pitch Deck */}
               <div className="space-y-1.5">
-                <Label>Pitch deck <span className="text-slate-400 font-normal">(optionnel · PDF uniquement)</span></Label>
+                <Label>{s.pitchLabel} <span className="text-slate-400 font-normal">{s.pitchOptional}</span></Label>
                 {!pitchFile ? (
                   <label className="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-slate-200 rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 hover:border-blue-300 transition-colors">
                     <Upload className="w-6 h-6 text-slate-400 mb-2" />
-                    <span className="text-sm text-slate-500">Glisse ton PDF ici ou <span className="text-blue-600 font-medium">clique pour choisir</span></span>
-                    <span className="text-xs text-slate-400 mt-1">Max 10 Mo</span>
+                    <span className="text-sm text-slate-500">{s.pitchDrag} <span className="text-blue-600 font-medium">{s.pitchClick}</span></span>
+                    <span className="text-xs text-slate-400 mt-1">{s.pitchMax}</span>
                     <input
                       type="file"
                       accept=".pdf"
@@ -447,7 +447,7 @@ export default function StartupSubmitPage() {
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file && file.size <= 10 * 1024 * 1024) setPitchFile(file);
-                        else if (file) alert("Le fichier dépasse 10 Mo");
+                        else if (file) alert(s.pitchTooBig);
                       }}
                     />
                   </label>
@@ -644,7 +644,7 @@ export default function StartupSubmitPage() {
                   {loading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      {uploadingPitch ? "Upload du pitch deck..." : s.btnAnalyzing}
+                      {uploadingPitch ? s.pitchUploading : s.btnAnalyzing}
                     </>
                   ) : (
                     <>

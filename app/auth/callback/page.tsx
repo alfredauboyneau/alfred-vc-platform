@@ -4,19 +4,14 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Loader2, Zap } from "lucide-react";
+import { useLanguage } from "@/lib/i18n";
 
-/**
- * Page de callback après confirmation d'email Supabase.
- * Supabase redirige ici avec les tokens dans l'URL (#access_token=... ou ?code=...).
- * Le client Supabase les traite automatiquement, puis on redirige vers le bon dashboard.
- */
 export default function AuthCallbackPage() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   useEffect(() => {
     async function handleCallback() {
-      // Laisser le client Supabase traiter les tokens de l'URL
-      // (hash #access_token ou query param ?code=)
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       const { data: { user } } = await supabase.auth.getUser();
@@ -29,7 +24,6 @@ export default function AuthCallbackPage() {
           router.push("/startup/dashboard");
         }
       } else {
-        // Pas de session → page de connexion
         router.push("/login");
       }
     }
@@ -45,8 +39,8 @@ export default function AuthCallbackPage() {
         </div>
         <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto" />
         <div>
-          <p className="font-semibold text-slate-800">Connexion en cours…</p>
-          <p className="text-slate-400 text-sm mt-1">Vous allez être redirigé vers votre espace</p>
+          <p className="font-semibold text-slate-800">{t.nav.connecting}</p>
+          <p className="text-slate-400 text-sm mt-1">{t.nav.redirecting}</p>
         </div>
       </div>
     </div>

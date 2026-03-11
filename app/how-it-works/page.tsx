@@ -55,12 +55,12 @@ export default function HowItWorksPage() {
             <NavbarLoginButton className="text-slate-600 hover:text-slate-900" />
             <Link href="/startup/submit">
               <Button variant="outline" size="sm" className="hidden sm:flex gap-1.5 border-blue-200 text-blue-700 hover:bg-blue-50 font-semibold">
-                Je suis une startup
+                {t.nav.isStartup}
               </Button>
             </Link>
             <Link href="/vc/register">
               <Button size="sm" className="hidden sm:flex gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-sm">
-                Je suis un VC
+                {t.nav.isVC}
               </Button>
             </Link>
           </div>

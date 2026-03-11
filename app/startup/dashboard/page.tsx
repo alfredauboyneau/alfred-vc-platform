@@ -22,9 +22,7 @@ import {
   User,
   Building2,
   Globe,
-  Calendar,
   Users,
-  TrendingUp as Euro,
 } from "lucide-react";
 import Link from "next/link";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
@@ -48,15 +46,17 @@ function ScoreBadge({ score }: { score: number }) {
 }
 
 function ReadinessBadge({ r }: { r: string }) {
-  if (r === "ready") return <Badge variant="success">Prêt pour les VCs</Badge>;
-  if (r === "soon") return <Badge variant="warning">Bientôt prêt</Badge>;
-  return <Badge variant="secondary">Pas encore prêt</Badge>;
+  const { t } = useLanguage();
+  const d = t.startupDash;
+  if (r === "ready") return <Badge variant="success">{d.readyLabel}</Badge>;
+  if (r === "soon") return <Badge variant="warning">{d.soonLabel}</Badge>;
+  return <Badge variant="secondary">{d.notReadyLabel}</Badge>;
 }
 
-function TrajectoryIcon({ t }: { t: string }) {
-  if (t === "exceptional" || t === "strong")
+function TrajectoryIcon({ t: traj }: { t: string }) {
+  if (traj === "exceptional" || traj === "strong")
     return <TrendingUp className="w-4 h-4 text-green-500" />;
-  if (t === "moderate") return <Minus className="w-4 h-4 text-yellow-500" />;
+  if (traj === "moderate") return <Minus className="w-4 h-4 text-yellow-500" />;
   return <TrendingDown className="w-4 h-4 text-red-500" />;
 }
 
@@ -65,10 +65,12 @@ function TrajectoryIcon({ t }: { t: string }) {
 type Tab = "analyse" | "matchs" | "profil";
 
 function TabBar({ active, onChange }: { active: Tab; onChange: (t: Tab) => void }) {
+  const { t } = useLanguage();
+  const d = t.startupDash;
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
-    { id: "analyse", label: "Mon Analyse", icon: <BarChart3 className="w-4 h-4" /> },
-    { id: "matchs", label: "Mes Matchs", icon: <Target className="w-4 h-4" /> },
-    { id: "profil", label: "Mon Profil", icon: <User className="w-4 h-4" /> },
+    { id: "analyse", label: d.tabAnalyse, icon: <BarChart3 className="w-4 h-4" /> },
+    { id: "matchs", label: d.tabMatchs, icon: <Target className="w-4 h-4" /> },
+    { id: "profil", label: d.tabProfil, icon: <User className="w-4 h-4" /> },
   ];
   return (
     <div className="border-b border-slate-200 bg-white">
@@ -95,27 +97,27 @@ function TabBar({ active, onChange }: { active: Tab; onChange: (t: Tab) => void 
 /* ────────────────────────────────── empty state ── */
 
 function NoStartupState() {
+  const { t } = useLanguage();
+  const d = t.startupDash;
+  const features = [
+    { icon: <BarChart3 className="w-5 h-5 text-blue-600" />, title: d.feat1Title, desc: d.feat1Desc },
+    { icon: <Target className="w-5 h-5 text-blue-600" />, title: d.feat2Title, desc: d.feat2Desc },
+    { icon: <Users className="w-5 h-5 text-blue-600" />, title: d.feat3Title, desc: d.feat3Desc },
+  ];
   return (
     <div className="max-w-2xl mx-auto px-4 py-20 text-center">
       <div className="w-16 h-16 rounded-2xl bg-blue-50 border-2 border-blue-100 flex items-center justify-center mx-auto mb-6">
         <Zap className="w-8 h-8 text-blue-600" />
       </div>
-      <h2 className="text-2xl font-bold text-slate-900 mb-3">Bienvenue sur Alfred !</h2>
-      <p className="text-slate-500 mb-8 leading-relaxed">
-        Vous n&apos;avez pas encore soumis votre startup. Remplissez votre profil et laissez l&apos;IA trouver
-        les meilleurs VCs pour vous.
-      </p>
+      <h2 className="text-2xl font-bold text-slate-900 mb-3">{d.welcomeTitle}</h2>
+      <p className="text-slate-500 mb-8 leading-relaxed">{d.welcomeDesc}</p>
       <Link href="/startup/submit">
         <Button size="lg" className="gap-2 bg-blue-600 hover:bg-blue-700 font-semibold">
-          Analyser ma startup <ArrowRight className="w-4 h-4" />
+          {d.welcomeCta} <ArrowRight className="w-4 h-4" />
         </Button>
       </Link>
       <div className="mt-12 grid sm:grid-cols-3 gap-4 text-left">
-        {[
-          { icon: <BarChart3 className="w-5 h-5 text-blue-600" />, title: "Analyse financière IA", desc: "Claude analyse vos métriques et génère un rapport complet." },
-          { icon: <Target className="w-5 h-5 text-blue-600" />, title: "Matching automatique", desc: "Trouvez les VCs dont la thèse correspond à votre projet." },
-          { icon: <Users className="w-5 h-5 text-blue-600" />, title: "98+ VCs référencés", desc: "Base de données complète des fonds actifs en France." },
-        ].map((item) => (
+        {features.map((item) => (
           <div key={item.title} className="rounded-xl border border-slate-100 bg-slate-50 p-4">
             <div className="mb-2">{item.icon}</div>
             <p className="font-semibold text-slate-800 text-sm mb-1">{item.title}</p>
@@ -130,6 +132,8 @@ function NoStartupState() {
 /* ────────────────────────────────── tab: analyse ── */
 
 function AnalyseTab({ startup }: { startup: Startup }) {
+  const { t } = useLanguage();
+  const d = t.startupDash;
   const fa = startup.financial_analysis;
 
   if (!fa) {
@@ -138,14 +142,11 @@ function AnalyseTab({ startup }: { startup: Startup }) {
         <div className="w-14 h-14 rounded-2xl bg-amber-50 border-2 border-amber-100 flex items-center justify-center mx-auto mb-5">
           <BarChart3 className="w-7 h-7 text-amber-500" />
         </div>
-        <h3 className="text-lg font-bold text-slate-900 mb-2">Analyse non encore réalisée</h3>
-        <p className="text-slate-500 mb-6 max-w-md mx-auto text-sm">
-          Votre startup est enregistrée mais l&apos;analyse IA n&apos;a pas encore été lancée.
-          Déclenchez-la pour obtenir votre rapport financier et démarrer le matching.
-        </p>
+        <h3 className="text-lg font-bold text-slate-900 mb-2">{d.notDoneTitle}</h3>
+        <p className="text-slate-500 mb-6 max-w-md mx-auto text-sm">{d.notDoneDesc}</p>
         <Link href="/startup/submit">
           <Button className="gap-2 bg-blue-600 hover:bg-blue-700">
-            Lancer mon analyse <ArrowRight className="w-4 h-4" />
+            {d.notDoneCta} <ArrowRight className="w-4 h-4" />
           </Button>
         </Link>
       </div>
@@ -154,23 +155,21 @@ function AnalyseTab({ startup }: { startup: Startup }) {
 
   return (
     <div className="space-y-6">
-      {/* Score + readiness */}
       <Card className="border-blue-100 bg-blue-50/30">
         <CardHeader>
           <div className="flex items-center justify-between flex-wrap gap-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Zap className="w-5 h-5 text-blue-600" />
-              Rapport d&apos;analyse IA
+              {d.reportTitle}
             </CardTitle>
             <ReadinessBadge r={fa.investment_readiness} />
           </div>
           <CardDescription className="text-slate-600 leading-relaxed">{fa.summary}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
-          {/* Score de santé */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-slate-700">Score de santé financière</span>
+              <span className="text-sm font-medium text-slate-700">{d.healthScore}</span>
               <div className="flex items-center gap-2">
                 <TrajectoryIcon t={fa.growth_trajectory} />
                 <span className="text-xl font-bold text-slate-900">{fa.financial_health_score}/100</span>
@@ -179,32 +178,29 @@ function AnalyseTab({ startup }: { startup: Startup }) {
             <Progress value={fa.financial_health_score} className="h-2.5" />
           </div>
 
-          {/* Unit economics */}
           {fa.unit_economics && (
             <div className="bg-white rounded-xl p-4 border border-slate-100">
-              <p className="text-sm font-semibold text-slate-700 mb-1">Unit Economics</p>
+              <p className="text-sm font-semibold text-slate-700 mb-1">{d.unitEco}</p>
               <p className="text-base font-bold text-slate-900">
                 {fa.unit_economics.ltv_cac_ratio !== null
                   ? `Ratio LTV/CAC : ${fa.unit_economics.ltv_cac_ratio}x — ${fa.unit_economics.assessment}`
-                  : "Données insuffisantes"}
+                  : d.insufficientData}
               </p>
               <p className="text-sm text-slate-500 mt-1">{fa.unit_economics.comment}</p>
             </div>
           )}
 
-          {/* Burn efficiency */}
           {fa.burn_efficiency && (
             <div className="bg-white rounded-xl p-4 border border-slate-100">
-              <p className="text-sm font-semibold text-slate-700 mb-1">Efficacité du burn</p>
+              <p className="text-sm font-semibold text-slate-700 mb-1">{d.burnEff}</p>
               <p className="text-sm text-slate-600">{fa.burn_efficiency}</p>
             </div>
           )}
 
-          {/* Forces / Risques */}
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <p className="text-sm font-semibold text-green-700 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4" /> Points forts
+                <CheckCircle2 className="w-4 h-4" /> {d.strengths}
               </p>
               {fa.key_strengths.map((s: string, i: number) => (
                 <p key={i} className="text-sm text-slate-700 flex items-start gap-2">
@@ -214,7 +210,7 @@ function AnalyseTab({ startup }: { startup: Startup }) {
             </div>
             <div className="space-y-2">
               <p className="text-sm font-semibold text-red-700 flex items-center gap-1.5">
-                <AlertCircle className="w-4 h-4" /> Risques
+                <AlertCircle className="w-4 h-4" /> {d.risks}
               </p>
               {fa.key_risks.map((r: string, i: number) => (
                 <p key={i} className="text-sm text-slate-700 flex items-start gap-2">
@@ -232,13 +228,8 @@ function AnalyseTab({ startup }: { startup: Startup }) {
 /* ────────────────────────────────── tab: matchs ── */
 
 function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup }) {
-  const d = {
-    topMatch: "Top match",
-    unknown: "Inconnu",
-    ticket: "Ticket",
-    site: "Site",
-    contact: "Contacter",
-  };
+  const { t } = useLanguage();
+  const d = t.startupDash;
 
   if (matches.length === 0) {
     return (
@@ -246,11 +237,9 @@ function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup })
         <div className="w-14 h-14 rounded-2xl bg-slate-50 border-2 border-slate-200 flex items-center justify-center mx-auto mb-5">
           <Target className="w-7 h-7 text-slate-400" />
         </div>
-        <h3 className="text-lg font-bold text-slate-900 mb-2">Pas encore de matchs</h3>
+        <h3 className="text-lg font-bold text-slate-900 mb-2">{d.noMatchTitle}</h3>
         <p className="text-slate-500 text-sm max-w-sm mx-auto">
-          {startup.financial_analysis
-            ? "Le matching n'a pas encore été lancé. Soumettez à nouveau votre startup pour déclencher l'analyse."
-            : "Complétez d'abord votre analyse financière pour obtenir vos matchs VC."}
+          {startup.financial_analysis ? d.noMatchDesc1 : d.noMatchDesc2}
         </p>
       </div>
     );
@@ -258,7 +247,7 @@ function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup })
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-slate-500">{matches.length} VC{matches.length > 1 ? "s" : ""} matchés</p>
+      <p className="text-sm text-slate-500">{matches.length} {d.matchedVCs}</p>
       {matches.map((match: any, i: number) => {
         const vc = match.venture_capital;
         return (
@@ -267,8 +256,8 @@ function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup })
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2 flex-wrap">
-                    {i === 0 && <Badge variant="default" className="text-xs">🏆 Top match</Badge>}
-                    <h3 className="font-semibold text-slate-900">{vc?.name ?? d.unknown}</h3>
+                    {i === 0 && <Badge variant="default" className="text-xs">🏆 {d.topMatch}</Badge>}
+                    <h3 className="font-semibold text-slate-900">{vc?.name ?? d.unknownVC}</h3>
                     <ScoreBadge score={match.score} />
                   </div>
                   <p className="text-sm text-slate-600 italic mb-3">&ldquo;{match.analysis}&rdquo;</p>
@@ -284,7 +273,7 @@ function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup })
                   )}
                   {vc && (
                     <p className="text-xs text-slate-400">
-                      Ticket : {vc.ticket_min?.toLocaleString("fr-FR")} € — {vc.ticket_max?.toLocaleString("fr-FR")} €
+                      {d.ticket} : {vc.ticket_min?.toLocaleString("fr-FR")} € — {vc.ticket_max?.toLocaleString("fr-FR")} €
                     </p>
                   )}
                 </div>
@@ -292,14 +281,14 @@ function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup })
                   {vc?.website && (
                     <a href={vc.website} target="_blank" rel="noreferrer">
                       <Button size="sm" variant="outline" className="gap-1">
-                        <ExternalLink className="w-3 h-3" /> Site
+                        <ExternalLink className="w-3 h-3" /> {d.site}
                       </Button>
                     </a>
                   )}
                   {vc?.contact_email && (
                     <a href={`mailto:${vc.contact_email}`}>
                       <Button size="sm" className="gap-1">
-                        <Mail className="w-3 h-3" /> Contacter
+                        <Mail className="w-3 h-3" /> {d.contact}
                       </Button>
                     </a>
                   )}
@@ -316,20 +305,22 @@ function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup })
 /* ────────────────────────────────── tab: profil ── */
 
 function ProfilTab({ startup }: { startup: Startup }) {
+  const { t } = useLanguage();
+  const d = t.startupDash;
+
   const fields = [
-    { label: "Secteur", value: startup.sector },
-    { label: "Stade", value: startup.stage },
-    { label: "Montant recherché", value: startup.amount_sought ? `${startup.amount_sought.toLocaleString("fr-FR")} €` : null },
-    { label: "Année de création", value: (startup as any).founded_year },
-    { label: "Taille équipe", value: (startup as any).team_size ? `${(startup as any).team_size} personnes` : null },
-    { label: "MRR", value: (startup as any).mrr ? `${Number((startup as any).mrr).toLocaleString("fr-FR")} €/mois` : null },
-    { label: "Site web", value: startup.website },
-    { label: "Email contact", value: startup.contact_email },
+    { label: d.sectorLabel, value: startup.sector },
+    { label: d.stageLabel, value: startup.stage },
+    { label: d.amountLabel, value: startup.amount_sought ? `${startup.amount_sought.toLocaleString("fr-FR")} €` : null },
+    { label: d.foundedLabel, value: (startup as any).founded_year },
+    { label: d.teamLabel, value: (startup as any).team_size ? `${(startup as any).team_size} ${d.teamSize}` : null },
+    { label: d.mrrLabel, value: (startup as any).mrr ? `${Number((startup as any).mrr).toLocaleString("fr-FR")} €/mois` : null },
+    { label: d.websiteLabel, value: startup.website },
+    { label: d.emailLabel, value: startup.contact_email },
   ];
 
   return (
     <div className="space-y-5">
-      {/* Header */}
       <Card>
         <CardContent className="p-6">
           <div className="flex items-start gap-4">
@@ -348,16 +339,15 @@ function ProfilTab({ startup }: { startup: Startup }) {
         </CardContent>
       </Card>
 
-      {/* Infos */}
       <Card>
-        <CardHeader><CardTitle className="text-base">Informations</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">{d.infoTitle}</CardTitle></CardHeader>
         <CardContent>
           <dl className="divide-y divide-slate-100">
             {fields.filter(f => f.value).map((f) => (
               <div key={f.label} className="flex items-center justify-between py-3">
                 <dt className="text-sm text-slate-500">{f.label}</dt>
                 <dd className="text-sm font-medium text-slate-800 text-right max-w-[60%] truncate">
-                  {f.label === "Site web" ? (
+                  {f.label === d.websiteLabel ? (
                     <a href={f.value as string} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
                       <Globe className="w-3 h-3" /> {f.value}
                     </a>
@@ -369,11 +359,11 @@ function ProfilTab({ startup }: { startup: Startup }) {
         </CardContent>
       </Card>
 
-      {/* Problem / Solution */}
-      {[(startup as any).problem && { label: "Problème", value: (startup as any).problem },
-        (startup as any).solution && { label: "Solution", value: (startup as any).solution },
-        (startup as any).market_size && { label: "Taille de marché", value: (startup as any).market_size },
-        (startup as any).traction && { label: "Traction", value: (startup as any).traction },
+      {[
+        (startup as any).problem && { label: d.problemLabel, value: (startup as any).problem },
+        (startup as any).solution && { label: d.solutionLabel, value: (startup as any).solution },
+        (startup as any).market_size && { label: d.marketLabel, value: (startup as any).market_size },
+        (startup as any).traction && { label: d.tractionLabel, value: (startup as any).traction },
       ].filter(Boolean).map((item: any) => (
         <Card key={item.label}>
           <CardHeader><CardTitle className="text-base">{item.label}</CardTitle></CardHeader>
@@ -386,7 +376,7 @@ function ProfilTab({ startup }: { startup: Startup }) {
       <div className="pt-2">
         <Link href="/startup/submit">
           <Button variant="outline" className="gap-2">
-            Modifier mon profil <ArrowRight className="w-4 h-4" />
+            {d.editBtn} <ArrowRight className="w-4 h-4" />
           </Button>
         </Link>
       </div>
@@ -401,8 +391,10 @@ function DashboardContent() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>("analyse");
-  const { user, loading: authLoading, signOut } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
+  const { t } = useLanguage();
+  const d = t.startupDash;
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -413,7 +405,6 @@ function DashboardContent() {
   useEffect(() => {
     if (!user) return;
     async function load() {
-      // Charger la startup liée à ce user
       const { data: s } = await supabase
         .from("startups")
         .select("*")
@@ -439,7 +430,7 @@ function DashboardContent() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-3">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto" />
-          <p className="text-slate-400 text-sm">Chargement…</p>
+          <p className="text-slate-400 text-sm">{d.loading}</p>
         </div>
       </div>
     );
@@ -465,6 +456,7 @@ function DashboardContent() {
 
 function DashboardNavbar() {
   const { signOut } = useAuth();
+  const { t } = useLanguage();
   return (
     <nav className="border-b border-slate-100 bg-white sticky top-0 z-50">
       <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
@@ -477,7 +469,7 @@ function DashboardNavbar() {
         <div className="flex items-center gap-3">
           <LanguageToggle />
           <Button variant="ghost" size="sm" onClick={signOut} className="text-slate-400 hover:text-slate-700 text-xs">
-            Se déconnecter
+            {t.startupDash.signOut}
           </Button>
         </div>
       </div>
