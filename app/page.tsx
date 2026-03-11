@@ -37,16 +37,18 @@ export default function Home() {
             <Link href="/about">
               <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900">{t.nav.about}</Button>
             </Link>
-            <Link href="/vc/register">
-              <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900">{t.nav.isVC}</Button>
-            </Link>
           </div>
           <div className="flex items-center gap-2">
             <LanguageToggle />
             <NavbarLoginButton className="text-slate-600 hover:text-slate-900" />
             <Link href="/startup/submit">
+              <Button variant="outline" size="sm" className="hidden sm:flex gap-1.5 border-blue-200 text-blue-700 hover:bg-blue-50 font-semibold">
+                Je suis une startup
+              </Button>
+            </Link>
+            <Link href="/vc/register">
               <Button size="sm" className="hidden sm:flex gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-sm">
-                {l.ctaStartup} <ArrowRight className="w-3.5 h-3.5" />
+                Je suis un VC
               </Button>
             </Link>
           </div>
