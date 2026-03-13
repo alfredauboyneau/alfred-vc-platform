@@ -328,6 +328,41 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="bg-white py-18">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="premium-card section-frame rounded-[30px] border border-slate-200/70 p-8 sm:p-10">
+            <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+              <div>
+                <p className="eyebrow mb-4">{l.privacy.eyebrow}</p>
+                <h2 className="headline-balance text-3xl sm:text-4xl font-bold tracking-tight text-slate-950 mb-4">
+                  {l.privacy.title}
+                </h2>
+                <p className="max-w-xl text-base leading-7 text-slate-600">{l.privacy.desc}</p>
+                <Link href="/privacy" className="inline-flex items-center gap-1.5 mt-6 text-sm text-blue-600 hover:text-blue-700 font-medium">
+                  {l.privacy.cta} <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-3">
+                {l.privacy.points.map((point, index) => (
+                  <div key={point} className="rounded-[24px] border border-slate-200/80 bg-slate-50/80 p-5">
+                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/70">
+                      {index === 0 ? (
+                        <ShieldCheck className="w-5 h-5 text-blue-700" />
+                      ) : index === 1 ? (
+                        <LockKeyhole className="w-5 h-5 text-blue-700" />
+                      ) : (
+                        <FileSpreadsheet className="w-5 h-5 text-blue-700" />
+                      )}
+                    </div>
+                    <p className="text-sm leading-6 text-slate-700">{point}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="bg-slate-950 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 max-w-3xl">

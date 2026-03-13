@@ -17,7 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/lib/supabase";
 import { toast } from "@/components/ui/use-toast";
-import { ArrowLeft, ArrowRight, Loader2, Zap, CheckCircle2, Upload, FileText, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, Zap, CheckCircle2, Upload, FileText, X, ShieldCheck, LockKeyhole } from "lucide-react";
 import Link from "next/link";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
@@ -251,6 +251,35 @@ export default function StartupSubmitPage() {
               {s.n < 3 && <div className="w-8 h-px bg-gray-200 mx-1" />}
             </div>
           ))}
+        </div>
+
+        <div className="mb-8 rounded-[28px] border border-slate-200/80 bg-white p-6 shadow-[0_16px_40px_rgba(15,23,42,0.04)]">
+          <div className="flex items-start gap-4">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50">
+              <ShieldCheck className="w-5 h-5 text-blue-700" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-lg font-semibold tracking-tight text-slate-950">{s.privacy.title}</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-600">{s.privacy.desc}</p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                {s.privacy.points.map((point, index) => (
+                  <div key={point} className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4">
+                    <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/70">
+                      {index === 1 ? (
+                        <LockKeyhole className="w-4 h-4 text-blue-700" />
+                      ) : (
+                        <ShieldCheck className="w-4 h-4 text-blue-700" />
+                      )}
+                    </div>
+                    <p className="text-sm leading-6 text-slate-700">{point}</p>
+                  </div>
+                ))}
+              </div>
+              <Link href="/privacy" className="inline-flex items-center gap-1.5 mt-4 text-sm text-blue-600 hover:text-blue-700 font-medium">
+                {s.privacy.cta} <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
         </div>
 
         {/* Étape 1 — Profil */}
