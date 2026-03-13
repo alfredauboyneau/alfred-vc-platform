@@ -258,7 +258,7 @@ export default function Home() {
       <section className="bg-white py-18">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="premium-card section-frame rounded-[30px] border border-slate-200/70 p-8 sm:p-10">
-            <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+            <div className="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-start">
               <div>
                 <p className="eyebrow mb-4">{l.privacy.eyebrow}</p>
                 <h2 className="headline-balance text-3xl sm:text-4xl font-bold tracking-tight text-slate-950 mb-4">
@@ -269,21 +269,11 @@ export default function Home() {
                   {l.privacy.cta} <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
-              <div className="grid gap-4 sm:grid-cols-3">
-                {l.privacy.points.map((point, index) => (
-                  <div key={point} className="rounded-[24px] border border-slate-200/80 bg-slate-50/80 p-5">
-                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/70">
-                      {index === 0 ? (
-                        <ShieldCheck className="w-5 h-5 text-blue-700" />
-                      ) : index === 1 ? (
-                        <LockKeyhole className="w-5 h-5 text-blue-700" />
-                      ) : (
-                        <FileSpreadsheet className="w-5 h-5 text-blue-700" />
-                      )}
-                    </div>
-                    <p className="text-sm leading-6 text-slate-700">{point}</p>
-                  </div>
-                ))}
+              <div className="rounded-[26px] border border-blue-100/80 bg-blue-50/80 p-6">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-blue-100">
+                  <ShieldCheck className="w-5 h-5 text-blue-700" />
+                </div>
+                <p className="text-base leading-7 text-slate-800">{l.privacy.access}</p>
               </div>
             </div>
           </div>
@@ -357,6 +347,20 @@ export default function Home() {
               {l.ctaBtn} <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
+          <div className="mt-10 flex flex-wrap justify-center gap-2">
+            {l.privacy.points.map((point, index) => (
+              <span key={point} className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-slate-50 px-3 py-1.5 text-xs text-slate-600">
+                {index === 0 ? (
+                  <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
+                ) : index === 1 ? (
+                  <LockKeyhole className="w-3.5 h-3.5 text-blue-600" />
+                ) : (
+                  <FileSpreadsheet className="w-3.5 h-3.5 text-blue-600" />
+                )}
+                {point}
+              </span>
+            ))}
+          </div>
           <p className="mt-6 text-sm text-slate-400">{footerNote}</p>
         </div>
       </section>

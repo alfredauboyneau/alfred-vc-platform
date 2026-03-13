@@ -77,6 +77,7 @@ export const translations = {
         eyebrow: "Confidentialité",
         title: "Les informations de votre startup ne sont pas exposées publiquement",
         desc: "Les données saisies servent à générer votre rapport et votre matching. Elles ne sont pas publiées automatiquement à des tiers sans action de votre part.",
+        access: "La startup qui soumet ses informations conserve l'accès à ses données et au rapport généré depuis son espace.",
         points: [
           "Accès réservé aux espaces authentifiés",
           "Utilisation limitée à l'analyse, au matching et à votre tableau de bord",
@@ -321,6 +322,7 @@ export const translations = {
       privacy: {
         title: "Avant de soumettre",
         desc: "Vos informations restent dans votre espace produit et servent uniquement à générer l'analyse, le matching et le rendu associé.",
+        access: "La startup qui soumet ses informations garde l'accès à ses données et au rapport généré depuis son espace.",
         points: [
           "Pas de publication automatique à des fonds ou à des tiers",
           "Accès restreint aux utilisateurs authentifiés",
@@ -642,6 +644,7 @@ export const translations = {
         eyebrow: "Confidentiality",
         title: "Your startup information is not exposed publicly",
         desc: "Submitted data is used to generate your report and matching output. It is not automatically published to third parties without action from you.",
+        access: "The startup that submits its information keeps access to its data and generated report from its own workspace.",
         points: [
           "Access restricted to authenticated workspaces",
           "Use limited to analysis, matching and your dashboard",
@@ -886,6 +889,7 @@ export const translations = {
       privacy: {
         title: "Before you submit",
         desc: "Your information stays inside your product workspace and is only used to generate the analysis, matching and related output.",
+        access: "The startup that submits the file keeps access to its data and generated report from its own workspace.",
         points: [
           "No automatic publication to funds or third parties",
           "Access restricted to authenticated users",

@@ -261,6 +261,9 @@ export default function StartupSubmitPage() {
             <div className="min-w-0 flex-1">
               <h2 className="text-lg font-semibold tracking-tight text-slate-950">{s.privacy.title}</h2>
               <p className="mt-2 text-sm leading-6 text-slate-600">{s.privacy.desc}</p>
+              <div className="mt-4 rounded-2xl border border-blue-100/80 bg-blue-50/80 p-4">
+                <p className="text-sm leading-6 text-slate-800">{s.privacy.access}</p>
+              </div>
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
                 {s.privacy.points.map((point, index) => (
                   <div key={point} className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4">
