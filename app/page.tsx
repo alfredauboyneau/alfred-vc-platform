@@ -13,7 +13,6 @@ import {
   ShieldCheck,
   FileSpreadsheet,
   LockKeyhole,
-  ScanSearch,
 } from "lucide-react";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
 import { NavbarLoginButton } from "@/components/navbar-login-button";
@@ -22,42 +21,6 @@ import { MarketingFooter } from "@/components/marketing-footer";
 export default function Home() {
   const { t, lang } = useLanguage();
   const l = t.landing;
-  const trustItems =
-    lang === "en"
-      ? [
-          {
-            title: "Method first",
-            desc: "Startup data, financial analysis, thesis fit and ticket are scored in sequence.",
-            icon: <ScanSearch className="w-5 h-5 text-blue-700" />,
-          },
-          {
-            title: "Readable output",
-            desc: "Every match comes with a short rationale, not just a score.",
-            icon: <FileSpreadsheet className="w-5 h-5 text-blue-700" />,
-          },
-          {
-            title: "Sensitive data handled carefully",
-            desc: "Financial data is used to generate the report and matching output, then kept in your workspace.",
-            icon: <LockKeyhole className="w-5 h-5 text-blue-700" />,
-          },
-        ]
-      : [
-          {
-            title: "Une méthode avant la promesse",
-            desc: "Données startup, analyse financière, thèse d'investissement et ticket sont évalués séquentiellement.",
-            icon: <ScanSearch className="w-5 h-5 text-blue-700" />,
-          },
-          {
-            title: "Un rendu lisible",
-            desc: "Chaque match est accompagné d'une justification courte, pas uniquement d'un score.",
-            icon: <FileSpreadsheet className="w-5 h-5 text-blue-700" />,
-          },
-          {
-            title: "Des données sensibles traitées proprement",
-            desc: "Les données financières servent à générer le rapport et le matching, puis restent dans votre espace.",
-            icon: <LockKeyhole className="w-5 h-5 text-blue-700" />,
-          },
-        ];
   const methodItems =
     lang === "en"
       ? [
@@ -139,42 +102,6 @@ export default function Home() {
             },
           ],
           note: "Exemple détaillé du rapport sur la page process",
-        };
-  const pipelineCopy =
-    lang === "en"
-      ? {
-          label: "Product output",
-          title: "A product flow designed to reach a clear deliverable",
-          subtitle: "Each block has one role: structure the file, produce a readable review, then rank the right funds.",
-        }
-      : {
-          label: "Rendu produit",
-          title: "Un flux pensé pour aboutir à un livrable clair",
-          subtitle: "Chaque bloc a une fonction précise : structurer le dossier, produire une revue lisible, puis classer les bons fonds.",
-        };
-  const credibilityCopy =
-    lang === "en"
-      ? {
-          title: "Built to stand up to scrutiny",
-          subtitle: "The product is designed to stay explainable, bounded and usable in a real fundraising workflow.",
-          badge: "Why it holds up",
-        }
-      : {
-          title: "Conçu pour résister à la lecture critique",
-          subtitle: "Le produit est pensé pour rester explicable, cadré et exploitable dans un vrai workflow de levée.",
-          badge: "Pourquoi ça tient",
-        };
-  const processCopy =
-    lang === "en"
-      ? {
-          label: "In three decisions",
-          title: "Simple for the founder, disciplined for the output",
-          subtitle: "No unnecessary branching. Alfred follows one sequence from intake to ranking.",
-        }
-      : {
-          label: "En trois décisions",
-          title: "Simple pour le fondateur, rigoureux pour le rendu",
-          subtitle: "Pas de détour inutile. Alfred suit une seule séquence, de l'intake au classement.",
         };
   const trustBand =
     lang === "en"
@@ -363,31 +290,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-slate-950 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 max-w-3xl">
-            <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.22em] text-blue-300">{credibilityCopy.badge}</p>
-            <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-white tracking-tight mb-4">{credibilityCopy.title}</h2>
-            <p className="max-w-2xl leading-relaxed text-slate-300">{credibilityCopy.subtitle}</p>
-          </div>
-          <div className="grid gap-5 md:grid-cols-3">
-            {trustItems.map((item) => (
-              <div key={item.title} className="rounded-[28px] border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm">
-                <div className="mb-4 inline-flex rounded-2xl bg-white/8 p-3 ring-1 ring-white/10">{item.icon}</div>
-                <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-300">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="bg-slate-50/80 py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
-            <p className="eyebrow mb-4">{processCopy.label}</p>
-            <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-slate-900 mb-4 tracking-tight">{processCopy.title}</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto">{processCopy.subtitle}</p>
+            <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-slate-900 mb-4 tracking-tight">{l.howTitle}</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">{l.howSubtitle}</p>
+            <Link href="/how-it-works" className="inline-flex items-center gap-1.5 mt-5 text-sm text-blue-600 hover:text-blue-700 font-medium">
+              {t.nav.seeProcess} <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
             {methodItems.map((item) => (
@@ -400,37 +310,6 @@ export default function Home() {
                 </div>
                 <h3 className="text-xl font-semibold tracking-tight text-slate-950">{item.title}</h3>
                 <p className="mt-3 text-sm leading-7 text-slate-600">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-16 max-w-3xl">
-            <p className="eyebrow mb-4">{pipelineCopy.label}</p>
-            <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-slate-900 mb-4 tracking-tight">{pipelineCopy.title}</h2>
-            <p className="text-slate-500 max-w-2xl">{pipelineCopy.subtitle}</p>
-            <Link href="/how-it-works" className="inline-flex items-center gap-1.5 mt-5 text-sm text-blue-600 hover:text-blue-700 font-medium">
-              {t.nav.seeProcess} <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-5">
-            {[
-              { step: "01", icon: <BarChart3 className="w-5 h-5 text-blue-600" />, ...l.steps[0] },
-              { step: "02", icon: <Brain className="w-5 h-5 text-blue-600" />, ...l.steps[1] },
-              { step: "03", icon: <Target className="w-5 h-5 text-blue-600" />, ...l.steps[2] },
-            ].map((item) => (
-              <div key={item.step} className="group relative rounded-[28px] border border-slate-200/80 bg-slate-50/70 p-8 transition-all duration-300 hover:border-blue-200">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-sm">
-                    {item.icon}
-                  </div>
-                  <span className="text-5xl font-bold text-slate-200 select-none transition-colors group-hover:text-blue-100">{item.step}</span>
-                </div>
-                <h3 className="font-semibold text-slate-900 text-lg mb-2 tracking-tight">{item.title}</h3>
-                <p className="text-slate-500 text-sm leading-7">{item.desc}</p>
               </div>
             ))}
           </div>
