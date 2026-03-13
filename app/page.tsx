@@ -103,12 +103,12 @@ export default function Home() {
           subtitle: "Not a black box. Alfred produces a financial summary and a ranked shortlist with explanations.",
           report: "Financial report",
           score: "Health score",
-          strengths: "Key strengths",
-          risks: "Key risks",
-          fit: "VC shortlist",
+          strengths: "Strengths",
+          risks: "Watchpoints",
+          fit: "Fund shortlist",
           fitDesc: "Ranked by score, stage fit, sector fit and ticket range.",
-          scorecard: "Alfred scorecard",
-          topFunds: "3 top funds",
+          scorecard: "Alfred summary",
+          topFunds: "3 priority funds",
           strengthItems: ["MoM growth +14%", "LTV/CAC above 3x", "B2B SaaS gross margin 78%"],
           riskItems: ["Runway under 12 months", "Ticket fit concentrated on Seed funds"],
           bullets: [
@@ -122,11 +122,11 @@ export default function Home() {
           subtitle: "Pas une boite noire. Alfred produit une synthese financiere et une shortlist classee avec explications.",
           report: "Rapport financier",
           score: "Score sante",
-          strengths: "Points forts",
-          risks: "Points de vigilance",
-          fit: "Shortlist VC",
+          strengths: "Forces cles",
+          risks: "Points d'attention",
+          fit: "Shortlist fonds",
           fitDesc: "Classement par score, adequation stade, secteur et ticket.",
-          scorecard: "Scorecard Alfred",
+          scorecard: "Synthese Alfred",
           topFunds: "3 fonds prioritaires",
           strengthItems: ["Croissance mensuelle +14 %", "LTV/CAC superieur a 3x", "Marge brute SaaS B2B de 78 %"],
           riskItems: ["Runway inferieure a 12 mois", "Fit ticket concentre sur des fonds Seed"],
@@ -221,7 +221,7 @@ export default function Home() {
           style={{ backgroundImage: "linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(to right, #e2e8f0 1px, transparent 1px)", backgroundSize: "64px 64px" }} />
         <div className="absolute top-0 right-[8%] w-[520px] h-[320px] bg-blue-100/70 rounded-full blur-[80px] pointer-events-none" />
 
-        <div className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-12 lg:grid-cols-[1.16fr_0.84fr] lg:items-center">
           {/* Badge */}
           <div>
             <div className="inline-flex items-center gap-2 mb-7 px-4 py-1.5 rounded-full border border-blue-200/80 bg-white/85 text-blue-700 text-xs font-semibold tracking-widest uppercase shadow-sm">
@@ -263,8 +263,8 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative">
-            <div className="premium-card section-frame rounded-[28px] border border-slate-200/70 p-5">
+          <div className="relative lg:max-w-[31rem] lg:ml-auto">
+            <div className="premium-card section-frame rounded-[28px] border border-slate-200/70 p-5 sm:p-6">
               <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div>
                   <p className="eyebrow">
@@ -272,7 +272,7 @@ export default function Home() {
                   </p>
                   <p className="mt-2 text-lg font-semibold text-slate-900">{previewCopy.scorecard}</p>
                 </div>
-                <div className="rounded-2xl bg-emerald-50 px-4 py-3 text-right ring-1 ring-emerald-100">
+                <div className="rounded-2xl bg-emerald-50 px-4 py-3 text-right ring-1 ring-emerald-100 min-w-[9rem]">
                   <p className="text-xs text-emerald-700">{previewCopy.score}</p>
                   <p className="text-2xl font-bold text-emerald-800">81/100</p>
                 </div>
@@ -283,7 +283,7 @@ export default function Home() {
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
                     {previewCopy.strengths}
                   </p>
-                  <ul className="mt-3 space-y-2 text-sm text-slate-700">
+                  <ul className="mt-3 space-y-2 text-[15px] leading-relaxed text-slate-700">
                     {previewCopy.strengthItems.map((item) => (
                       <li key={item} className="flex gap-2">
                         <CheckCircle2 className="mt-0.5 w-4 h-4 text-emerald-600 shrink-0" />
@@ -297,7 +297,7 @@ export default function Home() {
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-amber-700">
                     {previewCopy.risks}
                   </p>
-                  <ul className="mt-3 space-y-2 text-sm text-slate-700">
+                  <ul className="mt-3 space-y-2 text-[15px] leading-relaxed text-slate-700">
                     {previewCopy.riskItems.map((item) => (
                       <li key={item} className="flex gap-2">
                         <Target className="mt-0.5 w-4 h-4 text-amber-600 shrink-0" />
@@ -314,7 +314,7 @@ export default function Home() {
                     <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-700">
                       {previewCopy.fit}
                     </p>
-                    <p className="mt-1 text-sm text-slate-700">{previewCopy.fitDesc}</p>
+                    <p className="mt-1 text-[15px] leading-relaxed text-slate-700">{previewCopy.fitDesc}</p>
                   </div>
                   <div className="shrink-0 rounded-full bg-white px-3 py-1 text-sm font-semibold text-blue-700 shadow-sm">
                     {previewCopy.topFunds}
@@ -322,7 +322,7 @@ export default function Home() {
                 </div>
                 <div className="mt-4 space-y-2">
                   {["Partech", "Kima Ventures", "Alven"].map((fund, index) => (
-                    <div key={fund} className="flex items-center justify-between rounded-xl bg-white px-3 py-2 text-sm text-slate-700 shadow-sm ring-1 ring-slate-100">
+                    <div key={fund} className="flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-sm text-slate-700 shadow-sm ring-1 ring-slate-100">
                       <span className="flex items-center gap-2">
                         <Building2 className="w-4 h-4 text-blue-600" />
                         {fund}
@@ -335,7 +335,7 @@ export default function Home() {
 
               <div className="mt-4 space-y-2 rounded-2xl bg-slate-950 p-4 text-sm text-slate-200 shadow-[0_18px_38px_rgba(15,23,42,0.24)]">
                 {previewCopy.bullets.map((item) => (
-                  <div key={item} className="flex gap-2">
+                  <div key={item} className="flex gap-2 leading-relaxed">
                     <SearchCheck className="mt-0.5 w-4 h-4 text-blue-300 shrink-0" />
                     <span>{item}</span>
                   </div>
