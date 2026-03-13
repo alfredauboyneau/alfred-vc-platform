@@ -104,7 +104,7 @@ function TabBar({ active, onChange }: { active: Tab; onChange: (t: Tab) => void 
 /* ────────────────────────────────── no vc state ── */
 
 function NoVCState() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const d = t.vcDash;
   const features = [
     { icon: <Filter className="w-5 h-5 text-blue-600" />, title: d.feat1Title, desc: d.feat1Desc },
@@ -116,7 +116,7 @@ function NoVCState() {
       <div className="premium-card section-frame overflow-hidden rounded-[2rem] border border-slate-200/70 p-8 sm:p-10">
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
           <div>
-            <p className="eyebrow mb-4">VC workspace</p>
+            <p className="eyebrow mb-4">{lang === "en" ? "VC workspace" : "Espace VC"}</p>
             <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
               <Building2 className="w-8 h-8 text-blue-600" />
             </div>
@@ -131,7 +131,7 @@ function NoVCState() {
             </Link>
           </div>
           <div className="marketing-surface rounded-[1.75rem] border border-slate-200/70 p-5 sm:p-6">
-            <p className="eyebrow mb-4">Designed for triage</p>
+            <p className="eyebrow mb-4">{lang === "en" ? "Designed for triage" : "Conçu pour le tri"}</p>
             <div className="space-y-4 text-left">
         {features.map((item) => (
               <div key={item.title} className="rounded-2xl bg-white/85 p-4 shadow-sm">
@@ -216,7 +216,7 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
 
       <Card className="premium-card rounded-[1.75rem] border border-slate-200/70 shadow-none">
         <CardHeader className="pb-3">
-          <p className="eyebrow">Pipeline filters</p>
+          <p className="eyebrow">{lang === "en" ? "Pipeline filters" : "Filtres du pipeline"}</p>
           <CardTitle className="text-sm flex items-center gap-2 text-slate-700">
             <Filter className="w-4 h-4" /> {d.filtersTitle}
           </CardTitle>
@@ -418,7 +418,7 @@ function ProfilVCTab({ vc }: { vc: any }) {
 
       <Card className="premium-card rounded-[1.75rem] border border-slate-200/70 shadow-none">
         <CardHeader>
-          <p className="eyebrow">Investment profile</p>
+          <p className="eyebrow">{lang === "en" ? "Investment profile" : "Profil d'investissement"}</p>
           <CardTitle className="text-base">{d.criteria}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">

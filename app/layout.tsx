@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Alfred — Qualification startup x VC",
   description:
-    "Alfred structure les donnees startup, genere une revue financiere lisible et classe les fonds francais compatibles.",
+    "Alfred structure les données startup, génère une revue financière lisible et classe les fonds français compatibles.",
 };
 
 export default function RootLayout({

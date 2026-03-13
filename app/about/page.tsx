@@ -39,15 +39,15 @@ export default function AboutPage() {
       : [
           {
             title: "Explicable par construction",
-            desc: "Alfred doit produire un rendu qu'un fondateur ou un investisseur peut lire, challenger et reutiliser.",
+            desc: "Alfred doit produire un rendu qu'un fondateur ou un investisseur peut lire, challenger et réutiliser.",
           },
           {
-            title: "Concu d'abord pour le marche francais",
-            desc: "Le produit est pense autour des theses VC francaises, des stades et des logiques de ticket avant toute extension.",
+            title: "Conçu d'abord pour le marché français",
+            desc: "Le produit est pensé autour des thèses VC françaises, des stades et des logiques de ticket avant toute extension.",
           },
           {
             title: "Qualifier avant de prospecter",
-            desc: "L'objectif n'est pas d'automatiser plus de bruit, mais d'ameliorer la pertinence avant toute prise de contact.",
+            desc: "L'objectif n'est pas d'automatiser plus de bruit, mais d'améliorer la pertinence avant toute prise de contact.",
           },
         ];
 

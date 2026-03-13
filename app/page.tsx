@@ -45,18 +45,18 @@ export default function Home() {
         ]
       : [
           {
-            title: "Une methode avant la promesse",
-            desc: "Donnees startup, analyse financiere, these d'investissement et ticket sont evalues sequentiellement.",
+            title: "Une méthode avant la promesse",
+            desc: "Données startup, analyse financière, thèse d'investissement et ticket sont évalués séquentiellement.",
             icon: <ScanSearch className="w-5 h-5 text-blue-700" />,
           },
           {
             title: "Un rendu lisible",
-            desc: "Chaque match est accompagne d'une justification courte, pas uniquement d'un score.",
+            desc: "Chaque match est accompagné d'une justification courte, pas uniquement d'un score.",
             icon: <FileSpreadsheet className="w-5 h-5 text-blue-700" />,
           },
           {
-            title: "Des donnees sensibles traitees proprement",
-            desc: "Les donnees financieres servent a generer le rapport et le matching, puis restent dans votre espace.",
+            title: "Des données sensibles traitées proprement",
+            desc: "Les données financières servent à générer le rapport et le matching, puis restent dans votre espace.",
             icon: <LockKeyhole className="w-5 h-5 text-blue-700" />,
           },
         ];
@@ -83,17 +83,17 @@ export default function Home() {
           {
             step: "01",
             title: "Intake startup",
-            desc: "Les donnees societe, les metriques et le contexte de levee sont structures au meme endroit.",
+            desc: "Les données société, les métriques et le contexte de levée sont structurées au même endroit.",
           },
           {
             step: "02",
-            title: "Revue financiere",
-            desc: "Claude genere un rapport sur la sante, les forces, les risques et la maturite d'investissement.",
+            title: "Revue financière",
+            desc: "Claude génère un rapport sur la santé, les forces, les risques et la maturité d'investissement.",
           },
           {
             step: "03",
             title: "Scoring de fit VC",
-            desc: "Les fonds sont filtres par these, stade et ticket avant le classement final.",
+            desc: "Les fonds sont filtrés par thèse, stade et ticket avant le classement final.",
           },
         ];
   const previewCopy =
@@ -118,22 +118,22 @@ export default function Home() {
           ],
         }
       : {
-          title: "Ce que le fondateur recoit vraiment",
-          subtitle: "Pas une boite noire. Alfred produit une synthese financiere et une shortlist classee avec explications.",
+          title: "Ce que le fondateur reçoit vraiment",
+          subtitle: "Pas une boîte noire. Alfred produit une synthèse financière et une shortlist classée avec explications.",
           report: "Rapport financier",
-          score: "Score sante",
-          strengths: "Forces cles",
+          score: "Score de santé",
+          strengths: "Forces clés",
           risks: "Points d'attention",
           fit: "Shortlist fonds",
-          fitDesc: "Classement par score, adequation stade, secteur et ticket.",
-          scorecard: "Synthese Alfred",
+          fitDesc: "Classement par score, adéquation au stade, secteur et ticket.",
+          scorecard: "Synthèse Alfred",
           topFunds: "3 fonds prioritaires",
-          strengthItems: ["Croissance mensuelle +14 %", "LTV/CAC superieur a 3x", "Marge brute SaaS B2B de 78 %"],
-          riskItems: ["Runway inferieure a 12 mois", "Fit ticket concentre sur des fonds Seed"],
+          strengthItems: ["Croissance mensuelle +14 %", "LTV/CAC supérieur à 3x", "Marge brute SaaS B2B de 78 %"],
+          riskItems: ["Runway inférieur à 12 mois", "Ticket concentré sur des fonds Seed"],
           bullets: [
-            "Score de sante financiere de 0 a 100",
-            "Justification courte pour chaque fonds recommande",
-            "Rendu lisible a partager avec advisors ou investisseurs",
+            "Score de santé financière de 0 à 100",
+            "Justification courte pour chaque fonds recommandé",
+            "Rendu lisible à partager avec advisors ou investisseurs",
           ],
         };
   const pipelineCopy =
@@ -145,8 +145,8 @@ export default function Home() {
         }
       : {
           label: "Workflow produit",
-          title: "Comment Alfred transforme des donnees brutes en rendu exploitable pour la levee",
-          subtitle: "Le parcours reste simple pour le fondateur, mais le rendu est pense pour rester lisible par les advisors, les operateurs et les fonds.",
+          title: "Comment Alfred transforme des données brutes en rendu exploitable pour la levée",
+          subtitle: "Le parcours reste simple pour le fondateur, mais le rendu est pensé pour rester lisible par les advisors, les opérateurs et les fonds.",
         };
   const credibilityCopy =
     lang === "en"
@@ -156,9 +156,9 @@ export default function Home() {
           badge: "Credibility layer",
         }
       : {
-          title: "Concu pour un workflow de levee qui peut se verifier",
-          subtitle: "Alfred est pense pour reduire la prospection inutile, pas pour remplacer le jugement. Le produit structure les donnees, explique le resultat et garde un rendu exploitable pour les fondateurs comme pour les fonds.",
-          badge: "Couche de credibilite",
+          title: "Conçu pour un workflow de levée qui peut se vérifier",
+          subtitle: "Alfred est pensé pour réduire la prospection inutile, pas pour remplacer le jugement. Le produit structure les données, explique le résultat et garde un rendu exploitable pour les fondateurs comme pour les fonds.",
+          badge: "Couche de crédibilité",
         };
   const trustBand =
     lang === "en"
@@ -168,14 +168,14 @@ export default function Home() {
           "FR / EN reporting",
         ]
       : [
-          "Couverture du marche VC francais",
+          "Couverture du marché VC français",
           "Scoring avec restitution lisible",
           "Rapports FR / EN",
         ];
   const footerNote =
     lang === "en"
       ? "Alfred structures startup information, produces a readable financial review and ranks compatible French funds. It is not investment advice."
-      : "Alfred structure les informations startup, produit une revue financiere lisible et classe les fonds francais compatibles. Ce n'est pas un conseil en investissement.";
+      : "Alfred structure les informations startup, produit une revue financière lisible et classe les fonds français compatibles. Ce n'est pas un conseil en investissement.";
 
   return (
     <div className="min-h-screen bg-white">
@@ -352,8 +352,8 @@ export default function Home() {
           <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-slate-100">
             {[
               { value: "98+", label: l.stats.vcs },
-              { value: "35", label: lang === "en" ? "Funds pre-filtered before ranking" : "Fonds pre-filtres avant classement" },
-              { value: "0-100", label: lang === "en" ? "Readable compatibility score" : "Score de compatibilite lisible" },
+              { value: "35", label: lang === "en" ? "Funds pre-filtered before ranking" : "Fonds préfiltrés avant classement" },
+              { value: "0-100", label: lang === "en" ? "Readable compatibility score" : "Score de compatibilité lisible" },
               { value: "FR / EN", label: lang === "en" ? "Bilingual reporting" : "Rendu bilingue" },
             ].map((stat) => (
               <div key={stat.label} className="py-10 text-center">

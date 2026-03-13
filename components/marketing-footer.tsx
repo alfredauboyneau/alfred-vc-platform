@@ -15,9 +15,9 @@ export function MarketingFooter() {
           { href: "/legal", label: "Legal notice" },
         ]
       : [
-          { href: "/privacy", label: "Confidentialite" },
+          { href: "/privacy", label: "Confidentialité" },
           { href: "/terms", label: "Conditions" },
-          { href: "/legal", label: "Mentions legales" },
+          { href: "/legal", label: "Mentions légales" },
         ];
 
   return (

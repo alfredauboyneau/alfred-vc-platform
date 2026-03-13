@@ -52,44 +52,44 @@ export default function PrivacyPage() {
           ],
         }
       : {
-          eyebrow: "Confidentialite",
-          title: "Politique de confidentialite",
+          eyebrow: "Confidentialité",
+          title: "Politique de confidentialité",
           intro:
-            "Alfred est pense pour des workflows de levee impliquant des informations financieres et strategiques. Cette page resume la facon dont les donnees produit sont utilisees, stockees et partagees.",
+            "Alfred est pensé pour des workflows de levée impliquant des informations financières et stratégiques. Cette page résume la façon dont les données produit sont utilisées, stockées et partagées.",
           sections: [
             {
-              title: "Donnees collectees",
+              title: "Données collectées",
               paragraphs: [
-                "Alfred traite les informations de compte, les donnees de profil startup, le contexte de levee, certaines metriques financieres et, en option, des fichiers comme les pitch decks.",
-                "Pour les profils VC, Alfred traite la these d'investissement, les secteurs, les stades et les tickets utilises pour produire les resultats de compatibilite.",
+                "Alfred traite les informations de compte, les données de profil startup, le contexte de levée, certaines métriques financières et, en option, des fichiers comme les pitch decks.",
+                "Pour les profils VC, Alfred traite la thèse d'investissement, les secteurs, les stades et les tickets utilisés pour produire les résultats de compatibilité.",
               ],
             },
             {
-              title: "Finalites du traitement",
+              title: "Finalités du traitement",
               paragraphs: [
-                "Les donnees servent a authentifier les utilisateurs, stocker les profils, generer l'analyse financiere, classer les fonds compatibles et afficher les dashboards du produit.",
-                "Quand l'envoi email est active, une synthese du rapport genere peut aussi etre envoyee a l'email de contact fourni par la startup.",
+                "Les données servent à authentifier les utilisateurs, stocker les profils, générer l'analyse financière, classer les fonds compatibles et afficher les tableaux de bord du produit.",
+                "Quand l'envoi email est activé, une synthèse du rapport généré peut aussi être envoyée à l'email de contact fourni par la startup.",
               ],
             },
             {
               title: "Infrastructure et sous-traitants",
               paragraphs: [
-                "La stack actuelle utilise Supabase pour l'authentification et la base, Vercel pour l'hebergement, Anthropic pour la generation des rapports et Resend pour les emails transactionnels.",
-                "Ces prestataires ne recoivent que les donnees necessaires a la fonction qu'ils assurent.",
+                "La stack actuelle utilise Supabase pour l'authentification et la base, Vercel pour l'hébergement, Anthropic pour la génération des rapports et Resend pour les emails transactionnels.",
+                "Ces prestataires ne reçoivent que les données nécessaires à la fonction qu'ils assurent.",
               ],
             },
             {
-              title: "Conservation et acces",
+              title: "Conservation et accès",
               paragraphs: [
-                "Les donnees restent rattachees a l'espace et au compte qui les ont creees jusqu'a leur suppression ou a l'evolution de la politique du service.",
-                "L'acces aux dashboards est reserve aux utilisateurs authentifies. Les informations financieres sensibles ont vocation a rester dans le contexte operatoire du produit.",
+                "Les données restent rattachées à l'espace et au compte qui les ont créées jusqu'à leur suppression ou à l'évolution de la politique du service.",
+                "L'accès aux tableaux de bord est réservé aux utilisateurs authentifiés. Les informations financières sensibles ont vocation à rester dans le contexte opératoire du produit.",
               ],
             },
             {
-              title: "Securite et demandes",
+              title: "Sécurité et demandes",
               paragraphs: [
-                "Alfred cherche a limiter l'exposition inutile des informations financieres et a produire un rendu lisible et verifiable plutot qu'une diffusion large des donnees.",
-                "Avant un deploiement commercial plus large, cette page devra etre completee avec l'identite formelle du responsable de traitement, les durees de conservation et un contact operationnel.",
+                "Alfred cherche à limiter l'exposition inutile des informations financières et à produire un rendu lisible et vérifiable plutôt qu'une diffusion large des données.",
+                "Avant un déploiement commercial plus large, cette page devra être complétée avec l'identité formelle du responsable de traitement, les durées de conservation et un contact opérationnel.",
               ],
             },
           ],

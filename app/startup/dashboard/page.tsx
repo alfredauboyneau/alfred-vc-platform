@@ -100,7 +100,7 @@ function TabBar({ active, onChange }: { active: Tab; onChange: (t: Tab) => void 
 /* ────────────────────────────────── empty state ── */
 
 function NoStartupState() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const d = t.startupDash;
   const features = [
     { icon: <BarChart3 className="w-5 h-5 text-blue-600" />, title: d.feat1Title, desc: d.feat1Desc },
@@ -112,7 +112,7 @@ function NoStartupState() {
       <div className="premium-card section-frame overflow-hidden rounded-[2rem] border border-slate-200/70 p-8 sm:p-10">
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
           <div>
-            <p className="eyebrow mb-4">Startup dashboard</p>
+            <p className="eyebrow mb-4">{lang === "en" ? "Startup dashboard" : "Tableau de bord startup"}</p>
             <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
               <Zap className="w-8 h-8 text-blue-600" />
             </div>
@@ -127,7 +127,7 @@ function NoStartupState() {
             </Link>
           </div>
           <div className="marketing-surface rounded-[1.75rem] border border-slate-200/70 p-5 sm:p-6">
-            <p className="eyebrow mb-4">Included in the report</p>
+            <p className="eyebrow mb-4">{lang === "en" ? "Included in the report" : "Inclus dans le rapport"}</p>
             <div className="space-y-4 text-left">
         {features.map((item) => (
               <div key={item.title} className="rounded-2xl bg-white/85 p-4 shadow-sm">
@@ -176,7 +176,7 @@ function AnalyseTab({ startup }: { startup: Startup }) {
         <CardHeader>
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
-              <p className="eyebrow mb-3">Financial review</p>
+              <p className="eyebrow mb-3">{lang === "en" ? "Financial review" : "Revue financière"}</p>
               <CardTitle className="flex items-center gap-2 text-2xl tracking-tight text-slate-950">
               <Zap className="w-5 h-5 text-blue-600" />
               {d.reportTitle}
@@ -394,7 +394,7 @@ function ProfilTab({ startup }: { startup: Startup }) {
 
       <Card className="premium-card rounded-[1.75rem] border border-slate-200/70 shadow-none">
         <CardHeader>
-          <p className="eyebrow">Profile</p>
+          <p className="eyebrow">{lang === "en" ? "Profile" : "Profil"}</p>
           <CardTitle className="text-base">{d.infoTitle}</CardTitle>
         </CardHeader>
         <CardContent>

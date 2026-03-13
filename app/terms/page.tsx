@@ -54,40 +54,40 @@ export default function TermsPage() {
           eyebrow: "Conditions",
           title: "Conditions d'utilisation",
           intro:
-            "Ces conditions decrivent l'usage attendu d'Alfred comme logiciel de qualification startup et de matching VC. Elles constituent un cadre d'exploitation concis, pas un substitut a une revue juridique adaptee.",
+            "Ces conditions décrivent l'usage attendu d'Alfred comme logiciel de qualification startup et de matching VC. Elles constituent un cadre d'exploitation concis, pas un substitut à une revue juridique adaptée.",
           sections: [
             {
               title: "Objet du service",
               paragraphs: [
-                "Alfred aide les startups a structurer leurs informations de levee, generer une revue financiere et classer les fonds VC francais potentiellement pertinents.",
-                "Pour les investisseurs, Alfred aide a structurer la these d'investissement et a consulter des dossiers classes selon cette these.",
+                "Alfred aide les startups à structurer leurs informations de levée, générer une revue financière et classer les fonds VC français potentiellement pertinents.",
+                "Pour les investisseurs, Alfred aide à structurer la thèse d'investissement et à consulter des dossiers classés selon cette thèse.",
               ],
             },
             {
               title: "Absence de conseil en investissement",
               paragraphs: [
-                "Les scores, recommandations et analyses generees sont des outils d'aide a la decision uniquement. Ils ne constituent ni un conseil juridique, ni financier, ni en investissement.",
-                "Les utilisateurs restent responsables de leur prospection, de leurs decisions d'investissement, de leur due diligence et de leur revue professionnelle.",
+                "Les scores, recommandations et analyses générées sont des outils d'aide à la décision uniquement. Ils ne constituent ni un conseil juridique, ni financier, ni en investissement.",
+                "Les utilisateurs restent responsables de leur prospection, de leurs décisions d'investissement, de leur due diligence et de leur revue professionnelle.",
               ],
             },
             {
-              title: "Responsabilites utilisateur",
+              title: "Responsabilités utilisateur",
               paragraphs: [
                 "Les utilisateurs sont responsables de l'exactitude des informations soumises et d'un usage licite de la plateforme.",
-                "Les acces doivent etre conserves de facon securisee et les utilisateurs ne doivent pas chercher a detourner, aspirer ou degrader le service.",
+                "Les accès doivent être conservés de façon sécurisée et les utilisateurs ne doivent pas chercher à détourner, aspirer ou dégrader le service.",
               ],
             },
             {
-              title: "Disponibilite et limites",
+              title: "Disponibilité et limites",
               paragraphs: [
-                "Alfred est fourni sur une base best effort. La disponibilite, les rendus generes et la dependance a des services tiers peuvent evoluer.",
-                "Le produit peut faire evoluer ses prompts, sa logique de scoring, ses interfaces et ses politiques d'exploitation a mesure de sa maturation.",
+                "Alfred est fourni sur une base best effort. La disponibilité, les rendus générés et la dépendance à des services tiers peuvent évoluer.",
+                "Le produit peut faire évoluer ses prompts, sa logique de scoring, ses interfaces et ses politiques d'exploitation à mesure de sa maturation.",
               ],
             },
             {
-              title: "Complements commerciaux et juridiques",
+              title: "Compléments commerciaux et juridiques",
               paragraphs: [
-                "Avant un deploiement commercial plus large, ces conditions devront etre completees avec l'entite contractante formelle, la loi applicable, les clauses de responsabilite et les coordonnees de support.",
+                "Avant un déploiement commercial plus large, ces conditions devront être complétées avec l'entité contractante formelle, la loi applicable, les clauses de responsabilité et les coordonnées de support.",
               ],
             },
           ],

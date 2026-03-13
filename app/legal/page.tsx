@@ -44,36 +44,36 @@ export default function LegalPage() {
           ],
         }
       : {
-          eyebrow: "Mentions legales",
-          title: "Mentions legales",
+          eyebrow: "Mentions légales",
+          title: "Mentions légales",
           intro:
-            "Cette page presente l'etat actuel de publication du site Alfred et le cadrage legal minimal disponible a ce stade du produit.",
+            "Cette page présente l'état actuel de publication du site Alfred et le cadrage légal minimal disponible à ce stade du produit.",
           sections: [
             {
-              title: "Perimetre du site",
+              title: "Périmètre du site",
               paragraphs: [
-                "Alfred est un produit logiciel centre sur la qualification startup, la revue financiere et le matching VC.",
-                "Le site public actuel presente le produit, sa methode et les parcours utilisateur pour les startups et les fonds.",
+                "Alfred est un produit logiciel centré sur la qualification startup, la revue financière et le matching VC.",
+                "Le site public actuel présente le produit, sa méthode et les parcours utilisateur pour les startups et les fonds.",
               ],
             },
             {
-              title: "Hebergement et infrastructure coeur",
+              title: "Hébergement et infrastructure cœur",
               paragraphs: [
-                "Le site est heberge sur Vercel. Les donnees applicatives et l'authentification sont gerees via Supabase. L'envoi email peut reposer sur Resend et les rendus IA sur les services d'Anthropic.",
+                "Le site est hébergé sur Vercel. Les données applicatives et l'authentification sont gérées via Supabase. L'envoi email peut reposer sur Resend et les rendus IA sur les services d'Anthropic.",
               ],
             },
             {
               title: "Informations de publication",
               paragraphs: [
-                "L'identite editeur formelle, les informations societaires et le contact legal doivent etre completes avant une diffusion commerciale a plus grande echelle.",
-                "A ce stade, cette page vise a eviter une surface legale vide tout en gardant uniquement des informations exactes.",
+                "L'identité éditrice formelle, les informations sociétaires et le contact légal doivent être complétés avant une diffusion commerciale à plus grande échelle.",
+                "À ce stade, cette page vise à éviter une surface légale vide tout en gardant uniquement des informations exactes.",
               ],
             },
             {
-              title: "Propriete intellectuelle et usage",
+              title: "Propriété intellectuelle et usage",
               paragraphs: [
-                "Sauf mention contraire, la structure du produit, les textes, l'interface et les workflows presentes sur ce site relevent de l'environnement produit Alfred.",
-                "Toute reutilisation au-dela d'une evaluation normale du produit ou d'un usage client doit etre autorisee expressement.",
+                "Sauf mention contraire, la structure du produit, les textes, l'interface et les workflows présentés sur ce site relèvent de l'environnement produit Alfred.",
+                "Toute réutilisation au-delà d'une évaluation normale du produit ou d'un usage client doit être autorisée expressément.",
               ],
             },
           ],
