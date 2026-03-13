@@ -74,22 +74,24 @@ function TabBar({ active, onChange }: { active: Tab; onChange: (t: Tab) => void 
     { id: "profil", label: d.tabProfil, icon: <User className="w-4 h-4" /> },
   ];
   return (
-    <div className="border-b border-slate-200 bg-white">
-      <div className="max-w-4xl mx-auto px-4 flex gap-0">
+    <div className="border-b border-slate-200/70 bg-white/70 backdrop-blur-xl">
+      <div className="max-w-4xl mx-auto px-4 py-4">
+        <div className="premium-card inline-flex flex-wrap gap-2 rounded-2xl border border-slate-200/70 p-2">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => onChange(tab.id)}
-            className={`flex items-center gap-2 px-5 py-4 text-sm font-medium border-b-2 transition-colors ${
+            className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
               active === tab.id
-                ? "border-blue-600 text-blue-600"
-                : "border-transparent text-slate-500 hover:text-slate-700"
+                ? "bg-slate-950 text-white shadow-sm"
+                : "text-slate-500 hover:bg-white hover:text-slate-900"
             }`}
           >
             {tab.icon}
             {tab.label}
           </button>
         ))}
+        </div>
       </div>
     </div>
   );
@@ -106,25 +108,39 @@ function NoStartupState() {
     { icon: <Users className="w-5 h-5 text-blue-600" />, title: d.feat3Title, desc: d.feat3Desc },
   ];
   return (
-    <div className="max-w-2xl mx-auto px-4 py-20 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-blue-50 border-2 border-blue-100 flex items-center justify-center mx-auto mb-6">
-        <Zap className="w-8 h-8 text-blue-600" />
-      </div>
-      <h2 className="text-2xl font-bold text-slate-900 mb-3">{d.welcomeTitle}</h2>
-      <p className="text-slate-500 mb-8 leading-relaxed">{d.welcomeDesc}</p>
-      <Link href="/startup/submit">
-        <Button size="lg" className="gap-2 bg-blue-600 hover:bg-blue-700 font-semibold">
-          {d.welcomeCta} <ArrowRight className="w-4 h-4" />
-        </Button>
-      </Link>
-      <div className="mt-12 grid sm:grid-cols-3 gap-4 text-left">
-        {features.map((item) => (
-          <div key={item.title} className="rounded-xl border border-slate-100 bg-slate-50 p-4">
-            <div className="mb-2">{item.icon}</div>
-            <p className="font-semibold text-slate-800 text-sm mb-1">{item.title}</p>
-            <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
+    <div className="max-w-4xl mx-auto px-4 py-16">
+      <div className="premium-card section-frame overflow-hidden rounded-[2rem] border border-slate-200/70 p-8 sm:p-10">
+        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+          <div>
+            <p className="eyebrow mb-4">Startup dashboard</p>
+            <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
+              <Zap className="w-8 h-8 text-blue-600" />
+            </div>
+            <h2 className="headline-balance text-3xl font-semibold tracking-tight text-slate-950 mb-4">
+              {d.welcomeTitle}
+            </h2>
+            <p className="max-w-xl text-base leading-7 text-slate-600 mb-8">{d.welcomeDesc}</p>
+            <Link href="/startup/submit">
+              <Button size="lg" className="gap-2 rounded-full bg-slate-950 px-6 hover:bg-slate-800">
+                {d.welcomeCta} <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
           </div>
-        ))}
+          <div className="marketing-surface rounded-[1.75rem] border border-slate-200/70 p-5 sm:p-6">
+            <p className="eyebrow mb-4">Included in the report</p>
+            <div className="space-y-4 text-left">
+        {features.map((item) => (
+              <div key={item.title} className="rounded-2xl bg-white/85 p-4 shadow-sm">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50">
+                  {item.icon}
+                </div>
+                <p className="font-semibold text-slate-900 text-sm mb-1">{item.title}</p>
+                <p className="text-sm text-slate-500 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -156,50 +172,77 @@ function AnalyseTab({ startup }: { startup: Startup }) {
 
   return (
     <div className="space-y-6">
-      <Card className="border-blue-100 bg-blue-50/30">
+      <Card className="premium-card overflow-hidden rounded-[2rem] border border-slate-200/70 bg-white/90 shadow-none">
         <CardHeader>
           <div className="flex items-center justify-between flex-wrap gap-3">
-            <CardTitle className="flex items-center gap-2 text-lg">
+            <div>
+              <p className="eyebrow mb-3">Financial review</p>
+              <CardTitle className="flex items-center gap-2 text-2xl tracking-tight text-slate-950">
               <Zap className="w-5 h-5 text-blue-600" />
               {d.reportTitle}
-            </CardTitle>
+              </CardTitle>
+            </div>
             <ReadinessBadge r={fa.investment_readiness} />
           </div>
-          <CardDescription className="text-slate-600 leading-relaxed">{fa.summary}</CardDescription>
+          <CardDescription className="max-w-2xl text-base leading-7 text-slate-600">{fa.summary}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-slate-700">{d.healthScore}</span>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="marketing-surface rounded-3xl border border-blue-100/80 p-5">
+              <p className="eyebrow mb-3">{d.healthScore}</p>
               <div className="flex items-center gap-2">
                 <TrajectoryIcon t={fa.growth_trajectory} />
-                <span className="text-xl font-bold text-slate-900">{fa.financial_health_score}/100</span>
+                <span className="text-4xl font-semibold tracking-tight text-slate-950">
+                  {fa.financial_health_score}/100
+                </span>
+              </div>
+              <div className="mt-4">
+                <Progress value={fa.financial_health_score} className="h-2.5" />
               </div>
             </div>
-            <Progress value={fa.financial_health_score} className="h-2.5" />
+            <div className="rounded-3xl border border-emerald-100 bg-emerald-50/70 p-5">
+              <p className="eyebrow mb-3 text-emerald-700">{d.strengths}</p>
+              <div className="space-y-2">
+                {fa.key_strengths.slice(0, 2).map((s: string, i: number) => (
+                  <p key={i} className="text-sm text-slate-700 flex items-start gap-2">
+                    <span className="text-green-500 font-bold mt-0.5">+</span> {s}
+                  </p>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-3xl border border-amber-100 bg-amber-50/70 p-5">
+              <p className="eyebrow mb-3 text-amber-700">{d.risks}</p>
+              <div className="space-y-2">
+                {fa.key_risks.slice(0, 2).map((r: string, i: number) => (
+                  <p key={i} className="text-sm text-slate-700 flex items-start gap-2">
+                    <span className="text-amber-600 font-bold mt-0.5">!</span> {r}
+                  </p>
+                ))}
+              </div>
+            </div>
           </div>
 
           {fa.unit_economics && (
-            <div className="bg-white rounded-xl p-4 border border-slate-100">
-              <p className="text-sm font-semibold text-slate-700 mb-1">{d.unitEco}</p>
-              <p className="text-base font-bold text-slate-900">
+            <div className="rounded-3xl border border-slate-200/80 bg-slate-50/70 p-5">
+              <p className="eyebrow mb-2 text-slate-600">{d.unitEco}</p>
+              <p className="text-base font-semibold text-slate-950">
                 {fa.unit_economics.ltv_cac_ratio !== null
                   ? `${fa.unit_economics.ltv_cac_ratio}x — ${fa.unit_economics.assessment}`
                   : d.insufficientData}
               </p>
-              <p className="text-sm text-slate-500 mt-1">{fa.unit_economics.comment}</p>
+              <p className="text-sm text-slate-500 mt-2">{fa.unit_economics.comment}</p>
             </div>
           )}
 
           {fa.burn_efficiency && (
-            <div className="bg-white rounded-xl p-4 border border-slate-100">
-              <p className="text-sm font-semibold text-slate-700 mb-1">{d.burnEff}</p>
+            <div className="rounded-3xl border border-slate-200/80 bg-white p-5">
+              <p className="eyebrow mb-2 text-slate-600">{d.burnEff}</p>
               <p className="text-sm text-slate-600">{fa.burn_efficiency}</p>
             </div>
           )}
 
           <div className="grid sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
+            <div className="rounded-3xl border border-emerald-100 bg-emerald-50/60 p-5 space-y-2">
               <p className="text-sm font-semibold text-green-700 flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4" /> {d.strengths}
               </p>
@@ -209,7 +252,7 @@ function AnalyseTab({ startup }: { startup: Startup }) {
                 </p>
               ))}
             </div>
-            <div className="space-y-2">
+            <div className="rounded-3xl border border-rose-100 bg-rose-50/60 p-5 space-y-2">
               <p className="text-sm font-semibold text-red-700 flex items-center gap-1.5">
                 <AlertCircle className="w-4 h-4" /> {d.risks}
               </p>
@@ -249,20 +292,27 @@ function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup })
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-slate-500">{matches.length} {d.matchedVCs}</p>
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <p className="eyebrow">{matches.length} {d.matchedVCs}</p>
+      </div>
       {matches.map((match: any, i: number) => {
         const vc = match.venture_capital;
         return (
-          <Card key={match.id} className={i === 0 ? "border-blue-200 shadow-sm" : ""}>
+          <Card
+            key={match.id}
+            className={`premium-card rounded-[1.75rem] border shadow-none ${
+              i === 0 ? "border-blue-200/80" : "border-slate-200/70"
+            }`}
+          >
             <CardContent className="p-5">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2 flex-wrap">
-                    {i === 0 && <Badge variant="default" className="text-xs">🏆 {d.topMatch}</Badge>}
-                    <h3 className="font-semibold text-slate-900">{vc?.name ?? d.unknownVC}</h3>
+                    {i === 0 && <Badge variant="default" className="rounded-full text-xs">🏆 {d.topMatch}</Badge>}
+                    <h3 className="text-lg font-semibold tracking-tight text-slate-950">{vc?.name ?? d.unknownVC}</h3>
                     <ScoreBadge score={match.score} />
                   </div>
-                  <p className="text-sm text-slate-600 italic mb-3">&ldquo;{match.analysis}&rdquo;</p>
+                  <p className="text-sm leading-6 text-slate-600 italic mb-3">&ldquo;{match.analysis}&rdquo;</p>
                   {vc && (
                     <div className="flex flex-wrap gap-1 mb-2">
                       {vc.sectors?.slice(0, 3).map((s: string) => (
@@ -274,7 +324,7 @@ function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup })
                     </div>
                   )}
                   {vc && (
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-slate-400 mt-2">
                       {d.ticket} : {vc.ticket_min?.toLocaleString(numberLocale)} € — {vc.ticket_max?.toLocaleString(numberLocale)} €
                     </p>
                   )}
@@ -324,7 +374,7 @@ function ProfilTab({ startup }: { startup: Startup }) {
 
   return (
     <div className="space-y-5">
-      <Card>
+      <Card className="premium-card rounded-[1.75rem] border border-slate-200/70 shadow-none">
         <CardContent className="p-6">
           <div className="flex items-start gap-4">
             <div className="w-14 h-14 rounded-2xl bg-blue-50 border-2 border-blue-100 flex items-center justify-center shrink-0">
@@ -342,8 +392,11 @@ function ProfilTab({ startup }: { startup: Startup }) {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader><CardTitle className="text-base">{d.infoTitle}</CardTitle></CardHeader>
+      <Card className="premium-card rounded-[1.75rem] border border-slate-200/70 shadow-none">
+        <CardHeader>
+          <p className="eyebrow">Profile</p>
+          <CardTitle className="text-base">{d.infoTitle}</CardTitle>
+        </CardHeader>
         <CardContent>
           <dl className="divide-y divide-slate-100">
             {fields.filter(f => f.value).map((f) => (
@@ -368,8 +421,8 @@ function ProfilTab({ startup }: { startup: Startup }) {
         (startup as any).market_size && { label: d.marketLabel, value: (startup as any).market_size },
         (startup as any).traction && { label: d.tractionLabel, value: (startup as any).traction },
       ].filter(Boolean).map((item: any) => (
-        <Card key={item.label}>
-          <CardHeader><CardTitle className="text-base">{item.label}</CardTitle></CardHeader>
+        <Card key={item.label} className="premium-card rounded-[1.75rem] border border-slate-200/70 shadow-none">
+          <CardHeader><CardTitle className="text-base tracking-tight">{item.label}</CardTitle></CardHeader>
           <CardContent>
             <p className="text-sm text-slate-600 leading-relaxed">{item.value}</p>
           </CardContent>
@@ -461,8 +514,8 @@ function DashboardNavbar() {
   const { signOut } = useAuth();
   const { t } = useLanguage();
   return (
-    <nav className="border-b border-slate-100 bg-white sticky top-0 z-50">
-      <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+    <nav className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/75 backdrop-blur-2xl">
+      <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-sm">
             <Zap className="w-4 h-4 text-white" />
@@ -484,7 +537,7 @@ function DashboardNavbar() {
 
 export default function StartupDashboardPage() {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.08),transparent_28%),linear-gradient(to_bottom,rgba(248,250,252,0.96),rgba(255,255,255,1)_24%)]">
       <DashboardNavbar />
       <Suspense fallback={
         <div className="flex items-center justify-center min-h-[60vh]">

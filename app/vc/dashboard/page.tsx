@@ -78,22 +78,24 @@ function TabBar({ active, onChange }: { active: Tab; onChange: (t: Tab) => void 
     { id: "profil", label: d.tabProfil, icon: <User className="w-4 h-4" /> },
   ];
   return (
-    <div className="border-b border-slate-200 bg-white">
-      <div className="max-w-5xl mx-auto px-4 flex gap-0">
+    <div className="border-b border-slate-200/70 bg-white/70 backdrop-blur-xl">
+      <div className="max-w-5xl mx-auto px-4 py-4">
+        <div className="premium-card inline-flex flex-wrap gap-2 rounded-2xl border border-slate-200/70 p-2">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => onChange(tab.id)}
-            className={`flex items-center gap-2 px-5 py-4 text-sm font-medium border-b-2 transition-colors ${
+            className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
               active === tab.id
-                ? "border-blue-600 text-blue-600"
-                : "border-transparent text-slate-500 hover:text-slate-700"
+                ? "bg-slate-950 text-white shadow-sm"
+                : "text-slate-500 hover:bg-white hover:text-slate-900"
             }`}
           >
             {tab.icon}
             {tab.label}
           </button>
         ))}
+        </div>
       </div>
     </div>
   );
@@ -110,25 +112,39 @@ function NoVCState() {
     { icon: <CheckCircle2 className="w-5 h-5 text-blue-600" />, title: d.feat3Title, desc: d.feat3Desc },
   ];
   return (
-    <div className="max-w-2xl mx-auto px-4 py-20 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-blue-50 border-2 border-blue-100 flex items-center justify-center mx-auto mb-6">
-        <Building2 className="w-8 h-8 text-blue-600" />
-      </div>
-      <h2 className="text-2xl font-bold text-slate-900 mb-3">{d.welcomeTitle}</h2>
-      <p className="text-slate-500 mb-8 leading-relaxed">{d.welcomeDesc}</p>
-      <Link href="/vc/register">
-        <Button size="lg" className="gap-2 bg-blue-600 hover:bg-blue-700 font-semibold">
-          {d.welcomeCta} <ArrowRight className="w-4 h-4" />
-        </Button>
-      </Link>
-      <div className="mt-12 grid sm:grid-cols-3 gap-4 text-left">
-        {features.map((item) => (
-          <div key={item.title} className="rounded-xl border border-slate-100 bg-slate-50 p-4">
-            <div className="mb-2">{item.icon}</div>
-            <p className="font-semibold text-slate-800 text-sm mb-1">{item.title}</p>
-            <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
+    <div className="max-w-5xl mx-auto px-4 py-16">
+      <div className="premium-card section-frame overflow-hidden rounded-[2rem] border border-slate-200/70 p-8 sm:p-10">
+        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+          <div>
+            <p className="eyebrow mb-4">VC workspace</p>
+            <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
+              <Building2 className="w-8 h-8 text-blue-600" />
+            </div>
+            <h2 className="headline-balance text-3xl font-semibold tracking-tight text-slate-950 mb-4">
+              {d.welcomeTitle}
+            </h2>
+            <p className="max-w-xl text-base leading-7 text-slate-600 mb-8">{d.welcomeDesc}</p>
+            <Link href="/vc/register">
+              <Button size="lg" className="gap-2 rounded-full bg-slate-950 px-6 hover:bg-slate-800">
+                {d.welcomeCta} <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
           </div>
-        ))}
+          <div className="marketing-surface rounded-[1.75rem] border border-slate-200/70 p-5 sm:p-6">
+            <p className="eyebrow mb-4">Designed for triage</p>
+            <div className="space-y-4 text-left">
+        {features.map((item) => (
+              <div key={item.title} className="rounded-2xl bg-white/85 p-4 shadow-sm">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50">
+                  {item.icon}
+                </div>
+                <p className="font-semibold text-slate-900 text-sm mb-1">{item.title}</p>
+                <p className="text-sm text-slate-500 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -174,7 +190,6 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
 
   return (
     <div className="space-y-5">
-      {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { label: d.statReceived, value: matches.length },
@@ -190,18 +205,18 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
           },
           { label: d.statScore75, value: matches.filter((m) => m.score >= 75).length },
         ].map((stat) => (
-          <Card key={stat.label}>
-            <CardContent className="pt-4 pb-3 text-center">
-              <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
-              <p className="text-xs text-slate-400 mt-1">{stat.label}</p>
+          <Card key={stat.label} className="premium-card rounded-[1.5rem] border border-slate-200/70 shadow-none">
+            <CardContent className="pt-5 pb-4">
+              <p className="eyebrow mb-3 text-slate-500">{stat.label}</p>
+              <p className="text-3xl font-semibold tracking-tight text-slate-950">{stat.value}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* Filtres */}
-      <Card>
+      <Card className="premium-card rounded-[1.75rem] border border-slate-200/70 shadow-none">
         <CardHeader className="pb-3">
+          <p className="eyebrow">Pipeline filters</p>
           <CardTitle className="text-sm flex items-center gap-2 text-slate-700">
             <Filter className="w-4 h-4" /> {d.filtersTitle}
           </CardTitle>
@@ -250,13 +265,12 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
         </CardContent>
       </Card>
 
-      {/* Liste */}
       <div>
-        <p className="text-sm text-slate-500 mb-3">
+        <p className="eyebrow mb-3">
           {filtered.length} {d.filesCount}{filtered.length > 1 ? "s" : ""}
         </p>
         {filtered.length === 0 ? (
-          <Card>
+          <Card className="premium-card rounded-[1.75rem] border border-slate-200/70 shadow-none">
             <CardContent className="py-10 text-center text-slate-400 text-sm">
               {d.noFilesMatch}
             </CardContent>
@@ -269,12 +283,17 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
               const isOpen = expanded === match.id;
 
               return (
-                <Card key={match.id} className={isOpen ? "border-blue-200" : ""}>
+                <Card
+                  key={match.id}
+                  className={`premium-card rounded-[1.75rem] border shadow-none ${
+                    isOpen ? "border-blue-200/90" : "border-slate-200/70"
+                  }`}
+                >
                   <CardContent className="p-5">
                     <div className="flex items-start gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-slate-900">{startup?.name}</h3>
+                          <h3 className="text-lg font-semibold tracking-tight text-slate-950">{startup?.name}</h3>
                           <ScoreBadge score={match.score} />
                           {fa && <ReadinessBadge r={fa.investment_readiness} />}
                         </div>
@@ -289,7 +308,7 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
                         <p className="text-sm text-slate-600 italic">&ldquo;{match.analysis}&rdquo;</p>
 
                         {isOpen && fa && (
-                          <div className="mt-4 pt-4 border-t space-y-4">
+                          <div className="mt-4 pt-4 border-t border-slate-200/80 space-y-4">
                             <div className="flex items-center gap-2">
                               <TrajectoryIcon t={fa.growth_trajectory} />
                               <span className="text-sm font-semibold text-slate-700">
@@ -298,7 +317,7 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
                             </div>
 
                             {fa.unit_economics && (
-                              <div className="bg-slate-50 rounded-lg p-3">
+                              <div className="rounded-2xl border border-slate-200/70 bg-slate-50/80 p-4">
                                 <p className="text-xs font-semibold text-slate-500 mb-1">{d.unitEco}</p>
                                 <p className="text-sm font-semibold text-slate-800">
                                   {fa.unit_economics.ltv_cac_ratio !== null
@@ -310,7 +329,7 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
                             )}
 
                             <div className="grid sm:grid-cols-2 gap-3">
-                              <div>
+                              <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4">
                                 <p className="text-xs font-semibold text-green-700 mb-1 flex items-center gap-1">
                                   <CheckCircle2 className="w-3.5 h-3.5" /> {d.strengths}
                                 </p>
@@ -318,7 +337,7 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
                                   <p key={i} className="text-xs text-slate-600">+ {s}</p>
                                 ))}
                               </div>
-                              <div>
+                              <div className="rounded-2xl border border-rose-100 bg-rose-50/70 p-4">
                                 <p className="text-xs font-semibold text-red-700 mb-1 flex items-center gap-1">
                                   <AlertCircle className="w-3.5 h-3.5" /> {d.risks}
                                 </p>
@@ -328,7 +347,9 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
                               </div>
                             </div>
 
-                            <p className="text-sm text-slate-600 bg-blue-50 rounded-lg p-3">{fa.summary}</p>
+                            <p className="text-sm text-slate-600 bg-blue-50/80 rounded-2xl p-4 border border-blue-100/80">
+                              {fa.summary}
+                            </p>
                           </div>
                         )}
                       </div>
@@ -376,7 +397,7 @@ function ProfilVCTab({ vc }: { vc: any }) {
   const numberLocale = getNumberLocale(lang);
   return (
     <div className="space-y-5">
-      <Card>
+      <Card className="premium-card rounded-[1.75rem] border border-slate-200/70 shadow-none">
         <CardContent className="p-6">
           <div className="flex items-start gap-4">
             <div className="w-14 h-14 rounded-2xl bg-blue-50 border-2 border-blue-100 flex items-center justify-center shrink-0">
@@ -395,8 +416,11 @@ function ProfilVCTab({ vc }: { vc: any }) {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader><CardTitle className="text-base">{d.criteria}</CardTitle></CardHeader>
+      <Card className="premium-card rounded-[1.75rem] border border-slate-200/70 shadow-none">
+        <CardHeader>
+          <p className="eyebrow">Investment profile</p>
+          <CardTitle className="text-base">{d.criteria}</CardTitle>
+        </CardHeader>
         <CardContent className="space-y-4">
           {vc.sectors?.length > 0 && (
             <div>
@@ -430,7 +454,7 @@ function ProfilVCTab({ vc }: { vc: any }) {
       </Card>
 
       {vc.investment_thesis && (
-        <Card>
+        <Card className="premium-card rounded-[1.75rem] border border-slate-200/70 shadow-none">
           <CardHeader><CardTitle className="text-base">{d.thesis}</CardTitle></CardHeader>
           <CardContent>
             <p className="text-sm text-slate-600 leading-relaxed">{vc.investment_thesis}</p>
@@ -439,7 +463,7 @@ function ProfilVCTab({ vc }: { vc: any }) {
       )}
 
       {vc.notable_investments && (
-        <Card>
+        <Card className="premium-card rounded-[1.75rem] border border-slate-200/70 shadow-none">
           <CardHeader><CardTitle className="text-base">{d.notable}</CardTitle></CardHeader>
           <CardContent>
             <p className="text-sm text-slate-600 leading-relaxed">{vc.notable_investments}</p>
@@ -531,8 +555,8 @@ function VCNavbar() {
   const { signOut } = useAuth();
   const { t } = useLanguage();
   return (
-    <nav className="border-b border-slate-100 bg-white sticky top-0 z-50">
-      <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+    <nav className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/75 backdrop-blur-2xl">
+      <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-sm">
             <Zap className="w-4 h-4 text-white" />
@@ -554,7 +578,7 @@ function VCNavbar() {
 
 export default function VCDashboardPage() {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.08),transparent_28%),linear-gradient(to_bottom,rgba(248,250,252,0.96),rgba(255,255,255,1)_24%)]">
       <VCNavbar />
       <Suspense fallback={
         <div className="flex items-center justify-center min-h-[60vh]">
