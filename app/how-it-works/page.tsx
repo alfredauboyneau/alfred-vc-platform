@@ -13,6 +13,8 @@ import {
   ChevronDown,
   ChevronUp,
   Lightbulb,
+  SearchCheck,
+  Building2,
 } from "lucide-react";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
 import { useState } from "react";
@@ -27,9 +29,51 @@ const ICONS: Record<string, React.ReactNode> = {
 };
 
 export default function HowItWorksPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const h = t.howItWorks;
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const reportPreview =
+    lang === "en"
+      ? {
+          label: "Example output",
+          title: "What the founder receives after analysis",
+          subtitle: "A readable financial review followed by a fund ranking with short rationales.",
+          report: "Financial report",
+          score: "Health score",
+          strengths: "Strengths",
+          risks: "Watchpoints",
+          fit: "Fund shortlist",
+          fitDesc: "Ranked by score, stage fit, sector fit and ticket range.",
+          scorecard: "Alfred summary",
+          topFunds: "3 priority funds",
+          strengthItems: ["MoM growth +14%", "LTV/CAC above 3x", "B2B SaaS gross margin 78%"],
+          riskItems: ["Runway under 12 months", "Ticket fit concentrated on Seed funds"],
+          bullets: [
+            "0-100 financial health score",
+            "Short rationale for each recommended fund",
+            "Readable output to share with advisors or investors",
+          ],
+        }
+      : {
+          label: "Exemple de rendu",
+          title: "Ce que reçoit le fondateur après l'analyse",
+          subtitle: "Une revue financière lisible, suivie d'un classement des fonds avec justification courte.",
+          report: "Rapport financier",
+          score: "Score de santé",
+          strengths: "Points forts",
+          risks: "Points d'attention",
+          fit: "Classement des fonds",
+          fitDesc: "Ordonné par score, adéquation au stade, secteur et ticket.",
+          scorecard: "Synthèse Alfred",
+          topFunds: "3 fonds prioritaires",
+          strengthItems: ["Croissance mensuelle +14 %", "LTV/CAC supérieur à 3x", "Marge brute SaaS B2B de 78 %"],
+          riskItems: ["Runway inférieur à 12 mois", "Ticket concentré sur des fonds Seed"],
+          bullets: [
+            "Score de santé financière de 0 à 100",
+            "Justification courte pour chaque fonds recommandé",
+            "Rendu lisible à partager avec advisors ou investisseurs",
+          ],
+        };
 
   return (
     <div className="min-h-screen bg-white">
@@ -77,6 +121,95 @@ export default function HowItWorksPage() {
           </div>
           <h1 className="headline-balance text-4xl sm:text-5xl font-bold text-slate-900 tracking-tight mb-5">{h.title}</h1>
           <p className="text-lg text-slate-500 leading-relaxed max-w-2xl mx-auto">{h.subtitle}</p>
+        </div>
+      </section>
+
+      <section className="bg-white py-6 pb-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-10 max-w-2xl">
+            <p className="eyebrow mb-4">{reportPreview.label}</p>
+            <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-4">
+              {reportPreview.title}
+            </h2>
+            <p className="text-slate-500 leading-relaxed">{reportPreview.subtitle}</p>
+          </div>
+
+          <div className="premium-card section-frame rounded-[30px] border border-slate-200/70 p-5 sm:p-6">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div>
+                <p className="eyebrow">{reportPreview.report}</p>
+                <p className="mt-2 text-lg font-semibold text-slate-900">{reportPreview.scorecard}</p>
+              </div>
+              <div className="rounded-2xl bg-emerald-50 px-4 py-3 text-right ring-1 ring-emerald-100 min-w-[9rem]">
+                <p className="text-xs text-emerald-700">{reportPreview.score}</p>
+                <p className="text-2xl font-bold text-emerald-800">81/100</p>
+              </div>
+            </div>
+
+            <div className="grid gap-4 pt-4 sm:grid-cols-2">
+              <div className="rounded-2xl bg-slate-50/90 p-4 ring-1 ring-slate-200/70">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                  {reportPreview.strengths}
+                </p>
+                <ul className="mt-3 space-y-2 text-[15px] leading-relaxed text-slate-700">
+                  {reportPreview.strengthItems.map((item) => (
+                    <li key={item} className="flex gap-2">
+                      <CheckCircle2 className="mt-0.5 w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="rounded-2xl bg-amber-50/90 p-4 ring-1 ring-amber-100">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-amber-700">
+                  {reportPreview.risks}
+                </p>
+                <ul className="mt-3 space-y-2 text-[15px] leading-relaxed text-slate-700">
+                  {reportPreview.riskItems.map((item) => (
+                    <li key={item} className="flex gap-2">
+                      <Target className="mt-0.5 w-4 h-4 text-amber-600 shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-4 rounded-2xl border border-blue-100 bg-blue-50/90 p-4">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-700">
+                    {reportPreview.fit}
+                  </p>
+                  <p className="mt-1 text-[15px] leading-relaxed text-slate-700">{reportPreview.fitDesc}</p>
+                </div>
+                <div className="shrink-0 rounded-full bg-white px-3 py-1 text-sm font-semibold text-blue-700 shadow-sm">
+                  {reportPreview.topFunds}
+                </div>
+              </div>
+              <div className="mt-4 space-y-2">
+                {["Partech", "Kima Ventures", "Alven"].map((fund, index) => (
+                  <div key={fund} className="flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-sm text-slate-700 shadow-sm ring-1 ring-slate-100">
+                    <span className="flex items-center gap-2">
+                      <Building2 className="w-4 h-4 text-blue-600" />
+                      {fund}
+                    </span>
+                    <span className="font-semibold text-slate-900">{92 - index * 5}/100</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-2 rounded-2xl bg-slate-950 p-4 text-sm text-slate-200 shadow-[0_18px_38px_rgba(15,23,42,0.24)]">
+              {reportPreview.bullets.map((item) => (
+                <div key={item} className="flex gap-2 leading-relaxed">
+                  <SearchCheck className="mt-0.5 w-4 h-4 text-blue-300 shrink-0" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 

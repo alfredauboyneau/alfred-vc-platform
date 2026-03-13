@@ -11,10 +11,8 @@ import {
   Target,
   CheckCircle2,
   ShieldCheck,
-  SearchCheck,
   FileSpreadsheet,
   LockKeyhole,
-  Building2,
   ScanSearch,
 } from "lucide-react";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
@@ -96,69 +94,87 @@ export default function Home() {
             desc: "Les fonds sont filtrés par thèse, stade et ticket avant le classement final.",
           },
         ];
-  const previewCopy =
+  const heroPanel =
     lang === "en"
       ? {
-          title: "What founders actually receive",
-          subtitle: "Not a black box. Alfred produces a financial summary and a ranked shortlist with explanations.",
-          report: "Financial report",
-          score: "Health score",
-          strengths: "Strengths",
-          risks: "Watchpoints",
-          fit: "Fund shortlist",
-          fitDesc: "Ranked by score, stage fit, sector fit and ticket range.",
-          scorecard: "Alfred summary",
-          topFunds: "3 priority funds",
-          strengthItems: ["MoM growth +14%", "LTV/CAC above 3x", "B2B SaaS gross margin 78%"],
-          riskItems: ["Runway under 12 months", "Ticket fit concentrated on Seed funds"],
-          bullets: [
-            "0-100 financial health score",
-            "Short rationale for each recommended fund",
-            "Readable output to share with advisors or investors",
+          label: "What the product produces",
+          title: "A structured output, not a generic AI answer.",
+          items: [
+            {
+              icon: <BarChart3 className="w-4 h-4 text-blue-700" />,
+              title: "Financial review",
+              desc: "Health score, strengths, watchpoints and readiness.",
+            },
+            {
+              icon: <Target className="w-4 h-4 text-blue-700" />,
+              title: "Fund ranking",
+              desc: "Ordered by thesis fit, stage fit and ticket fit.",
+            },
+            {
+              icon: <FileSpreadsheet className="w-4 h-4 text-blue-700" />,
+              title: "Usable output",
+              desc: "Readable by founders, advisors and investors.",
+            },
           ],
+          note: "Detailed report example on the process page",
         }
       : {
-          title: "Ce que le fondateur reçoit vraiment",
-          subtitle: "Pas une boîte noire. Alfred produit une synthèse financière et une shortlist classée avec explications.",
-          report: "Rapport financier",
-          score: "Score de santé",
-          strengths: "Forces clés",
-          risks: "Points d'attention",
-          fit: "Shortlist fonds",
-          fitDesc: "Classement par score, adéquation au stade, secteur et ticket.",
-          scorecard: "Synthèse Alfred",
-          topFunds: "3 fonds prioritaires",
-          strengthItems: ["Croissance mensuelle +14 %", "LTV/CAC supérieur à 3x", "Marge brute SaaS B2B de 78 %"],
-          riskItems: ["Runway inférieur à 12 mois", "Ticket concentré sur des fonds Seed"],
-          bullets: [
-            "Score de santé financière de 0 à 100",
-            "Justification courte pour chaque fonds recommandé",
-            "Rendu lisible à partager avec advisors ou investisseurs",
+          label: "Ce que produit Alfred",
+          title: "Un rendu structuré, pas une réponse IA générique.",
+          items: [
+            {
+              icon: <BarChart3 className="w-4 h-4 text-blue-700" />,
+              title: "Revue financière",
+              desc: "Score de santé, points forts, risques et maturité.",
+            },
+            {
+              icon: <Target className="w-4 h-4 text-blue-700" />,
+              title: "Classement des fonds",
+              desc: "Ordonné selon la thèse, le stade et le ticket.",
+            },
+            {
+              icon: <FileSpreadsheet className="w-4 h-4 text-blue-700" />,
+              title: "Rendu exploitable",
+              desc: "Lisible pour les fondateurs, advisors et investisseurs.",
+            },
           ],
+          note: "Exemple détaillé du rapport sur la page process",
         };
   const pipelineCopy =
     lang === "en"
       ? {
-          label: "Delivery flow",
-          title: "How Alfred turns raw startup data into a usable fundraising output",
-          subtitle: "The workflow stays simple for the founder, but the output is designed to remain readable for advisors, operators and funds.",
+          label: "Product output",
+          title: "A product flow designed to reach a clear deliverable",
+          subtitle: "Each block has one role: structure the file, produce a readable review, then rank the right funds.",
         }
       : {
-          label: "Workflow produit",
-          title: "Comment Alfred transforme des données brutes en rendu exploitable pour la levée",
-          subtitle: "Le parcours reste simple pour le fondateur, mais le rendu est pensé pour rester lisible par les advisors, les opérateurs et les fonds.",
+          label: "Rendu produit",
+          title: "Un flux pensé pour aboutir à un livrable clair",
+          subtitle: "Chaque bloc a une fonction précise : structurer le dossier, produire une revue lisible, puis classer les bons fonds.",
         };
   const credibilityCopy =
     lang === "en"
       ? {
-          title: "Built for a fundraising workflow that can be audited",
-          subtitle: "Alfred is designed to reduce wasted outreach, not replace judgement. The product structures data, explains the outcome and keeps the workflow usable for founders and funds.",
-          badge: "Credibility layer",
+          title: "Built to stand up to scrutiny",
+          subtitle: "The product is designed to stay explainable, bounded and usable in a real fundraising workflow.",
+          badge: "Why it holds up",
         }
       : {
-          title: "Conçu pour un workflow de levée qui peut se vérifier",
-          subtitle: "Alfred est pensé pour réduire la prospection inutile, pas pour remplacer le jugement. Le produit structure les données, explique le résultat et garde un rendu exploitable pour les fondateurs comme pour les fonds.",
-          badge: "Couche de crédibilité",
+          title: "Conçu pour résister à la lecture critique",
+          subtitle: "Le produit est pensé pour rester explicable, cadré et exploitable dans un vrai workflow de levée.",
+          badge: "Pourquoi ça tient",
+        };
+  const processCopy =
+    lang === "en"
+      ? {
+          label: "In three decisions",
+          title: "Simple for the founder, disciplined for the output",
+          subtitle: "No unnecessary branching. Alfred follows one sequence from intake to ranking.",
+        }
+      : {
+          label: "En trois décisions",
+          title: "Simple pour le fondateur, rigoureux pour le rendu",
+          subtitle: "Pas de détour inutile. Alfred suit une seule séquence, de l'intake au classement.",
         };
   const trustBand =
     lang === "en"
@@ -263,84 +279,31 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative lg:max-w-[31rem] lg:ml-auto">
-            <div className="premium-card section-frame rounded-[28px] border border-slate-200/70 p-5 sm:p-6">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <div>
-                  <p className="eyebrow">
-                    {previewCopy.report}
-                  </p>
-                  <p className="mt-2 text-lg font-semibold text-slate-900">{previewCopy.scorecard}</p>
-                </div>
-                <div className="rounded-2xl bg-emerald-50 px-4 py-3 text-right ring-1 ring-emerald-100 min-w-[9rem]">
-                  <p className="text-xs text-emerald-700">{previewCopy.score}</p>
-                  <p className="text-2xl font-bold text-emerald-800">81/100</p>
-                </div>
+          <div className="relative lg:max-w-[30rem] lg:ml-auto">
+            <div className="premium-card section-frame rounded-[30px] border border-slate-200/70 p-6 sm:p-7">
+              <div className="mb-6">
+                <p className="eyebrow mb-3">{heroPanel.label}</p>
+                <p className="headline-balance text-2xl font-semibold tracking-tight text-slate-950">
+                  {heroPanel.title}
+                </p>
               </div>
-
-              <div className="grid gap-4 pt-4 sm:grid-cols-2">
-                <div className="rounded-2xl bg-slate-50/90 p-4 ring-1 ring-slate-200/70">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-                    {previewCopy.strengths}
-                  </p>
-                  <ul className="mt-3 space-y-2 text-[15px] leading-relaxed text-slate-700">
-                    {previewCopy.strengthItems.map((item) => (
-                      <li key={item} className="flex gap-2">
-                        <CheckCircle2 className="mt-0.5 w-4 h-4 text-emerald-600 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="rounded-2xl bg-amber-50/90 p-4 ring-1 ring-amber-100">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-amber-700">
-                    {previewCopy.risks}
-                  </p>
-                  <ul className="mt-3 space-y-2 text-[15px] leading-relaxed text-slate-700">
-                    {previewCopy.riskItems.map((item) => (
-                      <li key={item} className="flex gap-2">
-                        <Target className="mt-0.5 w-4 h-4 text-amber-600 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="mt-4 rounded-2xl border border-blue-100 bg-blue-50/90 p-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-700">
-                      {previewCopy.fit}
-                    </p>
-                    <p className="mt-1 text-[15px] leading-relaxed text-slate-700">{previewCopy.fitDesc}</p>
-                  </div>
-                  <div className="shrink-0 rounded-full bg-white px-3 py-1 text-sm font-semibold text-blue-700 shadow-sm">
-                    {previewCopy.topFunds}
-                  </div>
-                </div>
-                <div className="mt-4 space-y-2">
-                  {["Partech", "Kima Ventures", "Alven"].map((fund, index) => (
-                    <div key={fund} className="flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-sm text-slate-700 shadow-sm ring-1 ring-slate-100">
-                      <span className="flex items-center gap-2">
-                        <Building2 className="w-4 h-4 text-blue-600" />
-                        {fund}
-                      </span>
-                      <span className="font-semibold text-slate-900">{92 - index * 5}/100</span>
+              <div className="space-y-3">
+                {heroPanel.items.map((item) => (
+                  <div key={item.title} className="flex gap-3 rounded-2xl border border-slate-200/80 bg-white/80 p-4">
+                    <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-blue-50">
+                      {item.icon}
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-4 space-y-2 rounded-2xl bg-slate-950 p-4 text-sm text-slate-200 shadow-[0_18px_38px_rgba(15,23,42,0.24)]">
-                {previewCopy.bullets.map((item) => (
-                  <div key={item} className="flex gap-2 leading-relaxed">
-                    <SearchCheck className="mt-0.5 w-4 h-4 text-blue-300 shrink-0" />
-                    <span>{item}</span>
+                    <div>
+                      <p className="text-sm font-semibold text-slate-950">{item.title}</p>
+                      <p className="mt-1 text-sm leading-6 text-slate-500">{item.desc}</p>
+                    </div>
                   </div>
                 ))}
               </div>
+              <Link href="/how-it-works" className="mt-5 flex items-center justify-between rounded-2xl bg-slate-950 px-4 py-3 text-sm text-slate-200">
+                <span>{heroPanel.note}</span>
+                <ArrowRight className="w-4 h-4 text-blue-300" />
+              </Link>
             </div>
           </div>
         </div>
@@ -365,19 +328,19 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-white py-20">
+      <section className="bg-slate-950 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 max-w-3xl">
-            <p className="eyebrow mb-4">{credibilityCopy.badge}</p>
-            <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-4">{credibilityCopy.title}</h2>
-            <p className="text-slate-500 leading-relaxed">{credibilityCopy.subtitle}</p>
+            <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.22em] text-blue-300">{credibilityCopy.badge}</p>
+            <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-white tracking-tight mb-4">{credibilityCopy.title}</h2>
+            <p className="max-w-2xl leading-relaxed text-slate-300">{credibilityCopy.subtitle}</p>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
             {trustItems.map((item) => (
-              <div key={item.title} className="premium-card rounded-3xl border border-slate-200/70 p-6">
-                <div className="mb-4 inline-flex rounded-2xl bg-blue-100 p-3 ring-1 ring-blue-200/70">{item.icon}</div>
-                <h3 className="text-lg font-semibold text-slate-900">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.desc}</p>
+              <div key={item.title} className="rounded-[28px] border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm">
+                <div className="mb-4 inline-flex rounded-2xl bg-white/8 p-3 ring-1 ring-white/10">{item.icon}</div>
+                <h3 className="text-lg font-semibold text-white">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-300">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -387,34 +350,33 @@ export default function Home() {
       <section className="bg-slate-50/80 py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
-            <p className="eyebrow mb-4">{l.processLabel}</p>
-            <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-slate-900 mb-4 tracking-tight">{l.howTitle}</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto">{l.howSubtitle}</p>
+            <p className="eyebrow mb-4">{processCopy.label}</p>
+            <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-slate-900 mb-4 tracking-tight">{processCopy.title}</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">{processCopy.subtitle}</p>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
             {methodItems.map((item) => (
-              <div key={item.step} className="premium-card rounded-3xl border border-slate-200/70 p-7">
+              <div key={item.step} className="rounded-[28px] border border-slate-200/80 bg-white p-8 shadow-[0_20px_50px_rgba(15,23,42,0.05)]">
                 <div className="flex items-center justify-between mb-6">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 font-semibold text-blue-700">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-950 font-semibold text-white">
                     {item.step}
                   </span>
-                  <span className="text-xs uppercase tracking-[0.2em] text-slate-300">Alfred</span>
+                  <span className="h-px flex-1 mx-4 bg-slate-200" />
                 </div>
-                <h3 className="text-xl font-semibold tracking-tight text-slate-900">{item.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-slate-600">{item.desc}</p>
+                <h3 className="text-xl font-semibold tracking-tight text-slate-950">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── COMMENT ÇA MARCHE ── */}
       <section className="bg-white py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="mb-16 max-w-3xl">
             <p className="eyebrow mb-4">{pipelineCopy.label}</p>
             <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-slate-900 mb-4 tracking-tight">{pipelineCopy.title}</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto">{pipelineCopy.subtitle}</p>
+            <p className="text-slate-500 max-w-2xl">{pipelineCopy.subtitle}</p>
             <Link href="/how-it-works" className="inline-flex items-center gap-1.5 mt-5 text-sm text-blue-600 hover:text-blue-700 font-medium">
               {t.nav.seeProcess} <ArrowRight className="w-3.5 h-3.5" />
             </Link>
@@ -425,15 +387,15 @@ export default function Home() {
               { step: "02", icon: <Brain className="w-5 h-5 text-blue-600" />, ...l.steps[1] },
               { step: "03", icon: <Target className="w-5 h-5 text-blue-600" />, ...l.steps[2] },
             ].map((item) => (
-              <div key={item.step} className="premium-card group relative rounded-[26px] border border-slate-200/70 p-8 hover:border-blue-200 hover:-translate-y-0.5 transition-all duration-300">
+              <div key={item.step} className="group relative rounded-[28px] border border-slate-200/80 bg-slate-50/70 p-8 transition-all duration-300 hover:border-blue-200">
                 <div className="flex items-center justify-between mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-sm">
                     {item.icon}
                   </div>
-                  <span className="text-5xl font-bold text-slate-100 select-none group-hover:text-blue-50 transition-colors">{item.step}</span>
+                  <span className="text-5xl font-bold text-slate-200 select-none transition-colors group-hover:text-blue-100">{item.step}</span>
                 </div>
                 <h3 className="font-semibold text-slate-900 text-lg mb-2 tracking-tight">{item.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
+                <p className="text-slate-500 text-sm leading-7">{item.desc}</p>
               </div>
             ))}
           </div>
