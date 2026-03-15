@@ -20,31 +20,69 @@ export type MatchFitBreakdown = {
   notableCompanies: string[];
   matchedKeywords: string[];
   keywordCoverage: number;
+  sharedSignals: string[];
+};
+
+type NarrativeSignal = {
+  label: string;
+  patterns: string[];
 };
 
 const NOISE_KEYWORDS = new Set([
   "about",
+  "across",
+  "afin",
+  "after",
+  "ainsi",
+  "allow",
+  "allows",
+  "apporte",
+  "apportent",
+  "around",
   "avec",
+  "avoir",
+  "based",
+  "become",
+  "built",
   "build",
   "building",
+  "celle",
+  "celles",
+  "celui",
+  "ceux",
   "cette",
+  "chaque",
+  "chez",
   "cible",
+  "comment",
   "company",
   "companies",
+  "contre",
+  "dans",
+  "depuis",
+  "developpe",
+  "developpent",
+  "develops",
   "digital",
   "digitale",
+  "elles",
+  "entre",
   "europe",
   "european",
   "europeenne",
   "europeennes",
   "europeens",
+  "for",
   "fonds",
   "focus",
   "french",
   "france",
   "future",
+  "grace",
   "global",
   "growth",
+  "helps",
+  "into",
   "invest",
   "investing",
   "investment",
@@ -52,28 +90,86 @@ const NOISE_KEYWORDS = new Set([
   "investit",
   "investor",
   "investors",
+  "leur",
+  "leurs",
+  "making",
   "market",
   "markets",
   "modele",
   "modeles",
   "network",
+  "nous",
+  "notre",
+  "offre",
+  "offrent",
+  "over",
   "plateforme",
   "platform",
   "product",
   "products",
+  "pour",
+  "provides",
+  "render",
+  "sa",
   "scale",
   "scalable",
+  "ses",
   "services",
   "solution",
   "solutions",
   "startup",
   "startups",
+  "such",
+  "sur",
   "technology",
   "technologies",
   "tech",
+  "their",
+  "through",
+  "under",
   "venture",
+  "vers",
+  "votre",
+  "with",
   "worldwide",
+  "your",
 ]);
+
+const NARRATIVE_SIGNALS: NarrativeSignal[] = [
+  { label: "SaaS", patterns: ["saas", "software", "logiciel"] },
+  { label: "B2B", patterns: ["b2b", "enterprise", "entreprise"] },
+  { label: "B2C", patterns: ["b2c", "consumer"] },
+  { label: "FinTech", patterns: ["fintech", "paiement", "payment", "payments", "banque", "bank", "credit", "lending"] },
+  { label: "InsurTech", patterns: ["insurtech", "assurance", "insurance"] },
+  { label: "HealthTech", patterns: ["healthtech", "medtech", "sante", "health"] },
+  { label: "DeepTech", patterns: ["deeptech", "hardware", "scientifique", "scientific"] },
+  { label: "AI", patterns: ["ia", "ai", "machine learning"] },
+  { label: "Cybersecurity", patterns: ["cyber", "cybersecurity", "cybersecurite", "securite", "security"] },
+  { label: "Marketplace", patterns: ["marketplace", "place de marche", "places de marche"] },
+  { label: "E-commerce", patterns: ["e-commerce", "ecommerce", "commerce"] },
+  { label: "Retail", patterns: ["retail"] },
+  { label: "PropTech", patterns: ["proptech", "immobilier", "real estate"] },
+  { label: "GreenTech", patterns: ["greentech", "cleantech", "climat", "climate", "decarbon", "decarbonation"] },
+  { label: "Energy", patterns: ["energie", "energy"] },
+  { label: "FoodTech", patterns: ["foodtech", "food", "restauration"] },
+  { label: "AgriTech", patterns: ["agritech", "agri", "agriculture", "agricole"] },
+  { label: "Mobility", patterns: ["mobilite", "mobility", "transport"] },
+  { label: "Logistics", patterns: ["logistique", "logistics", "supply chain"] },
+  { label: "Travel", patterns: ["travel", "voyage", "tourisme"] },
+  { label: "Hospitality", patterns: ["hospitality", "hotel", "hotellerie"] },
+  { label: "EdTech", patterns: ["edtech", "education", "formation"] },
+  { label: "Media", patterns: ["media", "medias", "content", "contenu"] },
+  { label: "Gaming", patterns: ["gaming", "game", "jeu video", "jeux video"] },
+  { label: "Developer tools", patterns: ["api", "developer", "developpeur", "infra", "infrastructure", "devtools"] },
+  { label: "Data", patterns: ["data", "donnees", "analytics"] },
+  { label: "HR", patterns: ["rh", "recrutement", "recruiting", "talent"] },
+  { label: "LegalTech", patterns: ["legaltech", "juridique", "legal"] },
+  { label: "RegTech", patterns: ["regtech", "compliance", "regulation", "reglementaire"] },
+  { label: "Biotech", patterns: ["biotech", "biologie", "therapeutique"] },
+  { label: "Robotics", patterns: ["robot", "robotique", "robotics"] },
+  { label: "Luxury", patterns: ["luxe", "luxury", "fashion", "mode"] },
+  { label: "Beauty", patterns: ["beauty", "beaute", "cosmetique"] },
+];
 
 export function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
@@ -105,6 +201,14 @@ function getDistinctiveKeywordEntries(value: string) {
   }
 
   return [...entries.entries()].map(([normalized, label]) => ({ normalized, label }));
+}
+
+function getNarrativeSignals(value: string) {
+  const normalizedValue = normalizeText(value);
+
+  return NARRATIVE_SIGNALS.filter((signal) =>
+    signal.patterns.some((pattern) => normalizedValue.includes(normalizeText(pattern)))
+  ).map((signal) => signal.label);
 }
 
 export function canonicalizeStage(value: string): CanonicalStage {
@@ -223,12 +327,18 @@ function getPortfolioNarrativeInsights(startup: Startup, vc: VentureCapital) {
     [vc.description, vc.investment_thesis, vc.notable_investments ?? "", ...vc.sectors].join(" ")
   );
   const keywords = getDistinctiveKeywordEntries(startupNarrative);
+  const startupSignals = getNarrativeSignals(startupNarrative);
+  const vcSignals = new Set(
+    getNarrativeSignals([vc.description, vc.investment_thesis, vc.notable_investments ?? "", ...vc.sectors].join(" "))
+  );
+  const sharedSignals = startupSignals.filter((signal, index) => startupSignals.indexOf(signal) === index && vcSignals.has(signal)).slice(0, 4);
 
   if (keywords.length === 0) {
     return {
       score: 62,
       matchedKeywords: [] as string[],
       keywordCoverage: 0,
+      sharedSignals,
     };
   }
 
@@ -239,22 +349,22 @@ function getPortfolioNarrativeInsights(startup: Startup, vc: VentureCapital) {
   const coverage = matchedKeywords.length / keywords.length;
 
   if (coverage >= 0.42) {
-    return { score: 94, matchedKeywords, keywordCoverage: coverage };
+    return { score: 94, matchedKeywords, keywordCoverage: coverage, sharedSignals };
   }
   if (coverage >= 0.3) {
-    return { score: 86, matchedKeywords, keywordCoverage: coverage };
+    return { score: 86, matchedKeywords, keywordCoverage: coverage, sharedSignals };
   }
   if (coverage >= 0.2) {
-    return { score: 78, matchedKeywords, keywordCoverage: coverage };
+    return { score: 78, matchedKeywords, keywordCoverage: coverage, sharedSignals };
   }
   if (coverage >= 0.12) {
-    return { score: 68, matchedKeywords, keywordCoverage: coverage };
+    return { score: 68, matchedKeywords, keywordCoverage: coverage, sharedSignals };
   }
   if (coverage >= 0.06) {
-    return { score: 58, matchedKeywords, keywordCoverage: coverage };
+    return { score: 58, matchedKeywords, keywordCoverage: coverage, sharedSignals };
   }
 
-  return { score: 46, matchedKeywords, keywordCoverage: coverage };
+  return { score: 46, matchedKeywords, keywordCoverage: coverage, sharedSignals };
 }
 
 export function scoreFinancialFit(financialAnalysis: FinancialAnalysis) {
@@ -339,5 +449,6 @@ export function buildMatchFitBreakdown(
     notableCompanies: getNotableCompanies(vc.notable_investments),
     matchedKeywords: portfolioInsights.matchedKeywords,
     keywordCoverage: portfolioInsights.keywordCoverage,
+    sharedSignals: portfolioInsights.sharedSignals,
   };
 }

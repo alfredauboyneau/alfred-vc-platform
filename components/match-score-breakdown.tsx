@@ -74,7 +74,7 @@ function buildCopy(lang: Lang) {
           thesis: "Thèse",
           stage: "Stade",
           ticket: "Ticket",
-          portfolio: "Portefeuille",
+          portfolio: "Historique d'investissement",
         },
         rows: {
           startupSector: "Secteur de la startup",
@@ -84,11 +84,9 @@ function buildCopy(lang: Lang) {
           amountSought: "Montant recherché",
           fundRange: "Fourchette de ticket",
           listedDeals: "Participations connues",
-          detectedSignals: "Points communs relevés",
-          source: "Base utilisée",
+          detectedSignals: "Signaux comparables",
           noDeals: "Aucune participation nommée dans les données disponibles.",
-          noSignals: "Aucun point commun explicite relevé.",
-          sourceText: "Description du fonds, thèse d'investissement et participations connues enregistrées dans Alfred.",
+          noSignals: "Aucun signal comparable clair.",
         },
         summaries: {
           thesis: {
@@ -111,8 +109,8 @@ function buildCopy(lang: Lang) {
           },
           portfolio: {
             high: "Historique cohérent",
-            medium: "Quelques précédents",
-            low: "Peu de précédents",
+            medium: "Quelques précédents comparables",
+            low: "Peu de précédents comparables",
           },
         },
       };
@@ -191,11 +189,10 @@ export function MatchScoreBreakdown({
         },
         {
           label: copy.rows.detectedSignals,
-          value: breakdown.matchedKeywords.length > 0
-            ? joinList(breakdown.matchedKeywords)
+          value: breakdown.sharedSignals.length > 0
+            ? joinList(breakdown.sharedSignals)
             : copy.rows.noSignals,
         },
-        { label: copy.rows.source, value: copy.rows.sourceText },
       ],
     },
   ] as const;
