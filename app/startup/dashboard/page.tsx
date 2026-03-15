@@ -29,6 +29,7 @@ import { useLanguage, LanguageToggle } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { getNumberLocale, localizeSector, localizeStage } from "@/lib/taxonomy";
+import { MatchScoreBreakdown } from "@/components/match-score-breakdown";
 
 /* ────────────────────────────────── helpers ── */
 
@@ -313,6 +314,7 @@ function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup })
                     <ScoreBadge score={match.score} />
                   </div>
                   <p className="text-sm leading-6 text-slate-600 italic mb-3">&ldquo;{match.analysis}&rdquo;</p>
+                  {vc && <MatchScoreBreakdown startup={startup} vc={vc} lang={lang} />}
                   {vc && (
                     <div className="flex flex-wrap gap-1 mb-2">
                       {vc.sectors?.slice(0, 3).map((s: string) => (

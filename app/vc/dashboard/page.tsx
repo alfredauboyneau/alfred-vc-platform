@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import { supabase, type Match } from "@/lib/supabase";
+import { supabase, type Match, type VentureCapital } from "@/lib/supabase";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,6 +34,7 @@ import { useLanguage, LanguageToggle } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { getNumberLocale, localizeSector, localizeStage } from "@/lib/taxonomy";
+import { MatchScoreBreakdown } from "@/components/match-score-breakdown";
 
 /* ────────────────────────────────── helpers ── */
 
@@ -152,7 +153,7 @@ function NoVCState() {
 
 /* ────────────────────────────────── tab: deal flow ── */
 
-function DealFlowTab({ matches }: { matches: Match[] }) {
+function DealFlowTab({ matches, vc }: { matches: Match[]; vc: VentureCapital }) {
   const { t, lang } = useLanguage();
   const d = t.vcDash;
   const numberLocale = getNumberLocale(lang);
@@ -306,6 +307,7 @@ function DealFlowTab({ matches }: { matches: Match[] }) {
                           </Badge>
                         </div>
                         <p className="text-sm text-slate-600 italic">&ldquo;{match.analysis}&rdquo;</p>
+                        {startup && <MatchScoreBreakdown startup={startup} vc={vc} lang={lang} />}
 
                         {isOpen && fa && (
                           <div className="mt-4 pt-4 border-t border-slate-200/80 space-y-4">
@@ -542,7 +544,7 @@ function DashboardContent() {
     <>
       <TabBar active={activeTab} onChange={setActiveTab} />
       <div className="max-w-5xl mx-auto px-4 py-8">
-        {activeTab === "dealflow" && <DealFlowTab matches={matches} />}
+        {activeTab === "dealflow" && <DealFlowTab matches={matches} vc={vc} />}
         {activeTab === "profil" && <ProfilVCTab vc={vc} />}
       </div>
     </>
