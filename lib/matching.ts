@@ -7,9 +7,66 @@ export type MatchResult = {
   analysis: string;
 };
 
+type RawMatchResult = MatchResult & {
+  portfolio_fit?: number;
+};
+
 const MAX_VCS_FOR_CLAUDE = 35;
 
 type CanonicalStage = "pre-seed" | "seed" | "series-a" | "series-b" | "growth" | "other";
+
+const NOISE_KEYWORDS = new Set([
+  "about",
+  "avec",
+  "build",
+  "building",
+  "cette",
+  "cible",
+  "company",
+  "companies",
+  "digital",
+  "digitale",
+  "europe",
+  "european",
+  "europeenne",
+  "europeennes",
+  "europeens",
+  "fonds",
+  "focus",
+  "french",
+  "france",
+  "future",
+  "global",
+  "growth",
+  "invest",
+  "investing",
+  "investment",
+  "investissements",
+  "investit",
+  "investor",
+  "investors",
+  "market",
+  "markets",
+  "modele",
+  "modeles",
+  "network",
+  "plateforme",
+  "platform",
+  "product",
+  "products",
+  "scale",
+  "scalable",
+  "services",
+  "solution",
+  "solutions",
+  "startup",
+  "startups",
+  "technology",
+  "technologies",
+  "tech",
+  "venture",
+  "worldwide",
+]);
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
@@ -28,6 +85,10 @@ function getKeywords(value: string) {
     .filter((word) => word.length > 3);
 }
 
+function getDistinctiveKeywords(value: string) {
+  return [...new Set(getKeywords(value).filter((word) => !NOISE_KEYWORDS.has(word)))];
+}
+
 function canonicalizeStage(value: string): CanonicalStage {
   const stage = normalizeText(value);
 
@@ -44,7 +105,9 @@ function scoreSectorFit(startup: Startup, vc: VentureCapital) {
   const startupSector = normalizeText(startup.sector);
   const startupKeywords = getKeywords(startup.sector);
   const normalizedSectors = vc.sectors.map(normalizeText);
-  const vcText = normalizeText([...vc.sectors, vc.investment_thesis].join(" "));
+  const vcText = normalizeText(
+    [...vc.sectors, vc.description, vc.investment_thesis, vc.notable_investments ?? ""].join(" ")
+  );
   const isBroad = normalizedSectors.some(
     (sector) => sector.includes("tous secteurs") || sector.includes("all sectors")
   );
@@ -123,6 +186,38 @@ function scoreTicketFit(startup: Startup, vc: VentureCapital) {
   return 28;
 }
 
+function scorePortfolioNarrativeFit(startup: Startup, vc: VentureCapital) {
+  const startupNarrative = [
+    startup.tagline,
+    startup.sector,
+    startup.problem,
+    startup.solution,
+    startup.market_size,
+    startup.traction,
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const vcNarrative = normalizeText(
+    [vc.description, vc.investment_thesis, vc.notable_investments ?? "", ...vc.sectors].join(" ")
+  );
+  const keywords = getDistinctiveKeywords(startupNarrative);
+
+  if (keywords.length === 0) {
+    return 62;
+  }
+
+  const matches = keywords.filter((keyword) => vcNarrative.includes(keyword)).length;
+  const coverage = matches / keywords.length;
+
+  if (coverage >= 0.42) return 94;
+  if (coverage >= 0.3) return 86;
+  if (coverage >= 0.2) return 78;
+  if (coverage >= 0.12) return 68;
+  if (coverage >= 0.06) return 58;
+
+  return 46;
+}
+
 function scoreFinancialFit(financialAnalysis: FinancialAnalysis) {
   const readinessOffset =
     financialAnalysis.investment_readiness === "ready"
@@ -147,29 +242,60 @@ function calibrateMatchScore(
   rawScore: number,
   startup: Startup,
   vc: VentureCapital,
-  financialAnalysis: FinancialAnalysis
+  financialAnalysis: FinancialAnalysis,
+  portfolioFit?: number
 ) {
   const sectorScore = scoreSectorFit(startup, vc);
   const stageScore = scoreStageFit(startup, vc);
   const ticketScore = scoreTicketFit(startup, vc);
   const financialScore = scoreFinancialFit(financialAnalysis);
+  const narrativePortfolioScore = scorePortfolioNarrativeFit(startup, vc);
+  const hasPortfolioData = Boolean(vc.notable_investments?.trim());
+  const safePortfolioFit =
+    typeof portfolioFit === "number" && Number.isFinite(portfolioFit)
+      ? clamp(Math.round(portfolioFit), 0, 100)
+      : undefined;
+  const portfolioScore =
+    safePortfolioFit === undefined
+      ? narrativePortfolioScore
+      : hasPortfolioData
+      ? Math.round(safePortfolioFit * 0.7 + narrativePortfolioScore * 0.3)
+      : Math.round(safePortfolioFit * 0.4 + narrativePortfolioScore * 0.6);
 
   const objectiveScore = Math.round(
-    sectorScore * 0.45 +
+    sectorScore * 0.35 +
       stageScore * 0.2 +
       ticketScore * 0.2 +
-      financialScore * 0.15
+      financialScore * 0.1 +
+      portfolioScore * 0.15
   );
 
-  let maxScore = 94;
+  let maxScore = 93;
 
   if (
     sectorScore >= 95 &&
     stageScore >= 95 &&
     ticketScore >= 95 &&
-    financialScore >= 90
+    financialScore >= 92 &&
+    portfolioScore >= 92
+  ) {
+    maxScore = 98;
+  } else if (
+    sectorScore >= 95 &&
+    stageScore >= 95 &&
+    ticketScore >= 95 &&
+    financialScore >= 88 &&
+    portfolioScore >= 84
   ) {
     maxScore = 96;
+  } else if (
+    sectorScore >= 88 &&
+    stageScore >= 88 &&
+    ticketScore >= 88 &&
+    financialScore >= 80 &&
+    portfolioScore >= 78
+  ) {
+    maxScore = 94;
   }
 
   if (financialAnalysis.investment_readiness === "not_ready") {
@@ -183,8 +309,11 @@ function calibrateMatchScore(
   if (ticketScore < 70) maxScore = Math.min(maxScore, 78);
   if (stageScore < 50 || ticketScore < 50) maxScore = Math.min(maxScore, 66);
   if (objectiveScore < 60) maxScore = Math.min(maxScore, 70);
+  if (hasPortfolioData && portfolioScore < 70) maxScore = Math.min(maxScore, 84);
+  if (hasPortfolioData && portfolioScore < 55) maxScore = Math.min(maxScore, 76);
+  if (hasPortfolioData && portfolioScore < 40) maxScore = Math.min(maxScore, 68);
 
-  const blendedScore = Math.round(clamp(rawScore, 0, 100) * 0.4 + objectiveScore * 0.6);
+  const blendedScore = Math.round(clamp(rawScore, 0, 100) * 0.45 + objectiveScore * 0.55);
 
   return clamp(Math.min(blendedScore, maxScore), 0, 100);
 }
@@ -198,7 +327,9 @@ function preFilterVCs(startup: Startup, vcs: VentureCapital[]): VentureCapital[]
 
   const scored = vcs.map((vc) => {
     let score = 0;
-    const vcText = normalizeText([...vc.sectors, vc.investment_thesis].join(" "));
+    const vcText = normalizeText(
+      [...vc.sectors, vc.description, vc.investment_thesis, vc.notable_investments ?? ""].join(" ")
+    );
 
     // Correspondance secteur
     for (const word of sectorWords) {
@@ -232,6 +363,9 @@ function preFilterVCs(startup: Startup, vcs: VentureCapital[]): VentureCapital[]
     // Correspondance ticket
     if (amount >= vc.ticket_min * 0.3 && amount <= vc.ticket_max * 3) score += 2;
     if (amount >= vc.ticket_min && amount <= vc.ticket_max) score += 3;
+
+    // Similarite avec le comportement d'investissement historique
+    score += Math.round(scorePortfolioNarrativeFit(startup, vc) / 25);
 
     return { vc, score };
   });
@@ -276,10 +410,12 @@ Résumé : ${financialAnalysis.summary}
     .map(
       (vc) => `VC_ID: ${vc.id}
 Nom : ${vc.name}
+Description : ${vc.description}
 Secteurs : ${vc.sectors.join(", ")}
 Stades : ${vc.stages.join(", ")}
 Ticket : ${vc.ticket_min.toLocaleString("fr-FR")} € — ${vc.ticket_max.toLocaleString("fr-FR")} €
-Thèse : ${vc.investment_thesis.slice(0, 250)}`
+Thèse : ${vc.investment_thesis.slice(0, 320)}
+Investissements notables : ${vc.notable_investments || "Non renseigné"}`
     )
     .join("\n---\n");
 
@@ -299,18 +435,23 @@ ${startupProfile}
 ${vcsFormatted}
 
 For each VC, evaluate compatibility taking into account:
-1. Sector / investment thesis alignment (50% of score)
-2. Stage and ticket requested vs. what the VC invests (30% of score)
-3. Financial attractiveness and startup maturity (20% of score)
+1. Sector / stated thesis alignment (35% of score)
+2. Stage and ticket requested vs. what the VC actually invests (25% of score)
+3. Consistency with the fund's past investments and real portfolio pattern (25% of score)
+4. Financial attractiveness and fundraising readiness (15% of score)
 
 Strict scoring anchors:
-- 95-100 = exceptional and rare, only when thesis, stage and ticket fit with no material reservation
+- 95-100 = exceptional and rare, only when thesis, stage, ticket and historical portfolio pattern are all strongly aligned
 - 85-94 = very strong fit, with at most one minor caveat
 - 70-84 = credible but imperfect fit
 - 55-69 = partial fit
 - 0-54 = weak fit
 
 Do not hand out 90+ by default. Use the full scale.
+Use past investments as evidence of actual investing behavior, not just stated marketing copy.
+If a fund has previously invested in companies that are genuinely similar in stage, vertical, business model or go-to-market, reflect it in the score.
+If the portfolio history contradicts the match, pull the score down even if the stated thesis sounds broad.
+If everything truly lines up, a genuine perfect match is allowed.
 If stage or ticket is clearly misaligned, the score cannot exceed 74.
 If sector / thesis alignment is weak, the score cannot exceed 69.
 If the startup is not ready to raise, avoid scores above 84 unless the fit is truly exceptional.
@@ -320,11 +461,13 @@ Reply ONLY with valid JSON (no markdown, no backticks) in this exact format:
   {
     "vc_id": "<exact VC id>",
     "score": <integer between 0 and 100>,
+    "portfolio_fit": <integer between 0 and 100>,
     "analysis": "<2-3 sentences explaining why this VC matches (or not) this startup, in English>"
   }
 ]
 
-Include ALL ${relevantVCs.length} VCs in the response, sorted by descending score.`
+Include ALL ${relevantVCs.length} VCs in the response, sorted by descending score.
+When relevant, mention the portfolio pattern or notable investments in the analysis.`
           : `Tu es un expert en venture capital français. Évalue la compatibilité de cette startup avec chaque fonds de VC.
 
 === PROFIL STARTUP ===
@@ -334,18 +477,23 @@ ${startupProfile}
 ${vcsFormatted}
 
 Pour chaque VC, évalue la compatibilité en tenant compte :
-1. De l'adéquation secteur / thèse d'investissement (50% du score)
-2. Du stade et du ticket demandé vs. ce que le VC investit (30% du score)
-3. De l'attractivité financière et de la maturité de la startup (20% du score)
+1. De l'adéquation secteur / thèse d'investissement affichée (35% du score)
+2. Du stade et du ticket demandé vs. ce que le VC investit vraiment (25% du score)
+3. De la cohérence avec les investissements passés du fonds et son portefeuille historique (25% du score)
+4. De l'attractivité financière et de la maturité de levée (15% du score)
 
 Barème strict :
-- 95-100 = exceptionnel et rare, réservé aux cas où thèse, stade et ticket sont alignés sans réserve importante
+- 95-100 = exceptionnel et rare, réservé aux cas où thèse, stade, ticket et historique d'investissement sont tous fortement alignés
 - 85-94 = très bon fit, avec au plus une réserve mineure
 - 70-84 = fit crédible mais imparfait
 - 55-69 = fit partiel
 - 0-54 = fit faible
 
 N'utilise pas 90+ par défaut. Utilise toute l'échelle.
+Prends les investissements passés comme un signal du comportement réel d'investissement, pas seulement comme du marketing.
+Si le fonds a déjà investi dans des startups vraiment proches en vertical, modèle économique, stade ou go-to-market, cela doit se voir dans le score.
+Si le portefeuille historique contredit le match, baisse le score même si la thèse affichée semble large.
+Si tout est vraiment aligné, un perfect match est autorisé.
 Si le stade ou le ticket est clairement décalé, le score ne peut pas dépasser 74.
 Si l'adéquation secteur / thèse est faible, le score ne peut pas dépasser 69.
 Si la startup n'est pas prête à lever, évite les scores supérieurs à 84 sauf cas vraiment exceptionnel.
@@ -355,11 +503,13 @@ Réponds UNIQUEMENT avec un JSON valide (sans markdown, sans backticks) dans ce 
   {
     "vc_id": "<id exact du VC>",
     "score": <nombre entier entre 0 et 100>,
+    "portfolio_fit": <nombre entier entre 0 et 100>,
     "analysis": "<2-3 phrases expliquant pourquoi ce VC correspond (ou non) à cette startup, en français>"
   }
 ]
 
-Inclus TOUS les ${relevantVCs.length} VCs dans la réponse, triés par score décroissant.`,
+Inclus TOUS les ${relevantVCs.length} VCs dans la réponse, triés par score décroissant.
+Quand c'est pertinent, cite le pattern du portefeuille ou des investissements notables dans l'analyse.`,
       },
     ],
   });
@@ -375,22 +525,29 @@ Inclus TOUS les ${relevantVCs.length} VCs dans la réponse, triés par score dé
     jsonText = jsonText.replace(/^```[\w]*\n?/, "").replace(/\n?```$/, "");
   }
 
-  const rawMatches = JSON.parse(jsonText) as MatchResult[];
+  const rawMatches = JSON.parse(jsonText) as RawMatchResult[];
   const vcById = new Map(relevantVCs.map((vc) => [vc.id, vc]));
 
   const calibratedMatches = rawMatches.map((match) => {
     const vc = vcById.get(match.vc_id);
+    const safeRawScore = clamp(Math.round(match.score), 0, 100);
+    const safePortfolioFit =
+      typeof match.portfolio_fit === "number" && Number.isFinite(match.portfolio_fit)
+        ? clamp(Math.round(match.portfolio_fit), 0, 100)
+        : undefined;
 
     if (!vc) {
       return {
-        ...match,
-        score: clamp(Math.round(match.score), 0, 100),
+        vc_id: match.vc_id,
+        analysis: match.analysis,
+        score: safeRawScore,
       };
     }
 
     return {
-      ...match,
-      score: calibrateMatchScore(match.score, startup, vc, financialAnalysis),
+      vc_id: match.vc_id,
+      analysis: match.analysis,
+      score: calibrateMatchScore(safeRawScore, startup, vc, financialAnalysis, safePortfolioFit),
     };
   });
 
