@@ -18,6 +18,8 @@ export type MatchFitBreakdown = {
   ticketFit: TicketFit;
   hasPortfolioData: boolean;
   notableCompanies: string[];
+  matchedKeywords: string[];
+  keywordCoverage: number;
 };
 
 const NOISE_KEYWORDS = new Set([
@@ -90,8 +92,19 @@ export function getKeywords(value: string) {
     .filter((word) => word.length > 3);
 }
 
-function getDistinctiveKeywords(value: string) {
-  return [...new Set(getKeywords(value).filter((word) => !NOISE_KEYWORDS.has(word)))];
+function getDistinctiveKeywordEntries(value: string) {
+  const rawWords = value.split(/[\s\/,\-+()]+/).filter((word) => word.length > 3);
+  const entries = new Map<string, string>();
+
+  for (const rawWord of rawWords) {
+    const normalized = normalizeText(rawWord);
+    if (normalized.length <= 3 || NOISE_KEYWORDS.has(normalized) || entries.has(normalized)) {
+      continue;
+    }
+    entries.set(normalized, rawWord);
+  }
+
+  return [...entries.entries()].map(([normalized, label]) => ({ normalized, label }));
 }
 
 export function canonicalizeStage(value: string): CanonicalStage {
@@ -192,6 +205,10 @@ export function scoreTicketFit(startup: Startup, vc: VentureCapital) {
 }
 
 export function scorePortfolioNarrativeFit(startup: Startup, vc: VentureCapital) {
+  return getPortfolioNarrativeInsights(startup, vc).score;
+}
+
+function getPortfolioNarrativeInsights(startup: Startup, vc: VentureCapital) {
   const startupNarrative = [
     startup.tagline,
     startup.sector,
@@ -205,22 +222,39 @@ export function scorePortfolioNarrativeFit(startup: Startup, vc: VentureCapital)
   const vcNarrative = normalizeText(
     [vc.description, vc.investment_thesis, vc.notable_investments ?? "", ...vc.sectors].join(" ")
   );
-  const keywords = getDistinctiveKeywords(startupNarrative);
+  const keywords = getDistinctiveKeywordEntries(startupNarrative);
 
   if (keywords.length === 0) {
-    return 62;
+    return {
+      score: 62,
+      matchedKeywords: [] as string[],
+      keywordCoverage: 0,
+    };
   }
 
-  const matches = keywords.filter((keyword) => vcNarrative.includes(keyword)).length;
-  const coverage = matches / keywords.length;
+  const matchedKeywords = keywords
+    .filter((keyword) => vcNarrative.includes(keyword.normalized))
+    .map((keyword) => keyword.label)
+    .slice(0, 4);
+  const coverage = matchedKeywords.length / keywords.length;
 
-  if (coverage >= 0.42) return 94;
-  if (coverage >= 0.3) return 86;
-  if (coverage >= 0.2) return 78;
-  if (coverage >= 0.12) return 68;
-  if (coverage >= 0.06) return 58;
+  if (coverage >= 0.42) {
+    return { score: 94, matchedKeywords, keywordCoverage: coverage };
+  }
+  if (coverage >= 0.3) {
+    return { score: 86, matchedKeywords, keywordCoverage: coverage };
+  }
+  if (coverage >= 0.2) {
+    return { score: 78, matchedKeywords, keywordCoverage: coverage };
+  }
+  if (coverage >= 0.12) {
+    return { score: 68, matchedKeywords, keywordCoverage: coverage };
+  }
+  if (coverage >= 0.06) {
+    return { score: 58, matchedKeywords, keywordCoverage: coverage };
+  }
 
-  return 46;
+  return { score: 46, matchedKeywords, keywordCoverage: coverage };
 }
 
 export function scoreFinancialFit(financialAnalysis: FinancialAnalysis) {
@@ -286,10 +320,11 @@ export function buildMatchFitBreakdown(
   vc: VentureCapital,
   financialAnalysis?: FinancialAnalysis | null
 ): MatchFitBreakdown {
+  const portfolioInsights = getPortfolioNarrativeInsights(startup, vc);
   const sectorScore = scoreSectorFit(startup, vc);
   const stageScore = scoreStageFit(startup, vc);
   const ticketScore = scoreTicketFit(startup, vc);
-  const portfolioScore = scorePortfolioNarrativeFit(startup, vc);
+  const portfolioScore = portfolioInsights.score;
 
   return {
     sectorScore,
@@ -302,5 +337,7 @@ export function buildMatchFitBreakdown(
     ticketFit: getTicketFit(ticketScore),
     hasPortfolioData: Boolean(vc.notable_investments?.trim()),
     notableCompanies: getNotableCompanies(vc.notable_investments),
+    matchedKeywords: portfolioInsights.matchedKeywords,
+    keywordCoverage: portfolioInsights.keywordCoverage,
   };
 }
