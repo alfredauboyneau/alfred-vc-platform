@@ -43,8 +43,8 @@ export default function Home() {
       : [
           {
             step: "01",
-            title: "Intake startup",
-            desc: "Les données société, les métriques et le contexte de levée sont structurées au même endroit.",
+            title: "Collecte des données",
+            desc: "Les informations de la startup, les métriques et le contexte de levée sont structurés au même endroit.",
           },
           {
             step: "02",
@@ -53,7 +53,7 @@ export default function Home() {
           },
           {
             step: "03",
-            title: "Scoring de fit VC",
+            title: "Classement des fonds",
             desc: "Les fonds sont filtrés par thèse, stade et ticket avant le classement final.",
           },
         ];
@@ -98,10 +98,10 @@ export default function Home() {
             {
               icon: <FileSpreadsheet className="w-4 h-4 text-blue-700" />,
               title: "Rendu exploitable",
-              desc: "Lisible pour les fondateurs, advisors et investisseurs.",
+              desc: "Lisible pour les fondateurs, leurs conseils et les investisseurs.",
             },
           ],
-          note: "Exemple détaillé du rapport sur la page process",
+          note: "Exemple détaillé du rapport sur la page Comment ça marche",
         };
   const trustBand =
     lang === "en"
@@ -112,13 +112,13 @@ export default function Home() {
         ]
       : [
           "Couverture du marché VC français",
-          "Scoring avec restitution lisible",
+          "Score explicable",
           "Rapports FR / EN",
         ];
   const footerNote =
     lang === "en"
       ? "Alfred structures startup information, produces a readable financial review and ranks compatible French funds. It is not investment advice."
-      : "Alfred structure les informations startup, produit une revue financière lisible et classe les fonds français compatibles. Ce n'est pas un conseil en investissement.";
+      : "Alfred structure les informations de la startup, produit une revue financière lisible et classe les fonds français compatibles. Ce n'est pas un conseil en investissement.";
 
   return (
     <div className="min-h-screen bg-white">

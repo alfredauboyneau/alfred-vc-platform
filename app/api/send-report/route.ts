@@ -32,23 +32,23 @@ function getEmailCopy(lang: Lang) {
   }
 
   return {
-    title: "Ton rapport Alfred",
-    hero: "Ton analyse est prête,",
-    fundsAnalyzed: "fonds VC ont été analysés pour toi",
+    title: "Votre rapport Alfred",
+    hero: "Votre analyse est prête,",
+    fundsAnalyzed: "fonds VC ont été analysés pour vous",
     financialHealth: "Santé financière",
     ltvCac: "Ratio LTV/CAC",
     strengths: "Points forts",
     risks: "Points de vigilance",
-    topMatches: "Tes meilleurs matchs VC",
-    topMatch: "TOP MATCH",
+    topMatches: "Vos meilleurs fonds compatibles",
+    topMatch: "MEILLEUR MATCH",
     ticket: "Ticket",
-    ctaText: "Accède à ton tableau de bord complet pour voir tous les matchs et contacter les VCs directement.",
+    ctaText: "Accédez à votre tableau de bord complet pour voir tous les fonds compatibles et contacter directement les VCs.",
     ctaButton: "Voir mon tableau de bord",
-    footer: "Alfred · Plateforme IA de matching VC x Startup",
+    footer: "Alfred · Plateforme de qualification VC x startup",
     missingEmail: "Email manquant",
-    subject: "Ton analyse IA",
-    matchedVcs: "VCs matchés",
-    sendError: "Erreur envoi email",
+    subject: "Votre analyse",
+    matchedVcs: "fonds compatibles",
+    sendError: "Erreur d'envoi de l'email",
   };
 }
 
@@ -146,10 +146,10 @@ function buildEmailHTML(startup: Startup, matches: Match[], fa: FinancialAnalysi
       </div>
     </div>
 
-    <!-- Top VCs -->
+    <!-- Top matches -->
     <div style="padding:24px 40px; border-bottom:1px solid #f1f5f9;">
       <h2 style="font-size:16px; font-weight:600; color:#0f172a; margin:0 0 16px;">
-        🏆 ${lang === "en" ? `Your top ${top5.length} VC matches` : `Tes ${top5.length} meilleurs matchs VC`}
+        🏆 ${lang === "en" ? `Your top ${top5.length} VC matches` : `Vos ${top5.length} fonds les plus compatibles`}
       </h2>
       ${top5.map((m, i) => {
         const vc = m.venture_capital as any;

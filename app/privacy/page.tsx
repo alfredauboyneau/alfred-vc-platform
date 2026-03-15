@@ -55,7 +55,7 @@ export default function PrivacyPage() {
           eyebrow: "Confidentialité",
           title: "Politique de confidentialité",
           intro:
-            "Alfred est pensé pour des workflows de levée impliquant des informations financières et stratégiques. Cette page résume la façon dont les données produit sont utilisées, stockées et partagées.",
+            "Alfred est conçu pour des parcours de levée impliquant des informations financières et stratégiques. Cette page résume la façon dont les données produit sont utilisées, stockées et partagées.",
           sections: [
             {
               title: "Données collectées",

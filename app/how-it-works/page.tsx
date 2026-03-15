@@ -63,15 +63,15 @@ export default function HowItWorksPage() {
           strengths: "Points forts",
           risks: "Points d'attention",
           fit: "Classement des fonds",
-          fitDesc: "Ordonné par score, adéquation au stade, secteur et ticket.",
+          fitDesc: "Classé par score, adéquation de stade, secteur et ticket.",
           scorecard: "Synthèse Alfred",
           topFunds: "3 fonds prioritaires",
           strengthItems: ["Croissance mensuelle +14 %", "LTV/CAC supérieur à 3x", "Marge brute SaaS B2B de 78 %"],
-          riskItems: ["Runway inférieur à 12 mois", "Ticket concentré sur des fonds Seed"],
+          riskItems: ["Runway inférieur à 12 mois", "Compatibilité ticket surtout avec des fonds Seed"],
           bullets: [
             "Score de santé financière de 0 à 100",
             "Justification courte pour chaque fonds recommandé",
-            "Rendu lisible à partager avec advisors ou investisseurs",
+            "Rendu lisible à partager avec vos conseils ou vos investisseurs",
           ],
         };
 

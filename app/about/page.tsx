@@ -39,7 +39,7 @@ export default function AboutPage() {
       : [
           {
             title: "Explicable par construction",
-            desc: "Alfred doit produire un rendu qu'un fondateur ou un investisseur peut lire, challenger et réutiliser.",
+            desc: "Alfred doit produire un rendu qu'un fondateur ou un investisseur peut lire, discuter et réutiliser.",
           },
           {
             title: "Conçu d'abord pour le marché français",
@@ -251,7 +251,7 @@ export default function AboutPage() {
             {lang === "en" ? "Operating principles" : "Principes de fonctionnement"}
           </p>
           <h2 className="headline-balance text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-            {lang === "en" ? "A product built to stay readable and useful" : "Un produit pense pour rester lisible et utile"}
+            {lang === "en" ? "A product built to stay readable and useful" : "Un produit pensé pour rester lisible et utile"}
           </h2>
         </div>
         <div className="grid gap-5 md:grid-cols-3">

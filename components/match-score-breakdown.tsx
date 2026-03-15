@@ -74,7 +74,7 @@ function buildCopy(lang: Lang) {
           thesis: "Thèse",
           stage: "Stade",
           ticket: "Ticket",
-          portfolio: "Historique d'investissement",
+          portfolio: "Historique des investissements",
         },
         rows: {
           startupSector: "Secteur de la startup",

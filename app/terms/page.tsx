@@ -80,7 +80,7 @@ export default function TermsPage() {
             {
               title: "Disponibilité et limites",
               paragraphs: [
-                "Alfred est fourni sur une base best effort. La disponibilité, les rendus générés et la dépendance à des services tiers peuvent évoluer.",
+                "Alfred est fourni sur une base de moyens raisonnables. La disponibilité, les rendus générés et la dépendance à des services tiers peuvent évoluer.",
                 "Le produit peut faire évoluer ses prompts, sa logique de scoring, ses interfaces et ses politiques d'exploitation à mesure de sa maturation.",
               ],
             },

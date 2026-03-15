@@ -59,7 +59,7 @@ export default function LegalPage() {
             {
               title: "Hébergement et infrastructure cœur",
               paragraphs: [
-                "Le site est hébergé sur Vercel. Les données applicatives et l'authentification sont gérées via Supabase. L'envoi email peut reposer sur Resend et les rendus IA sur les services d'Anthropic.",
+                "Le site est hébergé sur Vercel. Les données applicatives et l'authentification sont gérées via Supabase. L'envoi d'emails peut reposer sur Resend et les rendus IA sur les services d'Anthropic.",
               ],
             },
             {
@@ -72,7 +72,7 @@ export default function LegalPage() {
             {
               title: "Propriété intellectuelle et usage",
               paragraphs: [
-                "Sauf mention contraire, la structure du produit, les textes, l'interface et les workflows présentés sur ce site relèvent de l'environnement produit Alfred.",
+                "Sauf mention contraire, la structure du produit, les textes, l'interface et les parcours présentés sur ce site relèvent de l'environnement produit Alfred.",
                 "Toute réutilisation au-delà d'une évaluation normale du produit ou d'un usage client doit être autorisée expressément.",
               ],
             },
