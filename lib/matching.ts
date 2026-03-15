@@ -9,39 +9,221 @@ export type MatchResult = {
 
 const MAX_VCS_FOR_CLAUDE = 35;
 
+type CanonicalStage = "pre-seed" | "seed" | "series-a" | "series-b" | "growth" | "other";
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function normalizeText(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function getKeywords(value: string) {
+  return normalizeText(value)
+    .split(/[\s\/,\-+()]+/)
+    .filter((word) => word.length > 3);
+}
+
+function canonicalizeStage(value: string): CanonicalStage {
+  const stage = normalizeText(value);
+
+  if (stage.includes("pre-seed") || stage.includes("pre seed")) return "pre-seed";
+  if (stage.includes("seed")) return "seed";
+  if (stage.includes("serie a") || stage.includes("series a")) return "series-a";
+  if (stage.includes("serie b") || stage.includes("series b")) return "series-b";
+  if (stage.includes("growth") || stage.includes("late")) return "growth";
+
+  return "other";
+}
+
+function scoreSectorFit(startup: Startup, vc: VentureCapital) {
+  const startupSector = normalizeText(startup.sector);
+  const startupKeywords = getKeywords(startup.sector);
+  const normalizedSectors = vc.sectors.map(normalizeText);
+  const vcText = normalizeText([...vc.sectors, vc.investment_thesis].join(" "));
+  const isBroad = normalizedSectors.some(
+    (sector) => sector.includes("tous secteurs") || sector.includes("all sectors")
+  );
+
+  if (
+    normalizedSectors.some(
+      (sector) =>
+        sector.includes(startupSector) ||
+        startupSector.includes(sector)
+    )
+  ) {
+    return 100;
+  }
+
+  const keywordMatches = startupKeywords.filter((keyword) => vcText.includes(keyword)).length;
+
+  if (keywordMatches >= Math.max(1, Math.ceil(startupKeywords.length * 0.6))) {
+    return 88;
+  }
+
+  if (isBroad) {
+    return 76;
+  }
+
+  if (keywordMatches >= 1) {
+    return 66;
+  }
+
+  return 38;
+}
+
+function scoreStageFit(startup: Startup, vc: VentureCapital) {
+  const startupStage = canonicalizeStage(startup.stage);
+  const vcStages = vc.stages.map(canonicalizeStage);
+  const normalizedStages = vc.stages.map(normalizeText);
+
+  if (vcStages.includes(startupStage)) {
+    return 100;
+  }
+
+  const adjacentStages: Record<CanonicalStage, CanonicalStage[]> = {
+    "pre-seed": ["seed"],
+    seed: ["pre-seed", "series-a"],
+    "series-a": ["seed", "series-b"],
+    "series-b": ["series-a", "growth"],
+    growth: ["series-b"],
+    other: [],
+  };
+
+  if (adjacentStages[startupStage].some((stage) => vcStages.includes(stage))) {
+    return 74;
+  }
+
+  if (normalizedStages.some((stage) => stage.includes("all") || stage.includes("tous"))) {
+    return 70;
+  }
+
+  return 34;
+}
+
+function scoreTicketFit(startup: Startup, vc: VentureCapital) {
+  const amount = startup.amount_sought;
+
+  if (amount >= vc.ticket_min && amount <= vc.ticket_max) {
+    return 100;
+  }
+
+  if (amount >= vc.ticket_min * 0.75 && amount <= vc.ticket_max * 1.35) {
+    return 80;
+  }
+
+  if (amount >= vc.ticket_min * 0.5 && amount <= vc.ticket_max * 2) {
+    return 58;
+  }
+
+  return 28;
+}
+
+function scoreFinancialFit(financialAnalysis: FinancialAnalysis) {
+  const readinessOffset =
+    financialAnalysis.investment_readiness === "ready"
+      ? 10
+      : financialAnalysis.investment_readiness === "soon"
+      ? 0
+      : -14;
+
+  const trajectoryOffset =
+    financialAnalysis.growth_trajectory === "exceptional"
+      ? 8
+      : financialAnalysis.growth_trajectory === "strong"
+      ? 5
+      : financialAnalysis.growth_trajectory === "moderate"
+      ? 0
+      : -6;
+
+  return clamp(financialAnalysis.financial_health_score + readinessOffset + trajectoryOffset, 25, 100);
+}
+
+function calibrateMatchScore(
+  rawScore: number,
+  startup: Startup,
+  vc: VentureCapital,
+  financialAnalysis: FinancialAnalysis
+) {
+  const sectorScore = scoreSectorFit(startup, vc);
+  const stageScore = scoreStageFit(startup, vc);
+  const ticketScore = scoreTicketFit(startup, vc);
+  const financialScore = scoreFinancialFit(financialAnalysis);
+
+  const objectiveScore = Math.round(
+    sectorScore * 0.45 +
+      stageScore * 0.2 +
+      ticketScore * 0.2 +
+      financialScore * 0.15
+  );
+
+  let maxScore = 94;
+
+  if (
+    sectorScore >= 95 &&
+    stageScore >= 95 &&
+    ticketScore >= 95 &&
+    financialScore >= 90
+  ) {
+    maxScore = 96;
+  }
+
+  if (financialAnalysis.investment_readiness === "not_ready") {
+    maxScore = Math.min(maxScore, 82);
+  } else if (financialAnalysis.investment_readiness === "soon") {
+    maxScore = Math.min(maxScore, 88);
+  }
+
+  if (sectorScore < 70) maxScore = Math.min(maxScore, 69);
+  if (stageScore < 70) maxScore = Math.min(maxScore, 74);
+  if (ticketScore < 70) maxScore = Math.min(maxScore, 78);
+  if (stageScore < 50 || ticketScore < 50) maxScore = Math.min(maxScore, 66);
+  if (objectiveScore < 60) maxScore = Math.min(maxScore, 70);
+
+  const blendedScore = Math.round(clamp(rawScore, 0, 100) * 0.4 + objectiveScore * 0.6);
+
+  return clamp(Math.min(blendedScore, maxScore), 0, 100);
+}
+
 // Pré-filtre les VCs les plus pertinents avant d'envoyer à Claude
 // Évite les prompts trop longs et les erreurs de token
 function preFilterVCs(startup: Startup, vcs: VentureCapital[]): VentureCapital[] {
-  const sectorWords = startup.sector
-    .toLowerCase()
-    .split(/[\s\/,\-]+/)
-    .filter((w) => w.length > 3);
-
-  const stage = startup.stage.toLowerCase();
+  const sectorWords = getKeywords(startup.sector);
+  const stage = normalizeText(startup.stage);
   const amount = startup.amount_sought;
 
   const scored = vcs.map((vc) => {
     let score = 0;
-    const vcText = [...vc.sectors, vc.investment_thesis].join(" ").toLowerCase();
+    const vcText = normalizeText([...vc.sectors, vc.investment_thesis].join(" "));
 
     // Correspondance secteur
     for (const word of sectorWords) {
       if (vcText.includes(word)) score += 4;
     }
-    if (vc.sectors.some((s) => s.toLowerCase().includes("tous secteurs"))) score += 2;
+    if (
+      vc.sectors.some((s) => {
+        const normalized = normalizeText(s);
+        return normalized.includes("tous secteurs") || normalized.includes("all sectors");
+      })
+    ) {
+      score += 2;
+    }
 
     // Correspondance stade
     const stageMap: Record<string, string[]> = {
-      "pre-seed": ["pre-seed", "pré-seed", "pre seed"],
-      "pré-seed": ["pre-seed", "pré-seed", "pre seed"],
+      "pre-seed": ["pre-seed", "pre seed"],
       seed: ["seed"],
-      "série a": ["série a", "series a", "série a"],
-      "série b": ["série b", "series b", "série b", "série b+"],
-      "série b+": ["série b+", "series b+", "série b", "growth"],
+      "serie a": ["serie a", "series a"],
+      "serie b": ["serie b", "series b"],
+      "serie b+": ["serie b+", "series b+", "growth"],
     };
     const matchStages = stageMap[stage] || [stage];
     for (const ms of matchStages) {
-      if (vc.stages.some((s) => s.toLowerCase().includes(ms))) {
+      if (vc.stages.some((s) => normalizeText(s).includes(normalizeText(ms)))) {
         score += 5;
         break;
       }
@@ -121,6 +303,18 @@ For each VC, evaluate compatibility taking into account:
 2. Stage and ticket requested vs. what the VC invests (30% of score)
 3. Financial attractiveness and startup maturity (20% of score)
 
+Strict scoring anchors:
+- 95-100 = exceptional and rare, only when thesis, stage and ticket fit with no material reservation
+- 85-94 = very strong fit, with at most one minor caveat
+- 70-84 = credible but imperfect fit
+- 55-69 = partial fit
+- 0-54 = weak fit
+
+Do not hand out 90+ by default. Use the full scale.
+If stage or ticket is clearly misaligned, the score cannot exceed 74.
+If sector / thesis alignment is weak, the score cannot exceed 69.
+If the startup is not ready to raise, avoid scores above 84 unless the fit is truly exceptional.
+
 Reply ONLY with valid JSON (no markdown, no backticks) in this exact format:
 [
   {
@@ -143,6 +337,18 @@ Pour chaque VC, évalue la compatibilité en tenant compte :
 1. De l'adéquation secteur / thèse d'investissement (50% du score)
 2. Du stade et du ticket demandé vs. ce que le VC investit (30% du score)
 3. De l'attractivité financière et de la maturité de la startup (20% du score)
+
+Barème strict :
+- 95-100 = exceptionnel et rare, réservé aux cas où thèse, stade et ticket sont alignés sans réserve importante
+- 85-94 = très bon fit, avec au plus une réserve mineure
+- 70-84 = fit crédible mais imparfait
+- 55-69 = fit partiel
+- 0-54 = fit faible
+
+N'utilise pas 90+ par défaut. Utilise toute l'échelle.
+Si le stade ou le ticket est clairement décalé, le score ne peut pas dépasser 74.
+Si l'adéquation secteur / thèse est faible, le score ne peut pas dépasser 69.
+Si la startup n'est pas prête à lever, évite les scores supérieurs à 84 sauf cas vraiment exceptionnel.
 
 Réponds UNIQUEMENT avec un JSON valide (sans markdown, sans backticks) dans ce format exact :
 [
@@ -169,5 +375,25 @@ Inclus TOUS les ${relevantVCs.length} VCs dans la réponse, triés par score dé
     jsonText = jsonText.replace(/^```[\w]*\n?/, "").replace(/\n?```$/, "");
   }
 
-  return JSON.parse(jsonText) as MatchResult[];
+  const rawMatches = JSON.parse(jsonText) as MatchResult[];
+  const vcById = new Map(relevantVCs.map((vc) => [vc.id, vc]));
+
+  const calibratedMatches = rawMatches.map((match) => {
+    const vc = vcById.get(match.vc_id);
+
+    if (!vc) {
+      return {
+        ...match,
+        score: clamp(Math.round(match.score), 0, 100),
+      };
+    }
+
+    return {
+      ...match,
+      score: calibrateMatchScore(match.score, startup, vc, financialAnalysis),
+    };
+  });
+
+  calibratedMatches.sort((a, b) => b.score - a.score);
+  return calibratedMatches;
 }
