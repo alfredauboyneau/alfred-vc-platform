@@ -27,7 +27,7 @@ export const translations = {
       howItWorks: "Comment ça marche",
     },
     landing: {
-      badge: "Qualification startup x VC pour le marché français",
+      badge: "Revue financière et matching VC pour le marché français",
       titlePart1: "Trouvez les bons",
       titleHighlight: "investisseurs",
       titlePart2: "en quelques minutes",
@@ -191,7 +191,7 @@ export const translations = {
     },
     about: {
       navTitle: "Alfred · Qui sommes-nous",
-      heroBadge: "Produit · Qualification startup x VC",
+      heroBadge: "Produit · Revue financière et matching VC",
       heroTitle: "Une méthode",
       heroTitleHighlight: "plus claire pour lever.",
       heroSubtitle: "Alfred aide les startups à préparer un dossier investissable et à cibler les fonds pertinents avec une méthode explicable, pensée pour le marché VC français.",
@@ -599,7 +599,7 @@ export const translations = {
       howItWorks: "How it works",
     },
     landing: {
-      badge: "Startup x VC qualification for the French market",
+      badge: "Financial review and VC matching for the French market",
       titlePart1: "Find the right",
       titleHighlight: "investors",
       titlePart2: "in minutes",
@@ -763,7 +763,7 @@ export const translations = {
     },
     about: {
       navTitle: "Alfred · About",
-      heroBadge: "Product · Startup x VC qualification",
+      heroBadge: "Product · Financial review and VC matching",
       heroTitle: "A clearer",
       heroTitleHighlight: "fundraising workflow.",
       heroSubtitle: "Alfred helps startups prepare an investable file and target relevant funds with an explainable method designed for the French VC market.",

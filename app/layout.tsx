@@ -8,7 +8,7 @@ import { AuthProvider } from "@/lib/auth-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Alfred — Qualification startup x VC",
+  title: "Alfred — Revue financière et matching VC",
   description:
     "Alfred structure les données des startups, génère une revue financière lisible et classe les fonds français compatibles.",
 };
