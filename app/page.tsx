@@ -23,12 +23,16 @@ export default function Home() {
   const { t, lang } = useLanguage();
   const l = t.landing;
   const vcLogos = [
-    { name: "Partech", src: "/vc-logos/partech.png", width: 640, height: 427, className: "max-w-[132px]" },
-    { name: "Eurazeo", src: "/vc-logos/eurazeo.svg", width: 220, height: 48, className: "max-w-[138px]" },
-    { name: "Kima Ventures", src: "/vc-logos/kima.png", width: 1200, height: 668, className: "max-w-[144px]" },
-    { name: "ISAI", src: "/vc-logos/isai.png", width: 2362, height: 944, className: "max-w-[122px]" },
-    { name: "Elaia", src: "/vc-logos/elaia.png", width: 180, height: 54, className: "max-w-[120px]" },
-    { name: "Daphni", src: "/vc-logos/daphni.svg", width: 220, height: 52, className: "max-w-[126px]" },
+    { name: "Partech", src: "/vc-logos/partech.png", width: 640, height: 427, className: "max-w-[118px] sm:max-w-[132px]" },
+    { name: "Eurazeo", src: "/vc-logos/eurazeo.svg", width: 220, height: 48, className: "max-w-[122px] sm:max-w-[142px]" },
+    { name: "Kima Ventures", src: "/vc-logos/kima.png", width: 1200, height: 668, className: "max-w-[124px] sm:max-w-[148px]" },
+    { name: "ISAI", src: "/vc-logos/isai.png", width: 2362, height: 944, className: "max-w-[110px] sm:max-w-[128px]" },
+    { name: "Elaia", src: "/vc-logos/elaia.png", width: 180, height: 54, className: "max-w-[110px] sm:max-w-[126px]" },
+    { name: "Daphni", src: "/vc-logos/daphni.svg", width: 220, height: 52, className: "max-w-[118px] sm:max-w-[136px]" },
+    { name: "Singular", src: "/vc-logos/singular.svg", width: 240, height: 52, className: "max-w-[124px] sm:max-w-[144px]" },
+    { name: "Frst", src: "/vc-logos/frst.svg", width: 220, height: 52, className: "max-w-[96px] sm:max-w-[112px]" },
+    { name: "Serena", src: "/vc-logos/serena.svg", width: 220, height: 60, className: "max-w-[118px] sm:max-w-[136px]" },
+    { name: "Founders Future", src: "/vc-logos/founders-future.png", width: 408, height: 168, className: "max-w-[124px] sm:max-w-[144px]" },
   ];
   const methodItems =
     lang === "en"
@@ -258,21 +262,23 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-8 sm:gap-x-14">
-              {vcLogos.map((logo) => (
-                <div
-                  key={logo.name}
-                  className="flex h-16 min-w-[128px] items-center justify-center"
-                >
-                  <Image
-                    src={logo.src}
-                    alt={`${logo.name} logo`}
-                    width={logo.width}
-                    height={logo.height}
-                    className={`h-auto max-h-10 w-auto object-contain opacity-90 grayscale ${logo.className}`}
-                  />
-                </div>
-              ))}
+            <div className="mt-10 logo-ribbon">
+              <div className="logo-ribbon-track">
+                {[...vcLogos, ...vcLogos].map((logo, index) => (
+                  <div
+                    key={`${logo.name}-${index}`}
+                    className="flex h-24 w-[10.75rem] shrink-0 items-center justify-center rounded-[24px] border border-slate-200/80 bg-white/92 px-6 shadow-[0_18px_42px_rgba(15,23,42,0.06)]"
+                  >
+                    <Image
+                      src={logo.src}
+                      alt={`${logo.name} logo`}
+                      width={logo.width}
+                      height={logo.height}
+                      className={`h-auto max-h-11 w-auto object-contain ${logo.className}`}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
