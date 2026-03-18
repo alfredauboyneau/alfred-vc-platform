@@ -219,29 +219,76 @@ export default function AboutPage() {
 
       {/* ── Temps économisé ── */}
       <section className="py-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="section-frame bg-slate-900 rounded-[32px] p-10 sm:p-14 text-center shadow-[0_30px_80px_rgba(15,23,42,0.22)]">
-          <Clock className="w-10 h-10 text-blue-400 mx-auto mb-6" />
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-5 tracking-tight">
-            {a.timeBadge}
-          </h2>
-          <p className="text-slate-400 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
-            {a.timeDesc1} <strong className="text-white">{a.timeBold1}</strong> {a.timeDesc2} <strong className="text-blue-400">{a.timeBold2}</strong>.
-          </p>
-          <div className="grid grid-cols-3 gap-8 max-w-xl mx-auto mb-10">
-            {a.timeStats.map((s, i) => (
-              <div key={i} className="text-center">
-                <p className={`text-4xl font-bold ${i === 2 ? "text-blue-400" : i === 0 ? "text-red-400" : "text-slate-600"}`}>
-                  {s.value}<span className="text-lg ml-1">{s.unit}</span>
-                </p>
-                {s.label && <p className="text-xs text-slate-500 mt-1">{s.label}</p>}
-              </div>
-            ))}
+        <div className="section-frame rounded-[32px] bg-slate-950 p-8 sm:p-12 shadow-[0_30px_80px_rgba(15,23,42,0.22)]">
+          <div className="mx-auto max-w-3xl text-center">
+            <Clock className="mx-auto mb-6 h-10 w-10 text-blue-400" />
+            <p className="eyebrow mb-4 text-blue-300">{a.timeBadge}</p>
+            <h2 className="headline-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              {a.timeTitle}
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-300">
+              {a.timeDesc1} <strong className="text-white">{a.timeBold1}</strong> {a.timeDesc2}{" "}
+              <strong className="text-blue-300">{a.timeBold2}</strong>.
+            </p>
           </div>
-          <Link href="/startup/submit">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold gap-2 px-8">
-              {a.timeCta} <ArrowRight className="w-4 h-4" />
-            </Button>
-          </Link>
+
+          <div className="mt-12 grid gap-4 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+            <div className="rounded-[28px] border border-white/10 bg-white/[0.04] p-6 sm:p-7">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                {a.timeManualEyebrow}
+              </p>
+              <div className="mt-5 flex items-end gap-2">
+                <span className="text-5xl font-semibold tracking-tight text-rose-300">{a.timeManualValue}</span>
+                <span className="pb-1 text-xl font-semibold text-rose-200">{a.timeManualUnit}</span>
+              </div>
+              <h3 className="mt-4 text-xl font-semibold text-white">{a.timeManualTitle}</h3>
+              <p className="mt-3 text-sm leading-7 text-slate-300">{a.timeManualDesc}</p>
+              <div className="mt-5 space-y-3">
+                {a.timeManualPoints.map((point) => (
+                  <div key={point} className="flex items-start gap-3">
+                    <div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-rose-300" />
+                    <p className="text-sm leading-6 text-slate-300">{point}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="hidden h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] lg:flex">
+              <ArrowRight className="h-6 w-6 text-blue-300" />
+            </div>
+
+            <div className="rounded-[28px] border border-blue-400/20 bg-blue-500/10 p-6 sm:p-7 shadow-[0_18px_40px_rgba(37,99,235,0.18)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-200">
+                {a.timeAlfredEyebrow}
+              </p>
+              <div className="mt-5 flex items-end gap-2">
+                <span className="text-5xl font-semibold tracking-tight text-blue-300">{a.timeAlfredValue}</span>
+                <span className="pb-1 text-xl font-semibold text-blue-200">{a.timeAlfredUnit}</span>
+              </div>
+              <h3 className="mt-4 text-xl font-semibold text-white">{a.timeAlfredTitle}</h3>
+              <p className="mt-3 text-sm leading-7 text-slate-200">{a.timeAlfredDesc}</p>
+              <div className="mt-5 space-y-3">
+                {a.timeAlfredPoints.map((point) => (
+                  <div key={point} className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-blue-300" />
+                    <p className="text-sm leading-6 text-slate-200">{point}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <p className="mt-6 text-center text-xs leading-6 text-slate-500">
+            {a.timeFootnote}
+          </p>
+
+          <div className="mt-8 text-center">
+            <Link href="/startup/submit">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold gap-2 px-8">
+                {a.timeCta} <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
