@@ -5,6 +5,7 @@ import {
   type MatchFitBreakdown,
 } from "@/lib/match-fit";
 import { getNumberLocale, localizeSector, localizeStage } from "@/lib/taxonomy";
+import { ScoreGauge } from "@/components/score-gauge";
 
 type Lang = "fr" | "en";
 
@@ -22,15 +23,6 @@ function factorCardClasses(score: number) {
   if (tone === "good") return "border-blue-200/80 bg-white";
   if (tone === "mixed") return "border-amber-200/80 bg-white";
   return "border-rose-200/80 bg-white";
-}
-
-function factorBarClasses(score: number) {
-  const tone = getFactorTone(score);
-
-  if (tone === "strong") return "bg-emerald-500";
-  if (tone === "good") return "bg-blue-500";
-  if (tone === "mixed") return "bg-amber-500";
-  return "bg-rose-500";
 }
 
 function scoreBarClasses(score: number) {
@@ -639,12 +631,7 @@ export function MatchScoreBreakdown({
                   {factor.score}/100
                 </span>
               </div>
-              <div className="mb-4 h-1.5 rounded-full bg-slate-100">
-                <div
-                  className={`h-1.5 rounded-full ${factorBarClasses(factor.score)}`}
-                  style={{ width: `${factor.score}%` }}
-                />
-              </div>
+              <ScoreGauge score={factor.score} />
               <dl className="space-y-3">
                 {factor.rows.map((row) => (
                   <div key={row.label}>

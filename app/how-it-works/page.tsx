@@ -19,6 +19,7 @@ import { useLanguage, LanguageToggle } from "@/lib/i18n";
 import { useState } from "react";
 import { NavbarLoginButton } from "@/components/navbar-login-button";
 import { MarketingFooter } from "@/components/marketing-footer";
+import { ScoreGauge } from "@/components/score-gauge";
 
 const ICONS: Record<string, React.ReactNode> = {
   BarChart3: <BarChart3 className="w-7 h-7 text-blue-600" />,
@@ -54,7 +55,7 @@ export default function HowItWorksPage() {
           factors: [
             {
               title: "Thesis",
-              score: "86/100",
+              score: 86,
               summary: "1 shared sector across 5 declared sectors",
               keyLabel: "Startup sector",
               keyValue: "FinTech",
@@ -66,7 +67,7 @@ export default function HowItWorksPage() {
             },
             {
               title: "Stage",
-              score: "86/100",
+              score: 86,
               summary: "Stage mentioned across 3 declared stages",
               keyLabel: "Startup stage",
               keyValue: "Seed",
@@ -78,7 +79,7 @@ export default function HowItWorksPage() {
             },
             {
               title: "Ticket",
-              score: "81/100",
+              score: 81,
               summary: "Inside range, in the upper part of the range",
               keyLabel: "Amount sought",
               keyValue: "7,400,000 €",
@@ -90,7 +91,7 @@ export default function HowItWorksPage() {
             },
             {
               title: "Track record",
-              score: "58/100",
+              score: 58,
               summary: "2 named investments and 3 comparable signals",
               keyLabel: "Listed investments",
               keyValue: "Lydia · Younited Credit",
@@ -130,7 +131,7 @@ export default function HowItWorksPage() {
           factors: [
             {
               title: "Thèse",
-              score: "86/100",
+              score: 86,
               summary: "1 secteur commun parmi 5 secteurs déclarés",
               keyLabel: "Secteur de la startup",
               keyValue: "FinTech",
@@ -142,7 +143,7 @@ export default function HowItWorksPage() {
             },
             {
               title: "Stade",
-              score: "86/100",
+              score: 86,
               summary: "Stade mentionné parmi 3 stades déclarés",
               keyLabel: "Stade de la startup",
               keyValue: "Seed",
@@ -154,7 +155,7 @@ export default function HowItWorksPage() {
             },
             {
               title: "Ticket",
-              score: "81/100",
+              score: 81,
               summary: "Montant dans la fourchette, dans la partie haute",
               keyLabel: "Montant recherché",
               keyValue: "7 400 000 €",
@@ -166,7 +167,7 @@ export default function HowItWorksPage() {
             },
             {
               title: "Historique d'investissement",
-              score: "58/100",
+              score: 58,
               summary: "2 participations citées et 3 signaux comparables relevés",
               keyLabel: "Participations citées",
               keyValue: "Lydia · Younited Credit",
@@ -348,15 +349,10 @@ export default function HowItWorksPage() {
                             : "border-blue-200 bg-blue-50 text-blue-700"
                         }`}
                       >
-                        {factor.score}
+                        {factor.score}/100
                       </span>
                     </div>
-                    <div className="mb-4 h-1.5 rounded-full bg-slate-100">
-                      <div
-                        className={`h-1.5 rounded-full ${factor.tone === "rose" ? "bg-rose-500" : "bg-blue-500"}`}
-                        style={{ width: factor.score }}
-                      />
-                    </div>
+                    <ScoreGauge score={factor.score} />
                     <dl className="space-y-3">
                       <div>
                         <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
