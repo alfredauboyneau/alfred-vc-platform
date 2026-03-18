@@ -95,9 +95,11 @@ function buildCopy(lang: Lang) {
         header: {
           eyebrow: "Compatibility score",
           scoreLabel: "Overall score",
-          alignments: "Key alignments",
-          reservation: "Main constraint",
+          support: "What supports the score",
+          reservation: "Main reservation",
+          quickRead: "Quick read",
           noReservation: "No major reservation on the core fit criteria.",
+          noSupport: "No decisive support appears on the main criteria.",
         },
         bands: {
           exceptional: "Exceptional compatibility",
@@ -147,9 +149,11 @@ function buildCopy(lang: Lang) {
         header: {
           eyebrow: "Score de compatibilité",
           scoreLabel: "Score global",
-          alignments: "Alignements clés",
-          reservation: "Point de vigilance",
+          support: "Ce qui soutient le score",
+          reservation: "Réserve principale",
+          quickRead: "Lecture rapide",
           noReservation: "Aucune réserve majeure sur les critères structurants.",
+          noSupport: "Aucun soutien décisif ne ressort sur les critères principaux.",
         },
         bands: {
           exceptional: "Compatibilité exceptionnelle",
@@ -390,6 +394,86 @@ function getPortfolioEvidence(lang: Lang, breakdown: MatchFitBreakdown) {
     : "Aucun élément de portefeuille clairement comparable n'est exploitable dans les données actuelles.";
 }
 
+function getSupportText(
+  copy: ReturnType<typeof buildCopy>,
+  lang: Lang,
+  aligned: string[],
+  mixed: string[]
+) {
+  if (aligned.length >= 2) {
+    return lang === "en"
+      ? `${formatList(aligned, lang)} are consistent with the fund's declared mandate.`
+      : `${formatList(aligned, lang)} sont cohérents avec le mandat déclaré du fonds.`;
+  }
+
+  if (aligned.length === 1 && mixed.length > 0) {
+    return lang === "en"
+      ? `${formatList(aligned, lang)} is the clearest support, while ${formatList(mixed, lang)} remains more nuanced.`
+      : `${formatList(aligned, lang)} constitue le soutien le plus clair, tandis que ${formatList(mixed, lang)} reste plus nuancé.`;
+  }
+
+  if (aligned.length === 1) {
+    return lang === "en"
+      ? `${formatList(aligned, lang)} is the clearest support in the current data.`
+      : `${formatList(aligned, lang)} constitue le soutien le plus clair dans les données actuelles.`;
+  }
+
+  if (mixed.length > 0) {
+    return lang === "en"
+      ? `The score relies mainly on partial signals around ${formatList(mixed, lang)}.`
+      : `Le score repose surtout sur des signaux partiels autour de ${formatList(mixed, lang)}.`;
+  }
+
+  return copy.header.noSupport;
+}
+
+function getQuickRead(
+  lang: Lang,
+  score: number,
+  aligned: string[],
+  primaryReservation: string | null
+) {
+  if (score >= 92) {
+    return lang === "en"
+      ? "Priority match for a warm introduction. The core fit reads as unusually strong."
+      : "Match prioritaire pour une introduction. Le fit ressort comme exceptionnellement solide.";
+  }
+
+  if (score >= 84) {
+    return primaryReservation
+      ? lang === "en"
+        ? "Very credible match for outreach. Strong fit overall, with one point still worth checking."
+        : "Match très crédible pour une prise de contact. Le fit est fort, avec un point à vérifier."
+      : lang === "en"
+      ? "Very credible match for outreach. The main criteria line up well."
+      : "Match très crédible pour une prise de contact. Les critères principaux sont bien alignés.";
+  }
+
+  if (score >= 72) {
+    return primaryReservation
+      ? lang === "en"
+        ? "Credible match for outreach. Not a perfect fit, but the fund remains relevant."
+        : "Match crédible pour une prise de contact. Ce n'est pas un perfect match, mais le fonds reste pertinent."
+      : lang === "en"
+      ? "Credible match for outreach. The fund looks relevant on the main declared criteria."
+      : "Match crédible pour une prise de contact. Le fonds paraît pertinent sur les principaux critères déclarés.";
+  }
+
+  if (score >= 60) {
+    return aligned.length > 0
+      ? lang === "en"
+        ? "Partial fit. Worth reviewing manually before treating it as a priority."
+        : "Fit partiel. À relire manuellement avant d'en faire une cible prioritaire."
+      : lang === "en"
+      ? "Partial fit. Useful as a secondary lead rather than a priority target."
+      : "Fit partiel. À considérer plutôt comme une piste secondaire que comme une priorité.";
+  }
+
+  return lang === "en"
+    ? "Weak fit on the declared criteria. Not a priority without new evidence."
+    : "Fit faible au regard des critères déclarés. Pas une priorité sans élément nouveau.";
+}
+
 export function MatchScoreBreakdown({
   startup,
   vc,
@@ -413,14 +497,6 @@ export function MatchScoreBreakdown({
   const localizedStages = vc.stages.map((stage) => localizeStage(stage, lang));
   const { aligned, mixed } = getAlignedFactors(copy, breakdown);
   const primaryReservation = getPrimaryReservation(copy, breakdown);
-  const alignmentText =
-    aligned.length > 0
-      ? formatList(aligned, lang)
-      : mixed.length > 0
-      ? lang === "en"
-        ? `Some signal on ${formatList(mixed, lang)}.`
-        : `Quelques signaux sur ${formatList(mixed, lang)}.`
-      : copy.noAlignment;
   const reservationText =
     primaryReservation ??
     (aligned.length > 0 && mixed.length === 0
@@ -430,6 +506,8 @@ export function MatchScoreBreakdown({
         ? `Current conviction relies mostly on ${formatList(mixed, lang)}.`
         : `La conviction repose surtout sur ${formatList(mixed, lang)}.`
       : copy.header.noReservation);
+  const supportText = getSupportText(copy, lang, aligned, mixed);
+  const quickReadText = getQuickRead(lang, score, aligned, primaryReservation);
 
   const factors = [
     {
@@ -495,18 +573,24 @@ export function MatchScoreBreakdown({
         <div className="min-w-0">
           <p className="eyebrow mb-3 text-slate-300">{copy.header.eyebrow}</p>
           <h4 className="text-lg font-semibold tracking-tight text-white">{getScoreBandLabel(score, copy)}</h4>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="mt-4 grid gap-3 xl:grid-cols-3 sm:grid-cols-2">
             <div className="rounded-[1.25rem] border border-white/10 bg-white/[0.04] p-3">
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                {copy.header.alignments}
+                {copy.header.support}
               </p>
-              <p className="mt-2 text-sm leading-6 text-slate-100">{alignmentText}</p>
+              <p className="mt-2 text-sm leading-6 text-slate-100">{supportText}</p>
             </div>
             <div className="rounded-[1.25rem] border border-white/10 bg-white/[0.04] p-3">
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
                 {copy.header.reservation}
               </p>
               <p className="mt-2 text-sm leading-6 text-slate-100">{reservationText}</p>
+            </div>
+            <div className="rounded-[1.25rem] border border-white/10 bg-white/[0.04] p-3 sm:col-span-2 xl:col-span-1">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                {copy.header.quickRead}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-slate-100">{quickReadText}</p>
             </div>
           </div>
         </div>
