@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { localizeReportItems, type LocalizedReportItem, type SupportedLanguage } from "@/lib/report-localization";
+import { getAuthenticatedRouteContext } from "@/lib/supabase-server";
 
 export async function POST(req: NextRequest) {
   try {
+    const { user } = await getAuthenticatedRouteContext();
+
+    if (!user) {
+      return NextResponse.json({ error: "Authentification requise" }, { status: 401 });
+    }
+
     const { items = [], target_lang = "fr" } = await req.json();
 
     if (!Array.isArray(items)) {

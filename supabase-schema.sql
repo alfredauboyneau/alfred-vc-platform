@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS venture_capitals (
   investment_thesis TEXT NOT NULL,
   notable_investments TEXT,
   contact_email TEXT NOT NULL,
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -79,19 +80,13 @@ CREATE INDEX IF NOT EXISTS idx_matches_score ON matches(score DESC);
 CREATE INDEX IF NOT EXISTS idx_startups_sector ON startups(sector);
 CREATE INDEX IF NOT EXISTS idx_startups_stage ON startups(stage);
 
--- 5. Row Level Security (RLS) — optionnel pour le MVP
--- Décommentez si vous activez l'auth Supabase
+-- 5. Row Level Security (RLS)
+-- Activez immédiatement le RLS en production.
+-- Pour une base déjà existante, appliquez ensuite le fichier `supabase-security.sql`.
 
--- ALTER TABLE startups ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE matches ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE venture_capitals ENABLE ROW LEVEL SECURITY;
-
--- Politique : tout le monde peut lire les VCs
--- CREATE POLICY "VCs publics" ON venture_capitals FOR SELECT USING (true);
-
--- Politique : les startups peuvent voir leurs propres données
--- CREATE POLICY "Startups own data" ON startups
---   FOR ALL USING (auth.uid() = user_id);
+ALTER TABLE startups ENABLE ROW LEVEL SECURITY;
+ALTER TABLE matches ENABLE ROW LEVEL SECURITY;
+ALTER TABLE venture_capitals ENABLE ROW LEVEL SECURITY;
 
 -- ============================================================
 -- ✅ Schéma créé avec succès !

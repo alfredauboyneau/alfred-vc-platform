@@ -1,38 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
 import { analyzeStartupFinancials } from "@/lib/analyze";
 import { matchStartupWithVCs } from "@/lib/matching";
+import { getAuthenticatedRouteContext } from "@/lib/supabase-server";
+import { sendReportEmail } from "@/lib/send-report";
 
 export async function POST(req: NextRequest) {
   try {
+    const { supabase, user } = await getAuthenticatedRouteContext();
     const { startup_id, lang = "fr" } = await req.json();
+    const normalizedLang = lang === "en" ? "en" : "fr";
+
+    if (!user) {
+      return NextResponse.json({ error: "Authentification requise" }, { status: 401 });
+    }
 
     if (!startup_id) {
       return NextResponse.json({ error: "startup_id requis" }, { status: 400 });
     }
 
-    // 1. Récupérer la startup
     const { data: startup, error: startupError } = await supabase
       .from("startups")
       .select("*")
       .eq("id", startup_id)
+      .eq("user_id", user.id)
       .single();
 
     if (startupError || !startup) {
       return NextResponse.json({ error: "Startup introuvable" }, { status: 404 });
     }
 
-    // 2. Analyse financière (si pas encore faite)
     let financialAnalysis = startup.financial_analysis;
     if (!financialAnalysis) {
-      financialAnalysis = await analyzeStartupFinancials(startup, lang);
+      financialAnalysis = await analyzeStartupFinancials(startup, normalizedLang);
       await supabase
         .from("startups")
         .update({ financial_analysis: financialAnalysis })
         .eq("id", startup_id);
     }
 
-    // 3. Récupérer tous les VCs
     const { data: vcs, error: vcsError } = await supabase
       .from("venture_capitals")
       .select("*");
@@ -44,13 +49,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 4. Matching IA
-    const matchResults = await matchStartupWithVCs(startup, vcs, financialAnalysis, lang);
+    const matchResults = await matchStartupWithVCs(startup, vcs, financialAnalysis, normalizedLang);
 
-    // 5. Supprimer les anciens matches pour cette startup
     await supabase.from("matches").delete().eq("startup_id", startup_id);
 
-    // 6. Insérer les nouveaux matches
     const matchesPayload = matchResults.map((m) => ({
       startup_id,
       vc_id: m.vc_id,
@@ -65,7 +67,6 @@ export async function POST(req: NextRequest) {
 
     if (insertError) throw insertError;
 
-    // 7. Envoyer le rapport par email (non-bloquant)
     try {
       const { data: fullMatches } = await supabase
         .from("matches")
@@ -73,15 +74,11 @@ export async function POST(req: NextRequest) {
         .eq("startup_id", startup_id)
         .order("score", { ascending: false });
 
-      await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/api/send-report`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          startup,
-          matches: fullMatches ?? [],
-          financial_analysis: financialAnalysis,
-          lang,
-        }),
+      await sendReportEmail({
+        startup,
+        matches: fullMatches ?? [],
+        financialAnalysis,
+        lang: normalizedLang,
       });
     } catch (emailErr) {
       console.warn("[match] Email non envoyé (non-bloquant):", emailErr);

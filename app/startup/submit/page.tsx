@@ -121,7 +121,7 @@ export default function StartupSubmitPage() {
       let pitch_deck_url: string | null = null;
       if (pitchFile) {
         setUploadingPitch(true);
-        const fileName = `${Date.now()}-${pitchFile.name.replace(/\s+/g, "-")}`;
+        const fileName = `${user!.id}/${Date.now()}-${pitchFile.name.replace(/\s+/g, "-")}`;
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from("pitch-decks")
           .upload(fileName, pitchFile, { contentType: "application/pdf" });
@@ -129,10 +129,7 @@ export default function StartupSubmitPage() {
         if (uploadError) {
           console.warn("Upload pitch deck échoué:", uploadError.message);
         } else {
-          const { data: urlData } = supabase.storage
-            .from("pitch-decks")
-            .getPublicUrl(uploadData.path);
-          pitch_deck_url = urlData.publicUrl;
+          pitch_deck_url = uploadData.path;
         }
         setUploadingPitch(false);
       }

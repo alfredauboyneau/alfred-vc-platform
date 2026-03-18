@@ -1,30 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
 import { analyzeStartupFinancials } from "@/lib/analyze";
+import { getAuthenticatedRouteContext } from "@/lib/supabase-server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { startup_id } = await req.json();
+    const { supabase, user } = await getAuthenticatedRouteContext();
+    const { startup_id, lang = "fr" } = await req.json();
+
+    if (!user) {
+      return NextResponse.json({ error: "Authentification requise" }, { status: 401 });
+    }
 
     if (!startup_id) {
       return NextResponse.json({ error: "startup_id requis" }, { status: 400 });
     }
 
-    // Récupérer la startup
     const { data: startup, error: fetchError } = await supabase
       .from("startups")
       .select("*")
       .eq("id", startup_id)
+      .eq("user_id", user.id)
       .single();
 
     if (fetchError || !startup) {
       return NextResponse.json({ error: "Startup introuvable" }, { status: 404 });
     }
 
-    // Générer l'analyse financière
-    const analysis = await analyzeStartupFinancials(startup);
+    const analysis = await analyzeStartupFinancials(startup, lang === "en" ? "en" : "fr");
 
-    // Sauvegarder en base
     const { error: updateError } = await supabase
       .from("startups")
       .update({ financial_analysis: analysis })
