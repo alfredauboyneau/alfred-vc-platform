@@ -16,7 +16,7 @@ import {
   SearchCheck,
 } from "lucide-react";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavbarLoginButton } from "@/components/navbar-login-button";
 import { MarketingFooter } from "@/components/marketing-footer";
 import { ScoreGauge } from "@/components/score-gauge";
@@ -32,6 +32,11 @@ export default function HowItWorksPage() {
   const { t, lang } = useLanguage();
   const h = t.howItWorks;
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  useEffect(() => {
+    document.title = h.navTitle;
+  }, [h.navTitle]);
+
   const reportPreview =
     lang === "en"
       ? {
