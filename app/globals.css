@@ -127,11 +127,17 @@
     display: flex;
     width: max-content;
     gap: 1.25rem;
-    animation: logo-ribbon 34s linear infinite;
+    animation: logo-ribbon 38s linear infinite;
+  }
+
+  .logo-ribbon-track-reverse {
+    animation-direction: reverse;
+    animation-duration: 44s;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .logo-ribbon-track {
+    .logo-ribbon-track,
+    .logo-ribbon-track-reverse {
       animation: none;
     }
   }

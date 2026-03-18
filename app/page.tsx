@@ -40,6 +40,7 @@ export default function Home() {
     { name: "Serena", src: "/vc-logos/serena.svg", width: 220, height: 60, className: "max-w-[118px] sm:max-w-[136px]" },
     { name: "Founders Future", src: "/vc-logos/founders-future.png", width: 408, height: 168, className: "max-w-[124px] sm:max-w-[144px]" },
   ];
+  const vcLogoRows = [vcLogos, [...vcLogos].reverse()];
   const methodItems =
     lang === "en"
       ? [
@@ -256,35 +257,63 @@ export default function Home() {
       </section>
 
       <section className="bg-white py-14 sm:py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-[32px] border border-slate-200/80 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.08),transparent_42%),linear-gradient(180deg,rgba(248,250,252,0.92),rgba(255,255,255,1))] px-6 py-8 sm:px-10 sm:py-10">
-            <div className="mx-auto max-w-3xl text-center">
-              <p className="eyebrow mb-4">{l.vcRibbon.eyebrow}</p>
-              <h2 className="headline-balance text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-                {l.vcRibbon.title}
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-slate-500 sm:text-base">
-                {l.vcRibbon.desc}
-              </p>
+        <div className="mx-auto max-w-[92rem] px-4 sm:px-6 lg:px-8">
+          <div className="overflow-hidden rounded-[36px] border border-slate-200/80 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(15,23,42,0.04),transparent_28%),linear-gradient(180deg,rgba(248,250,252,0.96),rgba(255,255,255,1))] px-6 py-8 sm:px-10 sm:py-10 lg:px-14 lg:py-12">
+            <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-end">
+              <div className="max-w-2xl">
+                <p className="eyebrow mb-4">{l.vcRibbon.eyebrow}</p>
+                <h2 className="headline-balance text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+                  {l.vcRibbon.title}
+                </h2>
+              </div>
+              <div className="lg:pl-10">
+                <p className="max-w-2xl text-sm leading-7 text-slate-500 sm:text-base">
+                  {l.vcRibbon.desc}
+                </p>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  <span className="inline-flex items-center rounded-full border border-slate-200/80 bg-white/90 px-3 py-1.5 text-[11px] font-medium text-slate-600 shadow-sm">
+                    {lang === "en" ? "Continuously enriched VC base" : "Base VC enrichie en continu"}
+                  </span>
+                  <span className="inline-flex items-center rounded-full border border-slate-200/80 bg-white/90 px-3 py-1.5 text-[11px] font-medium text-slate-600 shadow-sm">
+                    {lang === "en" ? "Thesis, stage and ticket already structured" : "Thèse, stade et ticket déjà structurés"}
+                  </span>
+                </div>
+              </div>
             </div>
 
-            <div className="mt-10 logo-ribbon">
-              <div className="logo-ribbon-track">
-                {[...vcLogos, ...vcLogos].map((logo, index) => (
-                  <div
-                    key={`${logo.name}-${index}`}
-                    className="flex h-24 w-[10.75rem] shrink-0 items-center justify-center rounded-[24px] border border-slate-200/80 bg-white/92 px-6 shadow-[0_18px_42px_rgba(15,23,42,0.06)]"
-                  >
-                    <Image
-                      src={logo.src}
-                      alt={`${logo.name} logo`}
-                      width={logo.width}
-                      height={logo.height}
-                      className={`h-auto max-h-11 w-auto object-contain ${logo.className}`}
-                    />
+            <div className="mt-10 space-y-4">
+              {vcLogoRows.map((row, rowIndex) => (
+                <div key={rowIndex} className="logo-ribbon">
+                  <div className={`logo-ribbon-track ${rowIndex === 1 ? "logo-ribbon-track-reverse" : ""}`}>
+                    {[...row, ...row].map((logo, index) => (
+                      <div
+                        key={`${logo.name}-${rowIndex}-${index}`}
+                        className="flex h-28 w-[13.25rem] shrink-0 items-center justify-center rounded-[28px] border border-slate-200/80 bg-white/94 px-7 shadow-[0_18px_42px_rgba(15,23,42,0.06)] sm:w-[14.5rem] lg:w-[15.5rem]"
+                      >
+                        <Image
+                          src={logo.src}
+                          alt={`${logo.name} logo`}
+                          width={logo.width}
+                          height={logo.height}
+                          className={`h-auto max-h-12 w-auto object-contain ${logo.className}`}
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200/70 pt-6">
+              <p className="text-sm text-slate-500">
+                {lang === "en"
+                  ? "Funds displayed here illustrate the investment universe already indexed in Alfred."
+                  : "Les fonds affichés illustrent l'univers d'investissement déjà indexé dans Alfred."}
+              </p>
+              <Link href="/how-it-works" className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 hover:text-blue-800">
+                <span>{lang === "en" ? "See how the ranking works" : "Voir comment le classement fonctionne"}</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </div>
         </div>
