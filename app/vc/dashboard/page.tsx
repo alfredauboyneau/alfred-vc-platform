@@ -38,20 +38,6 @@ import { MatchScoreBreakdown } from "@/components/match-score-breakdown";
 
 /* ────────────────────────────────── helpers ── */
 
-function ScoreBadge({ score }: { score: number }) {
-  const color =
-    score >= 75
-      ? "bg-green-100 text-green-800"
-      : score >= 50
-      ? "bg-yellow-100 text-yellow-800"
-      : "bg-red-100 text-red-800";
-  return (
-    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${color}`}>
-      {score}/100
-    </span>
-  );
-}
-
 function ReadinessBadge({ r }: { r: string }) {
   const { t } = useLanguage();
   const d = t.vcDash;
@@ -291,11 +277,10 @@ function DealFlowTab({ matches, vc }: { matches: Match[]; vc: VentureCapital }) 
                   }`}
                 >
                   <CardContent className="p-5">
-                    <div className="flex items-start gap-4">
-                      <div className="flex-1 min-w-0">
+                    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_188px] lg:items-start">
+                      <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2 mb-1">
                           <h3 className="text-lg font-semibold tracking-tight text-slate-950">{startup?.name}</h3>
-                          <ScoreBadge score={match.score} />
                           {fa && <ReadinessBadge r={fa.investment_readiness} />}
                         </div>
                         <p className="text-sm text-slate-500 mb-2">{startup?.tagline}</p>
@@ -306,8 +291,13 @@ function DealFlowTab({ matches, vc }: { matches: Match[]; vc: VentureCapital }) 
                             {startup?.amount_sought?.toLocaleString(numberLocale)} €
                           </Badge>
                         </div>
-                        <p className="text-sm text-slate-600 italic">&ldquo;{match.analysis}&rdquo;</p>
-                        {startup && <MatchScoreBreakdown startup={startup} vc={vc} lang={lang} />}
+                        <div className="rounded-[1.25rem] border border-slate-200/80 bg-slate-50/80 p-4">
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                            {lang === "en" ? "Investment note" : "Note d'analyse"}
+                          </p>
+                          <p className="mt-2 text-sm leading-6 text-slate-600">{match.analysis}</p>
+                        </div>
+                        {startup && <MatchScoreBreakdown startup={startup} vc={vc} score={match.score} lang={lang} />}
 
                         {isOpen && fa && (
                           <div className="mt-4 pt-4 border-t border-slate-200/80 space-y-4">
@@ -356,10 +346,11 @@ function DealFlowTab({ matches, vc }: { matches: Match[]; vc: VentureCapital }) 
                         )}
                       </div>
 
-                      <div className="flex flex-col gap-2 shrink-0">
+                      <div className="space-y-2 rounded-[1.5rem] border border-slate-200/80 bg-slate-50/80 p-3">
                         <Button
                           size="sm"
                           variant="outline"
+                          className="w-full"
                           onClick={() => setExpanded(isOpen ? null : match.id)}
                         >
                           {isOpen ? d.collapse : d.aiReport}

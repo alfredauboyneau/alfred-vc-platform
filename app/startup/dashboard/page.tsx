@@ -33,20 +33,6 @@ import { MatchScoreBreakdown } from "@/components/match-score-breakdown";
 
 /* ────────────────────────────────── helpers ── */
 
-function ScoreBadge({ score }: { score: number }) {
-  const color =
-    score >= 75
-      ? "bg-green-100 text-green-800"
-      : score >= 50
-      ? "bg-yellow-100 text-yellow-800"
-      : "bg-red-100 text-red-800";
-  return (
-    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${color}`}>
-      {score}/100
-    </span>
-  );
-}
-
 function ReadinessBadge({ r }: { r: string }) {
   const { t } = useLanguage();
   const d = t.startupDash;
@@ -306,17 +292,25 @@ function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup })
             }`}
           >
             <CardContent className="p-5">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_188px] lg:items-start">
+                <div className="min-w-0">
                   <div className="flex items-center gap-2 mb-2 flex-wrap">
-                    {i === 0 && <Badge variant="default" className="rounded-full text-xs">🏆 {d.topMatch}</Badge>}
+                    {i === 0 && (
+                      <Badge variant="default" className="rounded-full text-xs">
+                        <Target className="mr-1 h-3 w-3" /> {d.topMatch}
+                      </Badge>
+                    )}
                     <h3 className="text-lg font-semibold tracking-tight text-slate-950">{vc?.name ?? d.unknownVC}</h3>
-                    <ScoreBadge score={match.score} />
                   </div>
-                  <p className="text-sm leading-6 text-slate-600 italic mb-3">&ldquo;{match.analysis}&rdquo;</p>
-                  {vc && <MatchScoreBreakdown startup={startup} vc={vc} lang={lang} />}
+                  <div className="rounded-[1.25rem] border border-slate-200/80 bg-slate-50/80 p-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                      {lang === "en" ? "Investment note" : "Note d'analyse"}
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">{match.analysis}</p>
+                  </div>
+                  {vc && <MatchScoreBreakdown startup={startup} vc={vc} score={match.score} lang={lang} />}
                   {vc && (
-                    <div className="flex flex-wrap gap-1 mb-2">
+                    <div className="mt-3 flex flex-wrap gap-1 mb-2">
                       {vc.sectors?.slice(0, 3).map((s: string) => (
                         <Badge key={s} variant="outline" className="text-xs">{localizeSector(s, lang)}</Badge>
                       ))}
@@ -331,17 +325,17 @@ function MatchsTab({ matches, startup }: { matches: Match[]; startup: Startup })
                     </p>
                   )}
                 </div>
-                <div className="flex flex-col gap-2 shrink-0">
+                <div className="space-y-2 rounded-[1.5rem] border border-slate-200/80 bg-slate-50/80 p-3">
                   {vc?.website && (
                     <a href={vc.website} target="_blank" rel="noreferrer">
-                      <Button size="sm" variant="outline" className="gap-1">
+                      <Button size="sm" variant="outline" className="w-full gap-1">
                         <ExternalLink className="w-3 h-3" /> {d.site}
                       </Button>
                     </a>
                   )}
                   {vc?.contact_email && (
                     <a href={`mailto:${vc.contact_email}`}>
-                      <Button size="sm" className="gap-1">
+                      <Button size="sm" className="w-full gap-1">
                         <Mail className="w-3 h-3" /> {d.contact}
                       </Button>
                     </a>
