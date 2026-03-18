@@ -21,6 +21,41 @@ export type MatchFitBreakdown = {
   matchedKeywords: string[];
   keywordCoverage: number;
   sharedSignals: string[];
+  matchedSectors: string[];
+  sectorBreadth: number;
+  sectorKeywordMatches: number;
+  sectorKeywordTotal: number;
+  stageBreadth: number;
+  stageExactListed: boolean;
+  stageAdjacentListed: boolean;
+  ticketInsideRange: boolean;
+  ticketPositionRatio: number | null;
+  ticketDistanceRatio: number;
+};
+
+type SectorFitInsights = {
+  score: number;
+  matchedSectors: string[];
+  sectorBreadth: number;
+  keywordMatches: number;
+  keywordTotal: number;
+  signalOverlap: number;
+  isBroad: boolean;
+};
+
+type StageFitInsights = {
+  score: number;
+  stageBreadth: number;
+  exactListed: boolean;
+  adjacentListed: boolean;
+  isBroad: boolean;
+};
+
+type TicketFitInsights = {
+  score: number;
+  insideRange: boolean;
+  positionRatio: number | null;
+  distanceRatio: number;
 };
 
 type NarrativeSignal = {
@@ -224,88 +259,15 @@ export function canonicalizeStage(value: string): CanonicalStage {
 }
 
 export function scoreSectorFit(startup: Startup, vc: VentureCapital) {
-  const startupSector = normalizeText(startup.sector);
-  const startupKeywords = getKeywords(startup.sector);
-  const normalizedSectors = vc.sectors.map(normalizeText);
-  const vcText = normalizeText(
-    [...vc.sectors, vc.description, vc.investment_thesis, vc.notable_investments ?? ""].join(" ")
-  );
-  const isBroad = normalizedSectors.some(
-    (sector) => sector.includes("tous secteurs") || sector.includes("all sectors")
-  );
-
-  if (
-    normalizedSectors.some(
-      (sector) =>
-        sector.includes(startupSector) ||
-        startupSector.includes(sector)
-    )
-  ) {
-    return 100;
-  }
-
-  const keywordMatches = startupKeywords.filter((keyword) => vcText.includes(keyword)).length;
-
-  if (keywordMatches >= Math.max(1, Math.ceil(startupKeywords.length * 0.6))) {
-    return 88;
-  }
-
-  if (isBroad) {
-    return 76;
-  }
-
-  if (keywordMatches >= 1) {
-    return 66;
-  }
-
-  return 38;
+  return getSectorFitInsights(startup, vc).score;
 }
 
 export function scoreStageFit(startup: Startup, vc: VentureCapital) {
-  const startupStage = canonicalizeStage(startup.stage);
-  const vcStages = vc.stages.map(canonicalizeStage);
-  const normalizedStages = vc.stages.map(normalizeText);
-
-  if (vcStages.includes(startupStage)) {
-    return 100;
-  }
-
-  const adjacentStages: Record<CanonicalStage, CanonicalStage[]> = {
-    "pre-seed": ["seed"],
-    seed: ["pre-seed", "series-a"],
-    "series-a": ["seed", "series-b"],
-    "series-b": ["series-a", "growth"],
-    growth: ["series-b"],
-    other: [],
-  };
-
-  if (adjacentStages[startupStage].some((stage) => vcStages.includes(stage))) {
-    return 74;
-  }
-
-  if (normalizedStages.some((stage) => stage.includes("all") || stage.includes("tous"))) {
-    return 70;
-  }
-
-  return 34;
+  return getStageFitInsights(startup, vc).score;
 }
 
 export function scoreTicketFit(startup: Startup, vc: VentureCapital) {
-  const amount = startup.amount_sought;
-
-  if (amount >= vc.ticket_min && amount <= vc.ticket_max) {
-    return 100;
-  }
-
-  if (amount >= vc.ticket_min * 0.75 && amount <= vc.ticket_max * 1.35) {
-    return 80;
-  }
-
-  if (amount >= vc.ticket_min * 0.5 && amount <= vc.ticket_max * 2) {
-    return 58;
-  }
-
-  return 28;
+  return getTicketFitInsights(startup, vc).score;
 }
 
 export function scorePortfolioNarrativeFit(startup: Startup, vc: VentureCapital) {
@@ -388,23 +350,23 @@ export function scoreFinancialFit(financialAnalysis: FinancialAnalysis) {
 }
 
 export function getSectorFit(score: number): SectorFit {
-  if (score >= 95) return "exact";
-  if (score >= 84) return "strong";
-  if (score >= 66) return "broad";
+  if (score >= 88) return "exact";
+  if (score >= 76) return "strong";
+  if (score >= 60) return "broad";
   return "weak";
 }
 
 export function getStageFit(score: number): StageFit {
-  if (score >= 95) return "exact";
-  if (score >= 74) return "adjacent";
-  if (score >= 70) return "broad";
+  if (score >= 86) return "exact";
+  if (score >= 68) return "adjacent";
+  if (score >= 60) return "broad";
   return "weak";
 }
 
 export function getTicketFit(score: number): TicketFit {
-  if (score >= 95) return "inside";
-  if (score >= 80) return "near";
-  if (score >= 58) return "stretch";
+  if (score >= 88) return "inside";
+  if (score >= 72) return "near";
+  if (score >= 52) return "stretch";
   return "outside";
 }
 
@@ -413,6 +375,129 @@ export function getFactorTone(score: number): FactorTone {
   if (score >= 75) return "good";
   if (score >= 60) return "mixed";
   return "weak";
+}
+
+function getSectorFitInsights(startup: Startup, vc: VentureCapital): SectorFitInsights {
+  const startupSector = normalizeText(startup.sector);
+  const startupKeywords = [...new Set(getKeywords(startup.sector))];
+  const vcNarrative = [vc.description, vc.investment_thesis, vc.notable_investments ?? "", ...vc.sectors].join(" ");
+  const vcText = normalizeText(vcNarrative);
+  const startupSignals = getNarrativeSignals(startup.sector);
+  const vcSignals = new Set(getNarrativeSignals(vcNarrative));
+  const normalizedSectors = vc.sectors.map(normalizeText);
+  const matchedSectors = vc.sectors.filter((sector) => {
+    const normalized = normalizeText(sector);
+    return normalized.includes(startupSector) || startupSector.includes(normalized);
+  });
+  const isBroad = normalizedSectors.some(
+    (sector) => sector.includes("tous secteurs") || sector.includes("all sectors")
+  );
+  const keywordMatches = startupKeywords.filter((keyword) => vcText.includes(keyword)).length;
+  const signalOverlap = startupSignals.filter((signal) => vcSignals.has(signal)).length;
+  const breadthPenalty = Math.min(12, Math.max(0, vc.sectors.length - 1) * 2);
+
+  let score = 30;
+
+  if (matchedSectors.length > 0) {
+    score = clamp(92 - breadthPenalty + Math.min(4, signalOverlap * 2), 82, 96);
+  } else {
+    const keywordCoverage = startupKeywords.length > 0 ? keywordMatches / startupKeywords.length : 0;
+
+    if (keywordCoverage >= 0.6 || signalOverlap >= 2) {
+      score = clamp(80 - Math.min(6, breadthPenalty / 2) + Math.min(6, signalOverlap * 2), 72, 88);
+    } else if (keywordCoverage >= 0.3 || signalOverlap >= 1) {
+      score = 62;
+    } else if (isBroad) {
+      score = 58;
+    } else if (keywordMatches >= 1) {
+      score = 52;
+    }
+  }
+
+  return {
+    score,
+    matchedSectors,
+    sectorBreadth: vc.sectors.length,
+    keywordMatches,
+    keywordTotal: startupKeywords.length,
+    signalOverlap,
+    isBroad,
+  };
+}
+
+function getStageFitInsights(startup: Startup, vc: VentureCapital): StageFitInsights {
+  const startupStage = canonicalizeStage(startup.stage);
+  const vcStages = [...new Set(vc.stages.map(canonicalizeStage))];
+  const normalizedStages = vc.stages.map(normalizeText);
+  const adjacentStages: Record<CanonicalStage, CanonicalStage[]> = {
+    "pre-seed": ["seed"],
+    seed: ["pre-seed", "series-a"],
+    "series-a": ["seed", "series-b"],
+    "series-b": ["series-a", "growth"],
+    growth: ["series-b"],
+    other: [],
+  };
+  const exactListed = vcStages.includes(startupStage);
+  const adjacentListed = adjacentStages[startupStage].some((stage) => vcStages.includes(stage));
+  const isBroad = normalizedStages.some((stage) => stage.includes("all") || stage.includes("tous"));
+  const breadthPenalty = Math.min(10, Math.max(0, vcStages.length - 1) * 3);
+
+  let score = 32;
+
+  if (exactListed) {
+    score = clamp(92 - breadthPenalty, 82, 96);
+  } else if (adjacentListed) {
+    score = clamp(74 - Math.max(0, vcStages.length - 2) * 2, 66, 78);
+  } else if (isBroad) {
+    score = 60;
+  }
+
+  return {
+    score,
+    stageBreadth: vcStages.length,
+    exactListed,
+    adjacentListed,
+    isBroad,
+  };
+}
+
+function getTicketFitInsights(startup: Startup, vc: VentureCapital): TicketFitInsights {
+  const amount = startup.amount_sought;
+  const min = Math.max(vc.ticket_min, 1);
+  const max = Math.max(vc.ticket_max, min + 1);
+
+  if (amount >= min && amount <= max) {
+    const logMin = Math.log(min);
+    const logMax = Math.log(max);
+    const span = Math.max(0.0001, logMax - logMin);
+    const positionRatio = clamp((Math.log(amount) - logMin) / span, 0, 1);
+    const centerComfort = 1 - Math.min(1, Math.abs(positionRatio - 0.5) * 2);
+    const rangeMultiple = max / min;
+    const widthPenalty = rangeMultiple > 30 ? 5 : rangeMultiple > 15 ? 3 : rangeMultiple > 8 ? 1 : 0;
+    const score = Math.round(clamp(78 + centerComfort * 15 - widthPenalty, 74, 94));
+
+    return {
+      score,
+      insideRange: true,
+      positionRatio,
+      distanceRatio: 0,
+    };
+  }
+
+  const distanceRatio =
+    amount < min ? (min - amount) / min : (amount - max) / max;
+
+  let score = 32;
+  if (distanceRatio <= 0.15) score = 72;
+  else if (distanceRatio <= 0.35) score = 62;
+  else if (distanceRatio <= 1) score = 50;
+
+  return {
+    score,
+    insideRange: false,
+    positionRatio: null,
+    distanceRatio,
+  };
 }
 
 function getNotableCompanies(notableInvestments: string | null) {
@@ -431,9 +516,12 @@ export function buildMatchFitBreakdown(
   financialAnalysis?: FinancialAnalysis | null
 ): MatchFitBreakdown {
   const portfolioInsights = getPortfolioNarrativeInsights(startup, vc);
-  const sectorScore = scoreSectorFit(startup, vc);
-  const stageScore = scoreStageFit(startup, vc);
-  const ticketScore = scoreTicketFit(startup, vc);
+  const sectorInsights = getSectorFitInsights(startup, vc);
+  const stageInsights = getStageFitInsights(startup, vc);
+  const ticketInsights = getTicketFitInsights(startup, vc);
+  const sectorScore = sectorInsights.score;
+  const stageScore = stageInsights.score;
+  const ticketScore = ticketInsights.score;
   const portfolioScore = portfolioInsights.score;
 
   return {
@@ -450,5 +538,15 @@ export function buildMatchFitBreakdown(
     matchedKeywords: portfolioInsights.matchedKeywords,
     keywordCoverage: portfolioInsights.keywordCoverage,
     sharedSignals: portfolioInsights.sharedSignals,
+    matchedSectors: sectorInsights.matchedSectors,
+    sectorBreadth: sectorInsights.sectorBreadth,
+    sectorKeywordMatches: sectorInsights.keywordMatches,
+    sectorKeywordTotal: sectorInsights.keywordTotal,
+    stageBreadth: stageInsights.stageBreadth,
+    stageExactListed: stageInsights.exactListed,
+    stageAdjacentListed: stageInsights.adjacentListed,
+    ticketInsideRange: ticketInsights.insideRange,
+    ticketPositionRatio: ticketInsights.positionRatio,
+    ticketDistanceRatio: ticketInsights.distanceRatio,
   };
 }

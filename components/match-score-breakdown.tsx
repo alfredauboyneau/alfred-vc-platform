@@ -61,14 +61,14 @@ function getAlignedFactors(copy: ReturnType<typeof buildCopy>, breakdown: MatchF
   const aligned: string[] = [];
   const mixed: string[] = [];
 
-  if (breakdown.sectorScore >= 84) aligned.push(copy.summaryFactors.sector);
-  else if (breakdown.sectorScore >= 66) mixed.push(copy.summaryFactors.sector);
+  if (breakdown.sectorScore >= 76) aligned.push(copy.summaryFactors.sector);
+  else if (breakdown.sectorScore >= 60) mixed.push(copy.summaryFactors.sector);
 
-  if (breakdown.stageScore >= 74) aligned.push(copy.summaryFactors.stage);
-  else if (breakdown.stageScore >= 70) mixed.push(copy.summaryFactors.stage);
+  if (breakdown.stageScore >= 68) aligned.push(copy.summaryFactors.stage);
+  else if (breakdown.stageScore >= 60) mixed.push(copy.summaryFactors.stage);
 
-  if (breakdown.ticketScore >= 80) aligned.push(copy.summaryFactors.ticket);
-  else if (breakdown.ticketScore >= 58) mixed.push(copy.summaryFactors.ticket);
+  if (breakdown.ticketScore >= 72) aligned.push(copy.summaryFactors.ticket);
+  else if (breakdown.ticketScore >= 52) mixed.push(copy.summaryFactors.ticket);
 
   if (breakdown.portfolioScore >= 78) aligned.push(copy.summaryFactors.portfolio);
   else if (breakdown.portfolioScore >= 60) mixed.push(copy.summaryFactors.portfolio);
@@ -114,42 +114,16 @@ function buildCopy(lang: Lang) {
         },
         rows: {
           startupSector: "Startup sector",
-          fundSectors: "Fund sectors",
+          fundSectors: "Declared sectors",
           startupStage: "Startup stage",
-          fundStages: "Fund stages",
+          fundStages: "Declared stages",
           amountSought: "Amount sought",
           fundRange: "Fund cheque range",
           listedDeals: "Listed investments",
           detectedSignals: "Detected signals",
-          source: "Signal source",
+          evidence: "Observed basis",
           noDeals: "No named investments in the current dataset.",
           noSignals: "No clear overlap detected from the startup narrative.",
-          sourceText: "Derived from the fund description, thesis and notable investments stored in Alfred.",
-        },
-        summaries: {
-          thesis: {
-            exact: "Exact sector match",
-            strong: "Strong thesis overlap",
-            broad: "Broad mandate only",
-            weak: "Sector misaligned",
-          },
-          stage: {
-            exact: "Exact stage match",
-            adjacent: "Adjacent stage",
-            broad: "Flexible but indirect",
-            weak: "Stage outside range",
-          },
-          ticket: {
-            inside: "Inside cheque range",
-            near: "Near cheque range",
-            stretch: "Stretch for the fund",
-            outside: "Outside cheque range",
-          },
-          portfolio: {
-            high: "Historical pattern supports the match",
-            medium: "Some historical support",
-            low: "Limited historical support",
-          },
         },
         summaryFactors: {
           sector: "sector thesis",
@@ -192,40 +166,16 @@ function buildCopy(lang: Lang) {
         },
         rows: {
           startupSector: "Secteur de la startup",
-          fundSectors: "Secteurs couverts",
+          fundSectors: "Secteurs déclarés",
           startupStage: "Stade de la startup",
-          fundStages: "Stades visés",
+          fundStages: "Stades déclarés",
           amountSought: "Montant recherché",
           fundRange: "Fourchette de ticket",
           listedDeals: "Participations connues",
           detectedSignals: "Signaux comparables",
+          evidence: "Base du score",
           noDeals: "Aucune participation nommée dans les données disponibles.",
           noSignals: "Aucun signal comparable clair.",
-        },
-        summaries: {
-          thesis: {
-            exact: "Alignement sectoriel direct",
-            strong: "Alignement sectoriel fort",
-            broad: "Alignement sectoriel large",
-            weak: "Alignement sectoriel faible",
-          },
-          stage: {
-            exact: "Stade visé",
-            adjacent: "Stade proche",
-            broad: "Stade possible",
-            weak: "Stade peu compatible",
-          },
-          ticket: {
-            inside: "Dans la fourchette",
-            near: "Proche de la fourchette",
-            stretch: "Fourchette étirée",
-            outside: "Hors fourchette",
-          },
-          portfolio: {
-            high: "Historique cohérent",
-            medium: "Quelques précédents comparables",
-            low: "Peu de précédents comparables",
-          },
         },
         summaryFactors: {
           sector: "thèse sectorielle",
@@ -245,14 +195,199 @@ function buildCopy(lang: Lang) {
       };
 }
 
-function joinList(items: string[]) {
-  return items.length > 0 ? items.join(" · ") : "—";
+function formatLimitedList(items: string[], lang: Lang, maxItems = 4) {
+  if (items.length === 0) return "—";
+
+  const visible = items.slice(0, maxItems);
+  const remainder = items.length - visible.length;
+  const base = visible.join(" · ");
+
+  if (remainder <= 0) return base;
+
+  return lang === "en" ? `${base} · +${remainder} more` : `${base} · +${remainder} autres`;
 }
 
-function getPortfolioSummary(copy: ReturnType<typeof buildCopy>, breakdown: MatchFitBreakdown) {
-  if (breakdown.portfolioScore >= 85) return copy.summaries.portfolio.high;
-  if (breakdown.portfolioScore >= 60) return copy.summaries.portfolio.medium;
-  return copy.summaries.portfolio.low;
+function getTicketPositionCopy(lang: Lang, ratio: number) {
+  if (ratio <= 0.3) {
+    return lang === "en" ? "rather in the lower part of the range" : "plutôt en bas de fourchette";
+  }
+  if (ratio >= 0.7) {
+    return lang === "en" ? "rather in the upper part of the range" : "plutôt en haut de fourchette";
+  }
+
+  return lang === "en" ? "near the middle of the range" : "au coeur de la fourchette";
+}
+
+function getSectorSummary(lang: Lang, breakdown: MatchFitBreakdown) {
+  if (breakdown.matchedSectors.length > 0) {
+    return lang === "en"
+      ? `${breakdown.matchedSectors.length} explicit sector match across ${breakdown.sectorBreadth} declared sectors`
+      : `${breakdown.matchedSectors.length} secteur explicite sur ${breakdown.sectorBreadth} secteurs déclarés`;
+  }
+  if (breakdown.sectorKeywordTotal > 0 && breakdown.sectorKeywordMatches > 0) {
+    return lang === "en"
+      ? `${breakdown.sectorKeywordMatches}/${breakdown.sectorKeywordTotal} sector signals found in the fund profile`
+      : `${breakdown.sectorKeywordMatches}/${breakdown.sectorKeywordTotal} signaux sectoriels retrouvés`;
+  }
+
+  return lang === "en" ? "No explicit sector evidence" : "Aucune preuve sectorielle explicite";
+}
+
+function getStageSummary(lang: Lang, breakdown: MatchFitBreakdown) {
+  if (breakdown.stageExactListed) {
+    return lang === "en"
+      ? `Stage explicitly listed across ${breakdown.stageBreadth} declared stages`
+      : `Stade explicitement listé parmi ${breakdown.stageBreadth} stades déclarés`;
+  }
+  if (breakdown.stageAdjacentListed) {
+    return lang === "en" ? "Neighbouring stage to the stated mandate" : "Stade voisin du mandat déclaré";
+  }
+  if (breakdown.stageFit === "broad") {
+    return lang === "en" ? "Broad mandate, but no direct stage focus" : "Mandat large, sans focus direct";
+  }
+
+  return lang === "en" ? "No direct stage listing" : "Aucune mention directe du stade";
+}
+
+function getTicketSummary(lang: Lang, breakdown: MatchFitBreakdown) {
+  if (breakdown.ticketInsideRange && breakdown.ticketPositionRatio !== null) {
+    return lang === "en"
+      ? `Inside range, ${getTicketPositionCopy(lang, breakdown.ticketPositionRatio)}`
+      : `Dans la fourchette, ${getTicketPositionCopy(lang, breakdown.ticketPositionRatio)}`;
+  }
+  if (breakdown.ticketDistanceRatio > 0) {
+    const distance = Math.round(breakdown.ticketDistanceRatio * 100);
+    return lang === "en"
+      ? `About ${distance}% away from the stated range`
+      : `Environ ${distance} % d'écart avec la fourchette`;
+  }
+
+  return lang === "en" ? "Cheque range unclear" : "Fourchette peu lisible";
+}
+
+function getPortfolioSummary(lang: Lang, breakdown: MatchFitBreakdown) {
+  const companyCount = breakdown.notableCompanies.length;
+  const signalCount = breakdown.sharedSignals.length;
+
+  if (companyCount > 0 && signalCount > 0) {
+    return lang === "en"
+      ? `${companyCount} named deals and ${signalCount} comparable signals`
+      : `${companyCount} participations citées et ${signalCount} signaux comparables`;
+  }
+  if (companyCount > 0) {
+    return lang === "en"
+      ? `${companyCount} named deals, with limited close comparables`
+      : `${companyCount} participations citées, avec peu de comparables proches`;
+  }
+  if (signalCount > 0) {
+    return lang === "en"
+      ? `${signalCount} comparable signals in the fund narrative`
+      : `${signalCount} signaux comparables dans le narratif du fonds`;
+  }
+
+  return lang === "en" ? "Little comparable evidence" : "Peu d'éléments comparables";
+}
+
+function getSectorEvidence(
+  lang: Lang,
+  breakdown: MatchFitBreakdown,
+  localizedSector: string
+) {
+  if (breakdown.matchedSectors.length > 0) {
+    return lang === "en"
+      ? `${localizedSector} is explicitly listed in the fund's declared sector scope.`
+      : `${localizedSector} figure explicitement dans les secteurs déclarés par le fonds.`;
+  }
+  if (breakdown.sectorKeywordTotal > 0 && breakdown.sectorKeywordMatches > 0) {
+    return lang === "en"
+      ? `${breakdown.sectorKeywordMatches}/${breakdown.sectorKeywordTotal} sector signals were identified in the thesis, description or named portfolio.`
+      : `${breakdown.sectorKeywordMatches}/${breakdown.sectorKeywordTotal} signaux sectoriels ont été repérés dans la thèse, la description ou le portefeuille cité.`;
+  }
+
+  return lang === "en"
+    ? "No explicit sector overlap appears in the fields currently available for the fund."
+    : "Aucun recouvrement sectoriel explicite n'apparaît dans les champs actuellement disponibles pour le fonds.";
+}
+
+function getStageEvidence(lang: Lang, breakdown: MatchFitBreakdown, localizedStage: string) {
+  if (breakdown.stageExactListed) {
+    return lang === "en"
+      ? `${localizedStage} is explicitly listed in the fund profile (${breakdown.stageBreadth} declared stages).`
+      : `${localizedStage} figure explicitement dans le profil du fonds (${breakdown.stageBreadth} stades déclarés).`;
+  }
+  if (breakdown.stageAdjacentListed) {
+    return lang === "en"
+      ? `${localizedStage} is not listed verbatim, but the fund covers an adjacent stage.`
+      : `${localizedStage} n'est pas listé tel quel, mais le fonds couvre un stade voisin.`;
+  }
+  if (breakdown.stageFit === "broad") {
+    return lang === "en"
+      ? `${localizedStage} remains possible because the fund presents a broad mandate, without clear stage priority.`
+      : `${localizedStage} reste possible car le fonds présente un mandat large, sans priorité de stade clairement exprimée.`;
+  }
+
+  return lang === "en"
+    ? `${localizedStage} does not appear in the fund's declared stage scope.`
+    : `${localizedStage} n'apparaît pas dans les stades déclarés par le fonds.`;
+}
+
+function getTicketEvidence(
+  lang: Lang,
+  breakdown: MatchFitBreakdown,
+  amount: number,
+  min: number,
+  max: number
+) {
+  if (breakdown.ticketInsideRange && breakdown.ticketPositionRatio !== null) {
+    return lang === "en"
+      ? `${amount.toLocaleString("en-US")} € sits inside the stated cheque range, ${getTicketPositionCopy(
+          lang,
+          breakdown.ticketPositionRatio
+        )}.`
+      : `${amount.toLocaleString("fr-FR")} € se situe dans la fourchette déclarée, ${getTicketPositionCopy(
+          lang,
+          breakdown.ticketPositionRatio
+        )}.`;
+  }
+
+  const distance = Math.round(breakdown.ticketDistanceRatio * 100);
+  if (amount < min) {
+    return lang === "en"
+      ? `${amount.toLocaleString("en-US")} € is about ${distance}% below the fund's stated minimum cheque.`
+      : `${amount.toLocaleString("fr-FR")} € se situe environ ${distance} % en dessous du ticket minimum déclaré.`;
+  }
+  if (amount > max) {
+    return lang === "en"
+      ? `${amount.toLocaleString("en-US")} € is about ${distance}% above the fund's stated maximum cheque.`
+      : `${amount.toLocaleString("fr-FR")} € se situe environ ${distance} % au-dessus du ticket maximum déclaré.`;
+  }
+
+  return lang === "en" ? "Cheque range evidence remains limited." : "La preuve sur le ticket reste limitée.";
+}
+
+function getPortfolioEvidence(lang: Lang, breakdown: MatchFitBreakdown) {
+  const companyCount = breakdown.notableCompanies.length;
+  const signalCount = breakdown.sharedSignals.length;
+
+  if (companyCount > 0 && signalCount > 0) {
+    return lang === "en"
+      ? `${companyCount} named portfolio companies and ${signalCount} comparable signals support this part of the score.`
+      : `${companyCount} participations nommées et ${signalCount} signaux comparables soutiennent cette partie du score.`;
+  }
+  if (companyCount > 0) {
+    return lang === "en"
+      ? `${companyCount} named portfolio companies are available, but close comparables remain limited.`
+      : `${companyCount} participations nommées sont disponibles, mais les comparables proches restent limités.`;
+  }
+  if (signalCount > 0) {
+    return lang === "en"
+      ? `This card relies mostly on ${signalCount} comparable signals found in the thesis and description.`
+      : `Cette carte repose surtout sur ${signalCount} signaux comparables relevés dans la thèse et la description.`;
+  }
+
+  return lang === "en"
+    ? "No comparable portfolio evidence is clearly usable in the current dataset."
+    : "Aucun élément de portefeuille clairement comparable n'est exploitable dans les données actuelles.";
 }
 
 export function MatchScoreBreakdown({
@@ -301,48 +436,55 @@ export function MatchScoreBreakdown({
       key: "thesis",
       label: copy.labels.thesis,
       score: breakdown.sectorScore,
-      summary: copy.summaries.thesis[breakdown.sectorFit],
+      summary: getSectorSummary(lang, breakdown),
       rows: [
         { label: copy.rows.startupSector, value: localizedSector },
-        { label: copy.rows.fundSectors, value: joinList(localizedSectors) },
+        { label: copy.rows.fundSectors, value: formatLimitedList(localizedSectors, lang) },
+        { label: copy.rows.evidence, value: getSectorEvidence(lang, breakdown, localizedSector) },
       ],
     },
     {
       key: "stage",
       label: copy.labels.stage,
       score: breakdown.stageScore,
-      summary: copy.summaries.stage[breakdown.stageFit],
+      summary: getStageSummary(lang, breakdown),
       rows: [
         { label: copy.rows.startupStage, value: localizedStage },
-        { label: copy.rows.fundStages, value: joinList(localizedStages) },
+        { label: copy.rows.fundStages, value: formatLimitedList(localizedStages, lang) },
+        { label: copy.rows.evidence, value: getStageEvidence(lang, breakdown, localizedStage) },
       ],
     },
     {
       key: "ticket",
       label: copy.labels.ticket,
       score: breakdown.ticketScore,
-      summary: copy.summaries.ticket[breakdown.ticketFit],
+      summary: getTicketSummary(lang, breakdown),
       rows: [
         { label: copy.rows.amountSought, value: amount },
         { label: copy.rows.fundRange, value: `${minTicket} — ${maxTicket}` },
+        {
+          label: copy.rows.evidence,
+          value: getTicketEvidence(lang, breakdown, startup.amount_sought, vc.ticket_min, vc.ticket_max),
+        },
       ],
     },
     {
       key: "portfolio",
       label: copy.labels.portfolio,
       score: breakdown.portfolioScore,
-      summary: getPortfolioSummary(copy, breakdown),
+      summary: getPortfolioSummary(lang, breakdown),
       rows: [
         {
           label: copy.rows.listedDeals,
-          value: breakdown.hasPortfolioData ? joinList(breakdown.notableCompanies) : copy.rows.noDeals,
+          value: breakdown.hasPortfolioData ? formatLimitedList(breakdown.notableCompanies, lang, 3) : copy.rows.noDeals,
         },
         {
           label: copy.rows.detectedSignals,
           value: breakdown.sharedSignals.length > 0
-            ? joinList(breakdown.sharedSignals)
+            ? formatLimitedList(breakdown.sharedSignals, lang, 4)
             : copy.rows.noSignals,
         },
+        { label: copy.rows.evidence, value: getPortfolioEvidence(lang, breakdown) },
       ],
     },
   ] as const;

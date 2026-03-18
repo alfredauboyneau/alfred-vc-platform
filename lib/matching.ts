@@ -69,27 +69,27 @@ function calibrateMatchScore(
   let maxScore = 93;
 
   if (
-    sectorScore >= 95 &&
-    stageScore >= 95 &&
-    ticketScore >= 95 &&
+    sectorScore >= 90 &&
+    stageScore >= 88 &&
+    ticketScore >= 88 &&
     financialScore >= 92 &&
     portfolioScore >= 92
   ) {
     maxScore = 98;
   } else if (
-    sectorScore >= 95 &&
-    stageScore >= 95 &&
-    ticketScore >= 95 &&
+    sectorScore >= 86 &&
+    stageScore >= 84 &&
+    ticketScore >= 84 &&
     financialScore >= 88 &&
-    portfolioScore >= 84
+    portfolioScore >= 82
   ) {
     maxScore = 96;
   } else if (
-    sectorScore >= 88 &&
-    stageScore >= 88 &&
-    ticketScore >= 88 &&
+    sectorScore >= 78 &&
+    stageScore >= 74 &&
+    ticketScore >= 74 &&
     financialScore >= 80 &&
-    portfolioScore >= 78
+    portfolioScore >= 74
   ) {
     maxScore = 94;
   }
@@ -100,12 +100,12 @@ function calibrateMatchScore(
     maxScore = Math.min(maxScore, 88);
   }
 
-  if (sectorScore < 70) maxScore = Math.min(maxScore, 69);
-  if (stageScore < 70) maxScore = Math.min(maxScore, 74);
-  if (ticketScore < 70) maxScore = Math.min(maxScore, 78);
-  if (stageScore < 50 || ticketScore < 50) maxScore = Math.min(maxScore, 66);
+  if (sectorScore < 60) maxScore = Math.min(maxScore, 69);
+  if (stageScore < 60) maxScore = Math.min(maxScore, 74);
+  if (ticketScore < 52) maxScore = Math.min(maxScore, 78);
+  if (stageScore < 45 || ticketScore < 45) maxScore = Math.min(maxScore, 66);
   if (objectiveScore < 60) maxScore = Math.min(maxScore, 70);
-  if (hasPortfolioData && portfolioScore < 70) maxScore = Math.min(maxScore, 84);
+  if (hasPortfolioData && portfolioScore < 68) maxScore = Math.min(maxScore, 84);
   if (hasPortfolioData && portfolioScore < 55) maxScore = Math.min(maxScore, 76);
   if (hasPortfolioData && portfolioScore < 40) maxScore = Math.min(maxScore, 68);
 
