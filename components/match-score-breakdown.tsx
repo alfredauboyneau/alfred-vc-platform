@@ -123,7 +123,7 @@ function buildCopy(lang: Lang) {
           fundRange: "Fund cheque range",
           listedDeals: "Listed investments",
           detectedSignals: "Detected signals",
-          evidence: "Observed basis",
+          evidence: "Rationale",
           noDeals: "No named investments in the current dataset.",
           noSignals: "No clear overlap detected from the startup narrative.",
         },
@@ -149,15 +149,15 @@ function buildCopy(lang: Lang) {
         header: {
           eyebrow: "Score de compatibilité",
           scoreLabel: "Score global",
-          support: "Ce qui soutient le score",
-          reservation: "Réserve principale",
-          quickRead: "Lecture rapide",
+          support: "Points d'appui",
+          reservation: "Réserve",
+          quickRead: "Synthèse",
           noReservation: "Aucune réserve majeure sur les critères structurants.",
           noSupport: "Aucun soutien décisif ne ressort sur les critères principaux.",
         },
         bands: {
-          exceptional: "Compatibilité exceptionnelle",
-          veryStrong: "Compatibilité très forte",
+          exceptional: "Compatibilité remarquable",
+          veryStrong: "Compatibilité élevée",
           solid: "Compatibilité solide",
           partial: "Compatibilité partielle",
           limited: "Compatibilité limitée",
@@ -166,34 +166,34 @@ function buildCopy(lang: Lang) {
           thesis: "Thèse",
           stage: "Stade",
           ticket: "Ticket",
-          portfolio: "Historique des investissements",
+          portfolio: "Historique d'investissement",
         },
         rows: {
           startupSector: "Secteur de la startup",
-          fundSectors: "Secteurs déclarés",
+          fundSectors: "Secteurs couverts",
           startupStage: "Stade de la startup",
-          fundStages: "Stades déclarés",
+          fundStages: "Stades couverts",
           amountSought: "Montant recherché",
           fundRange: "Fourchette de ticket",
-          listedDeals: "Participations connues",
+          listedDeals: "Participations citées",
           detectedSignals: "Signaux comparables",
-          evidence: "Base du score",
+          evidence: "Justification",
           noDeals: "Aucune participation nommée dans les données disponibles.",
           noSignals: "Aucun signal comparable clair.",
         },
         summaryFactors: {
-          sector: "thèse sectorielle",
-          stage: "stade",
-          ticket: "ticket",
-          portfolio: "historique d'investissement",
+          sector: "la thèse sectorielle",
+          stage: "le stade",
+          ticket: "le ticket",
+          portfolio: "l'historique d'investissement",
         },
         reservations: {
-          sector: "Thèse sectorielle peu alignée.",
-          stage: "Stade en dehors du coeur de cible du fonds.",
-          stageBroad: "Stade possible, mais non prioritaire.",
-          ticketStretch: "Ticket envisageable, mais moins naturel.",
-          ticketOutside: "Ticket hors de la fourchette habituelle.",
-          portfolio: "Peu de précédents comparables.",
+          sector: "La thèse sectorielle est peu alignée.",
+          stage: "Le stade sort du coeur de cible du fonds.",
+          stageBroad: "Le stade reste possible, sans être prioritaire.",
+          ticketStretch: "Le ticket reste envisageable, mais moins naturel.",
+          ticketOutside: "Le ticket est hors de la fourchette habituelle.",
+          portfolio: "L'historique offre peu de comparables.",
         },
         noAlignment: "Aucun signal fort ne ressort sur les critères principaux.",
       };
@@ -213,10 +213,10 @@ function formatLimitedList(items: string[], lang: Lang, maxItems = 4) {
 
 function getTicketPositionCopy(lang: Lang, ratio: number) {
   if (ratio <= 0.3) {
-    return lang === "en" ? "rather in the lower part of the range" : "plutôt en bas de fourchette";
+    return lang === "en" ? "rather in the lower part of the range" : "dans la partie basse de la fourchette";
   }
   if (ratio >= 0.7) {
-    return lang === "en" ? "rather in the upper part of the range" : "plutôt en haut de fourchette";
+    return lang === "en" ? "rather in the upper part of the range" : "dans la partie haute de la fourchette";
   }
 
   return lang === "en" ? "near the middle of the range" : "au coeur de la fourchette";
@@ -226,12 +226,12 @@ function getSectorSummary(lang: Lang, breakdown: MatchFitBreakdown) {
   if (breakdown.matchedSectors.length > 0) {
     return lang === "en"
       ? `${breakdown.matchedSectors.length} explicit sector match across ${breakdown.sectorBreadth} declared sectors`
-      : `${breakdown.matchedSectors.length} secteur explicite sur ${breakdown.sectorBreadth} secteurs déclarés`;
+      : `${breakdown.matchedSectors.length} secteur commun parmi ${breakdown.sectorBreadth} secteurs déclarés`;
   }
   if (breakdown.sectorKeywordTotal > 0 && breakdown.sectorKeywordMatches > 0) {
     return lang === "en"
       ? `${breakdown.sectorKeywordMatches}/${breakdown.sectorKeywordTotal} sector signals found in the fund profile`
-      : `${breakdown.sectorKeywordMatches}/${breakdown.sectorKeywordTotal} signaux sectoriels retrouvés`;
+      : `${breakdown.sectorKeywordMatches}/${breakdown.sectorKeywordTotal} signaux sectoriels retrouvés dans le profil`;
   }
 
   return lang === "en" ? "No explicit sector evidence" : "Aucune preuve sectorielle explicite";
@@ -241,13 +241,13 @@ function getStageSummary(lang: Lang, breakdown: MatchFitBreakdown) {
   if (breakdown.stageExactListed) {
     return lang === "en"
       ? `Stage explicitly listed across ${breakdown.stageBreadth} declared stages`
-      : `Stade explicitement listé parmi ${breakdown.stageBreadth} stades déclarés`;
+      : `Stade mentionné parmi ${breakdown.stageBreadth} stades déclarés`;
   }
   if (breakdown.stageAdjacentListed) {
     return lang === "en" ? "Neighbouring stage to the stated mandate" : "Stade voisin du mandat déclaré";
   }
   if (breakdown.stageFit === "broad") {
-    return lang === "en" ? "Broad mandate, but no direct stage focus" : "Mandat large, sans focus direct";
+    return lang === "en" ? "Broad mandate, but no direct stage focus" : "Mandat large, sans priorité explicite";
   }
 
   return lang === "en" ? "No direct stage listing" : "Aucune mention directe du stade";
@@ -257,16 +257,16 @@ function getTicketSummary(lang: Lang, breakdown: MatchFitBreakdown) {
   if (breakdown.ticketInsideRange && breakdown.ticketPositionRatio !== null) {
     return lang === "en"
       ? `Inside range, ${getTicketPositionCopy(lang, breakdown.ticketPositionRatio)}`
-      : `Dans la fourchette, ${getTicketPositionCopy(lang, breakdown.ticketPositionRatio)}`;
+      : `Montant dans la fourchette, ${getTicketPositionCopy(lang, breakdown.ticketPositionRatio)}`;
   }
   if (breakdown.ticketDistanceRatio > 0) {
     const distance = Math.round(breakdown.ticketDistanceRatio * 100);
     return lang === "en"
       ? `About ${distance}% away from the stated range`
-      : `Environ ${distance} % d'écart avec la fourchette`;
+      : `Montant situé à environ ${distance} % de la fourchette`;
   }
 
-  return lang === "en" ? "Cheque range unclear" : "Fourchette peu lisible";
+  return lang === "en" ? "Cheque range unclear" : "Fourchette peu exploitable";
 }
 
 function getPortfolioSummary(lang: Lang, breakdown: MatchFitBreakdown) {
@@ -276,17 +276,17 @@ function getPortfolioSummary(lang: Lang, breakdown: MatchFitBreakdown) {
   if (companyCount > 0 && signalCount > 0) {
     return lang === "en"
       ? `${companyCount} named deals and ${signalCount} comparable signals`
-      : `${companyCount} participations citées et ${signalCount} signaux comparables`;
+      : `${companyCount} participations citées et ${signalCount} signaux comparables relevés`;
   }
   if (companyCount > 0) {
     return lang === "en"
       ? `${companyCount} named deals, with limited close comparables`
-      : `${companyCount} participations citées, avec peu de comparables proches`;
+      : `${companyCount} participations citées, mais peu de comparables proches`;
   }
   if (signalCount > 0) {
     return lang === "en"
       ? `${signalCount} comparable signals in the fund narrative`
-      : `${signalCount} signaux comparables dans le narratif du fonds`;
+      : `${signalCount} signaux comparables relevés dans le profil du fonds`;
   }
 
   return lang === "en" ? "Little comparable evidence" : "Peu d'éléments comparables";
@@ -300,39 +300,43 @@ function getSectorEvidence(
   if (breakdown.matchedSectors.length > 0) {
     return lang === "en"
       ? `${localizedSector} is explicitly listed in the fund's declared sector scope.`
-      : `${localizedSector} figure explicitement dans les secteurs déclarés par le fonds.`;
+      : `Le fonds mentionne explicitement ${localizedSector} dans ses secteurs couverts.`;
   }
   if (breakdown.sectorKeywordTotal > 0 && breakdown.sectorKeywordMatches > 0) {
     return lang === "en"
       ? `${breakdown.sectorKeywordMatches}/${breakdown.sectorKeywordTotal} sector signals were identified in the thesis, description or named portfolio.`
-      : `${breakdown.sectorKeywordMatches}/${breakdown.sectorKeywordTotal} signaux sectoriels ont été repérés dans la thèse, la description ou le portefeuille cité.`;
+      : `${breakdown.sectorKeywordMatches} ${
+          breakdown.sectorKeywordMatches > 1 ? "signaux sectoriels" : "signal sectoriel"
+        } sur ${breakdown.sectorKeywordTotal} ${
+          breakdown.sectorKeywordMatches > 1 ? "ont été repérés" : "a été repéré"
+        } dans la thèse, la description ou le portefeuille cité.`;
   }
 
   return lang === "en"
     ? "No explicit sector overlap appears in the fields currently available for the fund."
-    : "Aucun recouvrement sectoriel explicite n'apparaît dans les champs actuellement disponibles pour le fonds.";
+    : "Aucun recoupement sectoriel explicite n'apparaît dans les éléments actuellement disponibles.";
 }
 
 function getStageEvidence(lang: Lang, breakdown: MatchFitBreakdown, localizedStage: string) {
   if (breakdown.stageExactListed) {
     return lang === "en"
       ? `${localizedStage} is explicitly listed in the fund profile (${breakdown.stageBreadth} declared stages).`
-      : `${localizedStage} figure explicitement dans le profil du fonds (${breakdown.stageBreadth} stades déclarés).`;
+      : `Le fonds mentionne explicitement le stade ${localizedStage} dans son profil (${breakdown.stageBreadth} stades déclarés).`;
   }
   if (breakdown.stageAdjacentListed) {
     return lang === "en"
       ? `${localizedStage} is not listed verbatim, but the fund covers an adjacent stage.`
-      : `${localizedStage} n'est pas listé tel quel, mais le fonds couvre un stade voisin.`;
+      : `Le stade ${localizedStage} n'est pas mentionné tel quel, mais le fonds couvre un stade voisin.`;
   }
   if (breakdown.stageFit === "broad") {
     return lang === "en"
       ? `${localizedStage} remains possible because the fund presents a broad mandate, without clear stage priority.`
-      : `${localizedStage} reste possible car le fonds présente un mandat large, sans priorité de stade clairement exprimée.`;
+      : `Le stade ${localizedStage} reste recevable, car le fonds affiche un mandat large sans priorité explicite.`;
   }
 
   return lang === "en"
     ? `${localizedStage} does not appear in the fund's declared stage scope.`
-    : `${localizedStage} n'apparaît pas dans les stades déclarés par le fonds.`;
+    : `Le stade ${localizedStage} n'apparaît pas dans les stades couverts par le fonds.`;
 }
 
 function getTicketEvidence(
@@ -348,7 +352,7 @@ function getTicketEvidence(
           lang,
           breakdown.ticketPositionRatio
         )}.`
-      : `${amount.toLocaleString("fr-FR")} € se situe dans la fourchette déclarée, ${getTicketPositionCopy(
+      : `Le montant recherché se situe dans la fourchette annoncée, ${getTicketPositionCopy(
           lang,
           breakdown.ticketPositionRatio
         )}.`;
@@ -358,12 +362,12 @@ function getTicketEvidence(
   if (amount < min) {
     return lang === "en"
       ? `${amount.toLocaleString("en-US")} € is about ${distance}% below the fund's stated minimum cheque.`
-      : `${amount.toLocaleString("fr-FR")} € se situe environ ${distance} % en dessous du ticket minimum déclaré.`;
+      : `Le montant recherché se situe environ ${distance} % en dessous du ticket minimum annoncé.`;
   }
   if (amount > max) {
     return lang === "en"
       ? `${amount.toLocaleString("en-US")} € is about ${distance}% above the fund's stated maximum cheque.`
-      : `${amount.toLocaleString("fr-FR")} € se situe environ ${distance} % au-dessus du ticket maximum déclaré.`;
+      : `Le montant recherché se situe environ ${distance} % au-dessus du ticket maximum annoncé.`;
   }
 
   return lang === "en" ? "Cheque range evidence remains limited." : "La preuve sur le ticket reste limitée.";
@@ -376,17 +380,17 @@ function getPortfolioEvidence(lang: Lang, breakdown: MatchFitBreakdown) {
   if (companyCount > 0 && signalCount > 0) {
     return lang === "en"
       ? `${companyCount} named portfolio companies and ${signalCount} comparable signals support this part of the score.`
-      : `${companyCount} participations nommées et ${signalCount} signaux comparables soutiennent cette partie du score.`;
+      : `Ce sous-score s'appuie sur ${companyCount} participations citées et ${signalCount} signaux comparables.`;
   }
   if (companyCount > 0) {
     return lang === "en"
       ? `${companyCount} named portfolio companies are available, but close comparables remain limited.`
-      : `${companyCount} participations nommées sont disponibles, mais les comparables proches restent limités.`;
+      : `${companyCount} participations citées sont disponibles, mais les comparables proches restent limités.`;
   }
   if (signalCount > 0) {
     return lang === "en"
       ? `This card relies mostly on ${signalCount} comparable signals found in the thesis and description.`
-      : `Cette carte repose surtout sur ${signalCount} signaux comparables relevés dans la thèse et la description.`;
+      : `Ce sous-score repose surtout sur ${signalCount} signaux comparables relevés dans la thèse et la description.`;
   }
 
   return lang === "en"
@@ -403,19 +407,19 @@ function getSupportText(
   if (aligned.length >= 2) {
     return lang === "en"
       ? `${formatList(aligned, lang)} are consistent with the fund's declared mandate.`
-      : `${formatList(aligned, lang)} sont cohérents avec le mandat déclaré du fonds.`;
+      : `${formatList(aligned, lang)} sont bien alignés avec le mandat déclaré du fonds.`;
   }
 
   if (aligned.length === 1 && mixed.length > 0) {
     return lang === "en"
       ? `${formatList(aligned, lang)} is the clearest support, while ${formatList(mixed, lang)} remains more nuanced.`
-      : `${formatList(aligned, lang)} constitue le soutien le plus clair, tandis que ${formatList(mixed, lang)} reste plus nuancé.`;
+      : `${formatList(aligned, lang)} constitue le point d'appui le plus net, tandis que ${formatList(mixed, lang)} reste plus nuancé.`;
   }
 
   if (aligned.length === 1) {
     return lang === "en"
       ? `${formatList(aligned, lang)} is the clearest support in the current data.`
-      : `${formatList(aligned, lang)} constitue le soutien le plus clair dans les données actuelles.`;
+      : `${formatList(aligned, lang)} constitue le point d'appui le plus net dans les données actuelles.`;
   }
 
   if (mixed.length > 0) {
@@ -436,42 +440,42 @@ function getQuickRead(
   if (score >= 92) {
     return lang === "en"
       ? "Priority match for a warm introduction. The core fit reads as unusually strong."
-      : "Match prioritaire pour une introduction. Le fit ressort comme exceptionnellement solide.";
+      : "Cible prioritaire pour une prise de contact. L'alignement ressort comme particulièrement fort.";
   }
 
   if (score >= 84) {
     return primaryReservation
       ? lang === "en"
         ? "Very credible match for outreach. Strong fit overall, with one point still worth checking."
-        : "Match très crédible pour une prise de contact. Le fit est fort, avec un point à vérifier."
+        : "Cible très crédible pour une prise de contact. L'alignement est solide, avec un point à vérifier."
       : lang === "en"
       ? "Very credible match for outreach. The main criteria line up well."
-      : "Match très crédible pour une prise de contact. Les critères principaux sont bien alignés.";
+      : "Cible très crédible pour une prise de contact. Les critères principaux sont bien alignés.";
   }
 
   if (score >= 72) {
     return primaryReservation
       ? lang === "en"
         ? "Credible match for outreach. Not a perfect fit, but the fund remains relevant."
-        : "Match crédible pour une prise de contact. Ce n'est pas un perfect match, mais le fonds reste pertinent."
+        : "Cible pertinente pour une première approche. L'ensemble est convaincant, sans être irréprochable."
       : lang === "en"
       ? "Credible match for outreach. The fund looks relevant on the main declared criteria."
-      : "Match crédible pour une prise de contact. Le fonds paraît pertinent sur les principaux critères déclarés.";
+      : "Cible pertinente pour une première approche. Le fonds paraît cohérent sur les principaux critères déclarés.";
   }
 
   if (score >= 60) {
     return aligned.length > 0
       ? lang === "en"
         ? "Partial fit. Worth reviewing manually before treating it as a priority."
-        : "Fit partiel. À relire manuellement avant d'en faire une cible prioritaire."
+        : "Adéquation partielle. À examiner manuellement avant d'en faire une cible prioritaire."
       : lang === "en"
       ? "Partial fit. Useful as a secondary lead rather than a priority target."
-      : "Fit partiel. À considérer plutôt comme une piste secondaire que comme une priorité.";
+      : "Adéquation partielle. À considérer plutôt comme une piste secondaire que comme une priorité.";
   }
 
   return lang === "en"
     ? "Weak fit on the declared criteria. Not a priority without new evidence."
-    : "Fit faible au regard des critères déclarés. Pas une priorité sans élément nouveau.";
+    : "Adéquation faible au regard des critères déclarés. Pas une priorité sans élément nouveau.";
 }
 
 export function MatchScoreBreakdown({
@@ -504,7 +508,7 @@ export function MatchScoreBreakdown({
       : mixed.length > 0
       ? lang === "en"
         ? `Current conviction relies mostly on ${formatList(mixed, lang)}.`
-        : `La conviction repose surtout sur ${formatList(mixed, lang)}.`
+        : `L'évaluation repose surtout sur ${formatList(mixed, lang)}.`
       : copy.header.noReservation);
   const supportText = getSupportText(copy, lang, aligned, mixed);
   const quickReadText = getQuickRead(lang, score, aligned, primaryReservation);
