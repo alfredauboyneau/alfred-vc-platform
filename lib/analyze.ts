@@ -84,5 +84,10 @@ Réponds UNIQUEMENT avec un JSON valide (sans markdown, sans backticks) dans ce 
     throw new Error("Réponse Claude invalide");
   }
 
-  return JSON.parse(content.text) as FinancialAnalysis;
+  const analysis = JSON.parse(content.text) as FinancialAnalysis;
+
+  return {
+    ...analysis,
+    lang,
+  };
 }

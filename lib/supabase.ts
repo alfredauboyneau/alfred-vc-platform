@@ -67,6 +67,7 @@ export type FinancialAnalysis = {
   key_risks: string[];
   investment_readiness: "not_ready" | "soon" | "ready";
   summary: string;
+  lang?: "fr" | "en";
 };
 
 export type Match = {

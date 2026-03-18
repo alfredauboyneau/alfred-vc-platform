@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { supabase, type Startup, type Match } from "@/lib/supabase";
+import { fetchLocalizedReportItems } from "@/lib/localize-report-client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -441,11 +442,13 @@ function ProfilTab({ startup }: { startup: Startup }) {
 function DashboardContent() {
   const [startup, setStartup] = useState<Startup | null>(null);
   const [matches, setMatches] = useState<Match[]>([]);
+  const [localizedStartup, setLocalizedStartup] = useState<Startup | null>(null);
+  const [localizedMatches, setLocalizedMatches] = useState<Match[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>("analyse");
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const d = t.startupDash;
 
   useEffect(() => {
@@ -463,6 +466,7 @@ function DashboardContent() {
         .eq("user_id", user!.id)
         .single();
       setStartup(s ?? null);
+      setLocalizedStartup(null);
 
       if (s) {
         const { data: m } = await supabase
@@ -471,11 +475,79 @@ function DashboardContent() {
           .eq("startup_id", s.id)
           .order("score", { ascending: false });
         setMatches(m || []);
+        setLocalizedMatches(null);
+      } else {
+        setMatches([]);
+        setLocalizedMatches([]);
       }
       setLoading(false);
     }
     load();
   }, [user]);
+
+  useEffect(() => {
+    if (!startup) {
+      setLocalizedStartup(null);
+      setLocalizedMatches([]);
+      return;
+    }
+
+    const currentStartup = startup;
+    const currentMatches = matches;
+    const items = [
+      ...(currentStartup.financial_analysis
+        ? [{ id: currentStartup.id, financial_analysis: currentStartup.financial_analysis }]
+        : []),
+      ...currentMatches.map((match) => ({
+        id: match.id,
+        match_analysis: match.analysis,
+      })),
+    ];
+
+    if (!items.length) {
+      setLocalizedStartup(currentStartup);
+      setLocalizedMatches(currentMatches);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function localize() {
+      try {
+        const localizedItems = await fetchLocalizedReportItems(items, lang);
+        if (cancelled) return;
+
+        const localizedById = new Map(localizedItems.map((item) => [item.id, item]));
+
+        setLocalizedStartup(
+          currentStartup.financial_analysis
+            ? {
+                ...currentStartup,
+                financial_analysis:
+                  localizedById.get(currentStartup.id)?.financial_analysis ?? currentStartup.financial_analysis,
+              }
+            : currentStartup
+        );
+        setLocalizedMatches(
+          currentMatches.map((match) => ({
+            ...match,
+            analysis: localizedById.get(match.id)?.match_analysis ?? match.analysis,
+          }))
+        );
+      } catch (error) {
+        console.error("[startup-dashboard] report localization failed:", error);
+        if (cancelled) return;
+        setLocalizedStartup(currentStartup);
+        setLocalizedMatches(currentMatches);
+      }
+    }
+
+    localize();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [startup, matches, lang]);
 
   if (authLoading || loading) {
     return (
@@ -492,13 +564,16 @@ function DashboardContent() {
     return <NoStartupState />;
   }
 
+  const displayStartup = localizedStartup ?? startup;
+  const displayMatches = localizedMatches ?? matches;
+
   return (
     <>
       <TabBar active={activeTab} onChange={setActiveTab} />
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {activeTab === "analyse" && <AnalyseTab startup={startup} />}
-        {activeTab === "matchs" && <MatchsTab matches={matches} startup={startup} />}
-        {activeTab === "profil" && <ProfilTab startup={startup} />}
+        {activeTab === "analyse" && <AnalyseTab startup={displayStartup} />}
+        {activeTab === "matchs" && <MatchsTab matches={displayMatches} startup={displayStartup} />}
+        {activeTab === "profil" && <ProfilTab startup={displayStartup} />}
       </div>
     </>
   );

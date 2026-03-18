@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { supabase, type Match, type VentureCapital } from "@/lib/supabase";
+import { fetchLocalizedReportItems } from "@/lib/localize-report-client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -480,11 +481,12 @@ function ProfilVCTab({ vc }: { vc: any }) {
 function DashboardContent() {
   const [vc, setVC] = useState<any>(null);
   const [matches, setMatches] = useState<Match[]>([]);
+  const [localizedMatches, setLocalizedMatches] = useState<Match[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>("dealflow");
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const d = t.vcDash;
 
   useEffect(() => {
@@ -510,11 +512,74 @@ function DashboardContent() {
           .eq("vc_id", v.id)
           .order("score", { ascending: false });
         setMatches(m || []);
+        setLocalizedMatches(null);
+      } else {
+        setMatches([]);
+        setLocalizedMatches([]);
       }
       setLoading(false);
     }
     load();
   }, [user]);
+
+  useEffect(() => {
+    if (!matches.length) {
+      setLocalizedMatches(matches);
+      return;
+    }
+
+    const items = matches
+      .map((match) => ({
+        id: match.id,
+        financial_analysis: match.startup?.financial_analysis ?? null,
+        match_analysis: match.analysis,
+      }))
+      .filter((item) => item.financial_analysis || item.match_analysis);
+
+    if (!items.length) {
+      setLocalizedMatches(matches);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function localize() {
+      try {
+        const localizedItems = await fetchLocalizedReportItems(items, lang);
+        if (cancelled) return;
+
+        const localizedById = new Map(localizedItems.map((item) => [item.id, item]));
+
+        setLocalizedMatches(
+          matches.map((match) => {
+            const localized = localizedById.get(match.id);
+
+            return {
+              ...match,
+              analysis: localized?.match_analysis ?? match.analysis,
+              startup: match.startup
+                ? {
+                    ...match.startup,
+                    financial_analysis:
+                      localized?.financial_analysis ?? match.startup.financial_analysis,
+                  }
+                : match.startup,
+            };
+          })
+        );
+      } catch (error) {
+        console.error("[vc-dashboard] report localization failed:", error);
+        if (cancelled) return;
+        setLocalizedMatches(matches);
+      }
+    }
+
+    localize();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [matches, lang]);
 
   if (authLoading || loading) {
     return (
@@ -531,11 +596,13 @@ function DashboardContent() {
     return <NoVCState />;
   }
 
+  const displayMatches = localizedMatches ?? matches;
+
   return (
     <>
       <TabBar active={activeTab} onChange={setActiveTab} />
       <div className="max-w-5xl mx-auto px-4 py-8">
-        {activeTab === "dealflow" && <DealFlowTab matches={matches} vc={vc} />}
+        {activeTab === "dealflow" && <DealFlowTab matches={displayMatches} vc={vc} />}
         {activeTab === "profil" && <ProfilVCTab vc={vc} />}
       </div>
     </>
