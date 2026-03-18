@@ -98,7 +98,7 @@ export default function Home() {
               desc: "Readable by founders, advisors and investors.",
             },
           ],
-          note: "Detailed report example on the How Alfred works page",
+          note: "Detailed report example on the How it works page",
         }
       : {
           label: "Ce que produit Alfred",

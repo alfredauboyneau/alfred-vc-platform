@@ -294,10 +294,13 @@ function getPortfolioNarrativeInsights(startup: Startup, vc: VentureCapital) {
     getNarrativeSignals([vc.description, vc.investment_thesis, vc.notable_investments ?? "", ...vc.sectors].join(" "))
   );
   const sharedSignals = startupSignals.filter((signal, index) => startupSignals.indexOf(signal) === index && vcSignals.has(signal)).slice(0, 4);
+  const notableCompanies = getNotableCompanies(vc.notable_investments);
+  const companyPoints = Math.min(12, notableCompanies.length * 4);
+  const signalPoints = Math.min(16, sharedSignals.length * 4);
 
   if (keywords.length === 0) {
     return {
-      score: 62,
+      score: clamp(40 + companyPoints + signalPoints, notableCompanies.length > 0 || sharedSignals.length > 0 ? 50 : 46, 72),
       matchedKeywords: [] as string[],
       keywordCoverage: 0,
       sharedSignals,
@@ -309,24 +312,10 @@ function getPortfolioNarrativeInsights(startup: Startup, vc: VentureCapital) {
     .map((keyword) => keyword.label)
     .slice(0, 4);
   const coverage = matchedKeywords.length / keywords.length;
+  const coveragePoints = Math.round(coverage * 92);
+  const score = clamp(40 + coveragePoints + signalPoints + companyPoints, 44, 94);
 
-  if (coverage >= 0.42) {
-    return { score: 94, matchedKeywords, keywordCoverage: coverage, sharedSignals };
-  }
-  if (coverage >= 0.3) {
-    return { score: 86, matchedKeywords, keywordCoverage: coverage, sharedSignals };
-  }
-  if (coverage >= 0.2) {
-    return { score: 78, matchedKeywords, keywordCoverage: coverage, sharedSignals };
-  }
-  if (coverage >= 0.12) {
-    return { score: 68, matchedKeywords, keywordCoverage: coverage, sharedSignals };
-  }
-  if (coverage >= 0.06) {
-    return { score: 58, matchedKeywords, keywordCoverage: coverage, sharedSignals };
-  }
-
-  return { score: 46, matchedKeywords, keywordCoverage: coverage, sharedSignals };
+  return { score, matchedKeywords, keywordCoverage: coverage, sharedSignals };
 }
 
 export function scoreFinancialFit(financialAnalysis: FinancialAnalysis) {

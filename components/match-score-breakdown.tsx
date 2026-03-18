@@ -103,7 +103,7 @@ function buildCopy(lang: Lang) {
           thesis: "Thesis",
           stage: "Stage",
           ticket: "Ticket",
-          portfolio: "Track record",
+          portfolio: "Portfolio evidence",
         },
         rows: {
           startupSector: "Startup sector",
@@ -122,7 +122,7 @@ function buildCopy(lang: Lang) {
           sector: "sector thesis",
           stage: "stage",
           ticket: "cheque range",
-          portfolio: "track record",
+          portfolio: "portfolio evidence",
         },
         reservations: {
           sector: "Sector thesis is weakly aligned.",
@@ -130,7 +130,7 @@ function buildCopy(lang: Lang) {
           stageBroad: "Stage remains possible, but not clearly prioritised.",
           ticketStretch: "Cheque size looks possible, but stretched.",
           ticketOutside: "Cheque size is outside the usual range.",
-          portfolio: "Comparable investments remain limited.",
+          portfolio: "Comparable portfolio evidence remains limited.",
         },
         noAlignment: "No strong signal emerges on the main fit criteria.",
       }

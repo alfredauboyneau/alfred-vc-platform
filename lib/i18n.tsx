@@ -613,7 +613,7 @@ export const translations = {
       dashboardStartup: "Alfred · Startup dashboard",
       vcRegister: "Alfred · VC registration",
       about: "About",
-      howItWorks: "How Alfred works",
+      howItWorks: "How it works",
     },
     landing: {
       badge: "Financial review and VC matching for the French market",
@@ -631,7 +631,7 @@ export const translations = {
         matching: "Targeted matching",
       },
       processLabel: "Process",
-      howTitle: "How Alfred works",
+      howTitle: "How it works",
       howSubtitle: "From data intake to fund ranking, Alfred structures a qualification workflow that stays readable for founders and investors.",
       steps: [
         {
@@ -685,9 +685,9 @@ export const translations = {
       footerAbout: "About",
     },
     howItWorks: {
-      navTitle: "Alfred · How Alfred works",
+      navTitle: "Alfred · How it works",
       badge: "How it works",
-      title: "How Alfred works",
+      title: "How it works",
       subtitle: "Alfred organizes data intake, financial review and VC matching into one workflow, with usable output at every step.",
       steps: [
         {
@@ -785,7 +785,7 @@ export const translations = {
       heroTitleHighlight: "fundraising workflow.",
       heroSubtitle: "Alfred helps startups prepare an investable file and target relevant funds with an explainable method designed for the French VC market.",
       ctaAnalyze: "Analyze my startup",
-      ctaHowItWorks: "See how Alfred works",
+      ctaHowItWorks: "See how it works",
       stats: [
         { value: "< 5 min", label: "For a first output" },
         { value: "98+", label: "Indexed French VCs" },
