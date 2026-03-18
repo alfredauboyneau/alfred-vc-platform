@@ -87,7 +87,8 @@ export const translations = {
       },
       vcRibbon: {
         eyebrow: "Fonds déjà référencés",
-        title: "Leurs thèses sont déjà prises en compte pour orienter votre recherche d'investisseurs.",
+        title: "Quelques fonds déjà intégrés dans Alfred",
+        desc: "Leurs thèses sont déjà prises en compte pour orienter votre recherche d'investisseurs.",
       },
       footerStartups: "Startups",
       footerInvestors: "Investisseurs",
@@ -658,7 +659,8 @@ export const translations = {
       },
       vcRibbon: {
         eyebrow: "Funds already indexed",
-        title: "Their investment theses are already factored in to guide your investor outreach.",
+        title: "A few funds already integrated into Alfred",
+        desc: "Their investment theses are already factored in to guide your investor outreach.",
       },
       footerStartups: "Startups",
       footerInvestors: "Investors",

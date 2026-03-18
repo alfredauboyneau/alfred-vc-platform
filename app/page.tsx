@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
@@ -21,19 +22,13 @@ import { MarketingFooter } from "@/components/marketing-footer";
 export default function Home() {
   const { t, lang } = useLanguage();
   const l = t.landing;
-  const vcWordmarks = [
-    "Partech",
-    "Eurazeo",
-    "Kima Ventures",
-    "Alven",
-    "Elaia",
-    "Serena",
-    "Daphni",
-    "XAnge",
-    "ISAI",
-    "Frst",
-    "Singular",
-    "Founders Future",
+  const vcLogos = [
+    { name: "Partech", src: "/vc-logos/partech.png", width: 640, height: 427, className: "max-w-[132px]" },
+    { name: "Eurazeo", src: "/vc-logos/eurazeo.svg", width: 220, height: 48, className: "max-w-[138px]" },
+    { name: "Kima Ventures", src: "/vc-logos/kima.png", width: 1200, height: 668, className: "max-w-[144px]" },
+    { name: "ISAI", src: "/vc-logos/isai.png", width: 2362, height: 944, className: "max-w-[122px]" },
+    { name: "Elaia", src: "/vc-logos/elaia.png", width: 180, height: 54, className: "max-w-[120px]" },
+    { name: "Daphni", src: "/vc-logos/daphni.svg", width: 220, height: 52, className: "max-w-[126px]" },
   ];
   const methodItems =
     lang === "en"
@@ -250,30 +245,32 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="overflow-hidden border-y border-slate-200/70 bg-slate-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-blue-300">
-              {l.vcRibbon.eyebrow}
-            </p>
-            <p className="max-w-2xl text-sm leading-6 text-slate-300 sm:text-right">
-              {l.vcRibbon.title}
-            </p>
-          </div>
+      <section className="bg-white py-14 sm:py-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-[32px] border border-slate-200/80 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.08),transparent_42%),linear-gradient(180deg,rgba(248,250,252,0.92),rgba(255,255,255,1))] px-6 py-8 sm:px-10 sm:py-10">
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="eyebrow mb-4">{l.vcRibbon.eyebrow}</p>
+              <h2 className="headline-balance text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+                {l.vcRibbon.title}
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-slate-500 sm:text-base">
+                {l.vcRibbon.desc}
+              </p>
+            </div>
 
-          <div className="logo-marquee">
-            <div className="logo-marquee-track">
-              {[...vcWordmarks, ...vcWordmarks].map((name, index) => (
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-8 sm:gap-x-14">
+              {vcLogos.map((logo) => (
                 <div
-                  key={`${name}-${index}`}
-                  className="flex shrink-0 items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-5 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-sm"
+                  key={logo.name}
+                  className="flex h-16 min-w-[128px] items-center justify-center"
                 >
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.26em] text-slate-500">
-                    VC
-                  </span>
-                  <span className="text-sm font-semibold tracking-[0.08em] text-white/90">
-                    {name}
-                  </span>
+                  <Image
+                    src={logo.src}
+                    alt={`${logo.name} logo`}
+                    width={logo.width}
+                    height={logo.height}
+                    className={`h-auto max-h-10 w-auto object-contain opacity-90 grayscale ${logo.className}`}
+                  />
                 </div>
               ))}
             </div>
