@@ -55,12 +55,12 @@ function getEmailCopy(lang: Lang) {
 function getReadinessLabel(r: string, lang: Lang) {
   if (lang === "en") {
     if (r === "ready") return "✅ Ready to raise";
-    if (r === "soon") return "🟡 Needs work";
+    if (r === "soon") return "🟡 Preparing to raise";
     return "🔴 Not yet ready";
   }
 
   if (r === "ready") return "✅ Prêt à lever";
-  if (r === "soon") return "🟡 À consolider";
+  if (r === "soon") return "🟡 Levée en préparation";
   return "🔴 Pas encore prêt";
 }
 
