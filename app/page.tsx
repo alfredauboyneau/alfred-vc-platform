@@ -98,7 +98,7 @@ export default function Home() {
               desc: "Readable by founders, advisors and investors.",
             },
           ],
-          note: "Detailed report example on the Method page",
+          note: "Detailed report example on the How Alfred works page",
         }
       : {
           label: "Ce que produit Alfred",
@@ -120,7 +120,7 @@ export default function Home() {
               desc: "Lisible pour les fondateurs, leurs conseils et les investisseurs.",
             },
           ],
-          note: "Exemple détaillé du rapport sur la page Méthode",
+          note: "Exemple détaillé du rapport sur la page Fonctionnement",
         };
   const trustBand =
     lang === "en"

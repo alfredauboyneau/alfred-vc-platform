@@ -14,7 +14,7 @@ export const translations = {
       isStartup: "Je suis une startup",
       signIn: "Se connecter",
       signOut: "Se déconnecter",
-      seeProcess: "Voir le processus détaillé",
+      seeProcess: "Voir le fonctionnement détaillé",
       connecting: "Connexion en cours…",
       redirecting: "Vous allez être redirigé vers votre espace",
       raiseFunds: "Lever des fonds",
@@ -24,7 +24,7 @@ export const translations = {
       dashboardStartup: "Alfred · Tableau de bord startup",
       vcRegister: "Alfred · Inscription VC",
       about: "Qui sommes-nous",
-      howItWorks: "Méthode",
+      howItWorks: "Fonctionnement",
     },
     landing: {
       badge: "Revue financière et matching VC pour le marché français",
@@ -42,7 +42,7 @@ export const translations = {
         matching: "Matching ciblé",
       },
       processLabel: "Processus",
-      howTitle: "La méthode Alfred",
+      howTitle: "Comment Alfred fonctionne",
       howSubtitle: "De la soumission des données au classement des fonds, Alfred structure un parcours de qualification clair pour les startups comme pour les fonds.",
       steps: [
         {
@@ -96,9 +96,9 @@ export const translations = {
       footerAbout: "À propos",
     },
     howItWorks: {
-      navTitle: "Alfred · Méthode Alfred",
-      badge: "La méthode",
-      title: "La méthode Alfred",
+      navTitle: "Alfred · Fonctionnement",
+      badge: "Fonctionnement",
+      title: "Comment Alfred fonctionne",
       subtitle: "Alfred organise la collecte de données, la revue financière et le matching VC dans un même parcours, avec un rendu exploitable à chaque étape.",
       steps: [
         {
@@ -196,7 +196,7 @@ export const translations = {
       heroTitleHighlight: "plus claire pour lever.",
       heroSubtitle: "Alfred aide les startups à préparer un dossier investissable et à cibler les fonds pertinents avec une méthode explicable, pensée pour le marché VC français.",
       ctaAnalyze: "Analyser ma startup",
-      ctaHowItWorks: "La méthode Alfred",
+      ctaHowItWorks: "Voir le fonctionnement",
       stats: [
         { value: "< 5 min", label: "Pour un premier rendu" },
         { value: "98+", label: "Fonds français référencés" },
@@ -586,7 +586,7 @@ export const translations = {
       isStartup: "I'm a startup",
       signIn: "Sign in",
       signOut: "Sign out",
-      seeProcess: "See detailed process",
+      seeProcess: "See detailed workflow",
       connecting: "Signing in…",
       redirecting: "You'll be redirected to your space",
       raiseFunds: "Raise funds",
@@ -596,7 +596,7 @@ export const translations = {
       dashboardStartup: "Alfred · Startup dashboard",
       vcRegister: "Alfred · VC registration",
       about: "About",
-      howItWorks: "Method",
+      howItWorks: "How Alfred works",
     },
     landing: {
       badge: "Financial review and VC matching for the French market",
@@ -614,7 +614,7 @@ export const translations = {
         matching: "Targeted matching",
       },
       processLabel: "Process",
-      howTitle: "The Alfred method",
+      howTitle: "How Alfred works",
       howSubtitle: "From data intake to fund ranking, Alfred structures a qualification workflow that stays readable for founders and investors.",
       steps: [
         {
@@ -668,9 +668,9 @@ export const translations = {
       footerAbout: "About",
     },
     howItWorks: {
-      navTitle: "Alfred · The Alfred method",
-      badge: "The method",
-      title: "The Alfred method",
+      navTitle: "Alfred · How Alfred works",
+      badge: "How it works",
+      title: "How Alfred works",
       subtitle: "Alfred organizes data intake, financial review and VC matching into one workflow, with usable output at every step.",
       steps: [
         {
@@ -768,7 +768,7 @@ export const translations = {
       heroTitleHighlight: "fundraising workflow.",
       heroSubtitle: "Alfred helps startups prepare an investable file and target relevant funds with an explainable method designed for the French VC market.",
       ctaAnalyze: "Analyze my startup",
-      ctaHowItWorks: "The Alfred method",
+      ctaHowItWorks: "See how Alfred works",
       stats: [
         { value: "< 5 min", label: "For a first output" },
         { value: "98+", label: "Indexed French VCs" },
