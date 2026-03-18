@@ -99,7 +99,7 @@ export default function HowItWorksPage() {
             },
           ],
           strengthItems: ["MoM growth +14%", "LTV/CAC above 3x", "B2B SaaS gross margin 78%"],
-          riskItems: ["Runway under 12 months", "Natural fit is strongest with Seed to Series A funds"],
+          riskItems: ["Runway under 12 months", "Best fit concentrated among Seed to Series A funds"],
           bullets: [
             "0-100 financial health score",
             "Clear scoring logic for each shortlisted fund",
@@ -171,7 +171,7 @@ export default function HowItWorksPage() {
             },
           ],
           strengthItems: ["Croissance mensuelle +14 %", "LTV/CAC supérieur à 3x", "Marge brute SaaS B2B de 78 %"],
-          riskItems: ["Runway inférieur à 12 mois", "Les meilleurs fits restent concentrés sur les fonds Seed à Série A"],
+          riskItems: ["Runway inférieur à 12 mois", "Fit surtout concentré sur les fonds Seed à Série A"],
           bullets: [
             "Score de santé financière de 0 à 100",
             "Logique de score lisible pour chaque fonds recommandé",
