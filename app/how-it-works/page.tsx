@@ -42,13 +42,9 @@ export default function HowItWorksPage() {
           score: "Health score",
           readiness: "Ready to raise",
           fitLabel: "Compatibility score",
-          fitTitle: "Solid compatibility",
-          support: "What supports the score",
-          reservation: "Main reservation",
-          quickRead: "Quick read",
-          supportText: "Sector thesis, stage and cheque range are consistent with the fund's declared mandate.",
-          reservationText: "Track record still offers only a limited number of close comparables.",
-          quickReadText: "Credible target for initial outreach. The overall fit is solid, without reading as an obvious case.",
+          fitTitle: "Why this score",
+          fitSubtitle: "The score is split across the four criteria below.",
+          fitBand: "Solid compatibility",
           strengths: "Strengths",
           risks: "Watchpoints",
           scorecard: "Alfred summary",
@@ -118,13 +114,9 @@ export default function HowItWorksPage() {
           score: "Score de santé",
           readiness: "Prête à lever",
           fitLabel: "Score de compatibilité",
-          fitTitle: "Compatibilité solide",
-          support: "Points d'appui",
-          reservation: "Réserve",
-          quickRead: "Synthèse",
-          supportText: "La thèse sectorielle, le stade et le ticket sont bien alignés avec le mandat déclaré du fonds.",
-          reservationText: "L'historique offre encore peu de comparables proches.",
-          quickReadText: "Cible pertinente pour une première approche. L'ensemble est convaincant, sans être irréprochable.",
+          fitTitle: "Pourquoi ce score",
+          fitSubtitle: "Le score se répartit sur les quatre critères ci-dessous.",
+          fitBand: "Compatibilité solide",
           strengths: "Points forts",
           risks: "Points de vigilance",
           scorecard: "Synthèse Alfred",
@@ -294,25 +286,30 @@ export default function HowItWorksPage() {
                 <div className="min-w-0">
                   <p className="eyebrow mb-3 text-slate-300">{reportPreview.fitLabel}</p>
                   <h3 className="text-xl font-semibold tracking-tight text-white">{reportPreview.fitTitle}</h3>
-                  <div className="mt-4 grid gap-3 xl:grid-cols-3 sm:grid-cols-2">
-                    <div className="rounded-[1.15rem] border border-white/10 bg-white/[0.04] p-3">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                        {reportPreview.support}
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-slate-100">{reportPreview.supportText}</p>
-                    </div>
-                    <div className="rounded-[1.15rem] border border-white/10 bg-white/[0.04] p-3">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                        {reportPreview.reservation}
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-slate-100">{reportPreview.reservationText}</p>
-                    </div>
-                    <div className="rounded-[1.15rem] border border-white/10 bg-white/[0.04] p-3 sm:col-span-2 xl:col-span-1">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                        {reportPreview.quickRead}
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-slate-100">{reportPreview.quickReadText}</p>
-                    </div>
+                  <p className="mt-2 text-sm leading-6 text-slate-400">{reportPreview.fitSubtitle}</p>
+                  <div className="mt-4 overflow-hidden rounded-[1.15rem] border border-white/10 bg-white/[0.04]">
+                    {reportPreview.factors.map((factor, index) => (
+                      <div
+                        key={factor.title}
+                        className={`flex items-center justify-between gap-4 px-4 py-3 ${
+                          index > 0 ? "border-t border-white/10" : ""
+                        }`}
+                      >
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-white">{factor.title}</p>
+                          <p className="mt-1 text-xs leading-5 text-slate-400">{factor.summary}</p>
+                        </div>
+                        <span
+                          className={`shrink-0 inline-flex rounded-full border px-2.5 py-1 text-[11px] font-semibold ${
+                            factor.tone === "rose"
+                              ? "border-rose-200 bg-rose-50 text-rose-700"
+                              : "border-blue-200 bg-blue-50 text-blue-700"
+                          }`}
+                        >
+                          {factor.score}/100
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </div>
                 <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.06] p-4 text-right">
@@ -323,6 +320,7 @@ export default function HowItWorksPage() {
                     <span className="text-4xl font-semibold tracking-tight text-white">81</span>
                     <span className="pb-1 text-sm text-slate-400">/100</span>
                   </div>
+                  <p className="mt-2 text-sm text-slate-300">{reportPreview.fitBand}</p>
                   <div className="mt-4 h-2 rounded-full bg-white/10">
                     <div className="h-2 w-[81%] rounded-full bg-blue-400" />
                   </div>

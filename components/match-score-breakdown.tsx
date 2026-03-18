@@ -87,9 +87,8 @@ function buildCopy(lang: Lang) {
         header: {
           eyebrow: "Compatibility score",
           scoreLabel: "Overall score",
-          support: "What supports the score",
-          reservation: "Main reservation",
-          quickRead: "Quick read",
+          overviewTitle: "Why this score",
+          overviewSubtitle: "The score is split across the four criteria below.",
           noReservation: "No major reservation on the core fit criteria.",
           noSupport: "No decisive support appears on the main criteria.",
         },
@@ -141,9 +140,8 @@ function buildCopy(lang: Lang) {
         header: {
           eyebrow: "Score de compatibilité",
           scoreLabel: "Score global",
-          support: "Points d'appui",
-          reservation: "Réserve",
-          quickRead: "Synthèse",
+          overviewTitle: "Pourquoi ce score",
+          overviewSubtitle: "Le score se répartit sur les quatre critères ci-dessous.",
           noReservation: "Aucune réserve majeure sur les critères structurants.",
           noSupport: "Aucun soutien décisif ne ressort sur les critères principaux.",
         },
@@ -491,20 +489,6 @@ export function MatchScoreBreakdown({
   const maxTicket = `${vc.ticket_max.toLocaleString(locale)} €`;
   const localizedSectors = vc.sectors.map((sector) => localizeSector(sector, lang));
   const localizedStages = vc.stages.map((stage) => localizeStage(stage, lang));
-  const { aligned, mixed } = getAlignedFactors(copy, breakdown);
-  const primaryReservation = getPrimaryReservation(copy, breakdown);
-  const reservationText =
-    primaryReservation ??
-    (aligned.length > 0 && mixed.length === 0
-      ? copy.header.noReservation
-      : mixed.length > 0
-      ? lang === "en"
-        ? `Current conviction relies mostly on ${formatList(mixed, lang)}.`
-        : `L'évaluation repose surtout sur ${formatList(mixed, lang)}.`
-      : copy.header.noReservation);
-  const supportText = getSupportText(copy, lang, aligned, mixed);
-  const quickReadText = getQuickRead(lang, score, aligned, primaryReservation);
-
   const factors = [
     {
       key: "thesis",
@@ -568,26 +552,29 @@ export function MatchScoreBreakdown({
       <div className="grid gap-4 border-b border-slate-200/80 bg-slate-950 px-4 py-4 sm:grid-cols-[minmax(0,1fr)_190px] sm:px-5">
         <div className="min-w-0">
           <p className="eyebrow mb-3 text-slate-300">{copy.header.eyebrow}</p>
-          <h4 className="text-lg font-semibold tracking-tight text-white">{getScoreBandLabel(score, copy)}</h4>
-          <div className="mt-4 grid gap-3 xl:grid-cols-3 sm:grid-cols-2">
-            <div className="rounded-[1.25rem] border border-white/10 bg-white/[0.04] p-3">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                {copy.header.support}
-              </p>
-              <p className="mt-2 text-sm leading-6 text-slate-100">{supportText}</p>
-            </div>
-            <div className="rounded-[1.25rem] border border-white/10 bg-white/[0.04] p-3">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                {copy.header.reservation}
-              </p>
-              <p className="mt-2 text-sm leading-6 text-slate-100">{reservationText}</p>
-            </div>
-            <div className="rounded-[1.25rem] border border-white/10 bg-white/[0.04] p-3 sm:col-span-2 xl:col-span-1">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                {copy.header.quickRead}
-              </p>
-              <p className="mt-2 text-sm leading-6 text-slate-100">{quickReadText}</p>
-            </div>
+          <h4 className="text-lg font-semibold tracking-tight text-white">{copy.header.overviewTitle}</h4>
+          <p className="mt-2 text-sm leading-6 text-slate-400">{copy.header.overviewSubtitle}</p>
+          <div className="mt-4 overflow-hidden rounded-[1.25rem] border border-white/10 bg-white/[0.04]">
+            {factors.map((factor, index) => (
+              <div
+                key={factor.key}
+                className={`flex items-center justify-between gap-4 px-4 py-3 ${
+                  index > 0 ? "border-t border-white/10" : ""
+                }`}
+              >
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-white">{factor.label}</p>
+                  <p className="mt-1 text-xs leading-5 text-slate-400">{factor.summary}</p>
+                </div>
+                <span
+                  className={`shrink-0 inline-flex rounded-full border px-2.5 py-1 text-[11px] font-semibold ${scoreClasses(
+                    factor.score
+                  )}`}
+                >
+                  {factor.score}/100
+                </span>
+              </div>
+            ))}
           </div>
         </div>
         <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-4 text-right">
@@ -598,6 +585,7 @@ export function MatchScoreBreakdown({
             <span className="text-4xl font-semibold tracking-tight text-white">{score}</span>
             <span className="pb-1 text-sm text-slate-400">/100</span>
           </div>
+          <p className="mt-2 text-sm text-slate-300">{getScoreBandLabel(score, copy)}</p>
           <div className="mt-4 h-2 rounded-full bg-white/10">
             <div
               className={`h-2 rounded-full ${scoreBarClasses(score)}`}
