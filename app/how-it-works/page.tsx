@@ -14,7 +14,6 @@ import {
   ChevronUp,
   Lightbulb,
   SearchCheck,
-  Building2,
 } from "lucide-react";
 import { useLanguage, LanguageToggle } from "@/lib/i18n";
 import { useState } from "react";
@@ -37,40 +36,152 @@ export default function HowItWorksPage() {
       ? {
           label: "Example output",
           title: "What the founder receives after analysis",
-          subtitle: "A readable financial review followed by a fund ranking with short rationales.",
-          report: "Financial report",
+          subtitle: "A readable analysis report, followed by a prioritised fund selection with explicit scoring logic.",
+          report: "Analysis report",
           score: "Health score",
+          readiness: "Ready to raise",
+          fitLabel: "Compatibility score",
+          fitTitle: "Solid compatibility",
+          support: "What supports the score",
+          reservation: "Main reservation",
+          quickRead: "Quick read",
+          supportText: "Sector thesis, stage and cheque range are consistent with the fund's declared mandate.",
+          reservationText: "Track record still offers only a limited number of close comparables.",
+          quickReadText: "Credible target for initial outreach. The overall fit is solid, without reading as an obvious case.",
           strengths: "Strengths",
           risks: "Watchpoints",
-          fit: "Fund shortlist",
-          fitDesc: "Ranked by score, stage fit, sector fit and ticket range.",
           scorecard: "Alfred summary",
-          topFunds: "3 priority funds",
+          factors: [
+            {
+              title: "Thesis",
+              score: "86/100",
+              summary: "1 shared sector across 5 declared sectors",
+              keyLabel: "Startup sector",
+              keyValue: "FinTech",
+              scopeLabel: "Covered sectors",
+              scopeValue: "FinTech · Cybersecurity · SaaS / Software · DeepTech / AI · +1 more",
+              evidenceLabel: "Rationale",
+              evidenceValue: "The fund explicitly lists FinTech among its covered sectors.",
+              tone: "blue",
+            },
+            {
+              title: "Stage",
+              score: "86/100",
+              summary: "Stage mentioned across 3 declared stages",
+              keyLabel: "Startup stage",
+              keyValue: "Seed",
+              scopeLabel: "Covered stages",
+              scopeValue: "Seed · Series A · Series B",
+              evidenceLabel: "Rationale",
+              evidenceValue: "The fund explicitly mentions Seed in its profile.",
+              tone: "blue",
+            },
+            {
+              title: "Ticket",
+              score: "81/100",
+              summary: "Inside range, in the upper part of the range",
+              keyLabel: "Amount sought",
+              keyValue: "7,400,000 €",
+              scopeLabel: "Cheque range",
+              scopeValue: "500,000 € — 15,000,000 €",
+              evidenceLabel: "Rationale",
+              evidenceValue: "The amount sought falls within the stated range, though in its upper band.",
+              tone: "blue",
+            },
+            {
+              title: "Track record",
+              score: "58/100",
+              summary: "2 named investments and 3 comparable signals",
+              keyLabel: "Listed investments",
+              keyValue: "Lydia · Younited Credit",
+              scopeLabel: "Comparable signals",
+              scopeValue: "SaaS · FinTech · AI",
+              evidenceLabel: "Rationale",
+              evidenceValue: "This part of the score relies on a few relevant portfolio references, but the evidence remains limited.",
+              tone: "rose",
+            },
+          ],
           strengthItems: ["MoM growth +14%", "LTV/CAC above 3x", "B2B SaaS gross margin 78%"],
-          riskItems: ["Runway under 12 months", "Ticket fit concentrated on Seed funds"],
+          riskItems: ["Runway under 12 months", "Natural fit is strongest with Seed to Series A funds"],
           bullets: [
             "0-100 financial health score",
-            "Short rationale for each recommended fund",
+            "Clear scoring logic for each shortlisted fund",
             "Readable output to share with advisors or investors",
           ],
         }
       : {
           label: "Exemple de rendu",
           title: "Ce que reçoit le fondateur après l'analyse",
-          subtitle: "Une revue financière lisible, suivie d'un classement des fonds avec justification courte.",
-          report: "Rapport financier",
+          subtitle: "Un rapport d'analyse lisible, suivi d'une sélection priorisée de fonds avec une logique de score explicite.",
+          report: "Rapport d'analyse",
           score: "Score de santé",
+          readiness: "Prête à lever",
+          fitLabel: "Score de compatibilité",
+          fitTitle: "Compatibilité solide",
+          support: "Points d'appui",
+          reservation: "Réserve",
+          quickRead: "Synthèse",
+          supportText: "La thèse sectorielle, le stade et le ticket sont bien alignés avec le mandat déclaré du fonds.",
+          reservationText: "L'historique offre encore peu de comparables proches.",
+          quickReadText: "Cible pertinente pour une première approche. L'ensemble est convaincant, sans être irréprochable.",
           strengths: "Points forts",
-          risks: "Points d'attention",
-          fit: "Classement des fonds",
-          fitDesc: "Classé par score, adéquation de stade, secteur et ticket.",
+          risks: "Points de vigilance",
           scorecard: "Synthèse Alfred",
-          topFunds: "3 fonds prioritaires",
+          factors: [
+            {
+              title: "Thèse",
+              score: "86/100",
+              summary: "1 secteur commun parmi 5 secteurs déclarés",
+              keyLabel: "Secteur de la startup",
+              keyValue: "FinTech",
+              scopeLabel: "Secteurs couverts",
+              scopeValue: "FinTech · Cybersécurité · SaaS / Logiciel · DeepTech / IA · +1 autre",
+              evidenceLabel: "Justification",
+              evidenceValue: "Le fonds mentionne explicitement la FinTech parmi ses secteurs couverts.",
+              tone: "blue",
+            },
+            {
+              title: "Stade",
+              score: "86/100",
+              summary: "Stade mentionné parmi 3 stades déclarés",
+              keyLabel: "Stade de la startup",
+              keyValue: "Seed",
+              scopeLabel: "Stades couverts",
+              scopeValue: "Seed · Série A · Série B",
+              evidenceLabel: "Justification",
+              evidenceValue: "Le fonds mentionne explicitement le stade Seed dans son profil.",
+              tone: "blue",
+            },
+            {
+              title: "Ticket",
+              score: "81/100",
+              summary: "Montant dans la fourchette, dans la partie haute",
+              keyLabel: "Montant recherché",
+              keyValue: "7 400 000 €",
+              scopeLabel: "Fourchette de ticket",
+              scopeValue: "500 000 € — 15 000 000 €",
+              evidenceLabel: "Justification",
+              evidenceValue: "Le montant recherché se situe dans la fourchette annoncée, mais dans sa partie haute.",
+              tone: "blue",
+            },
+            {
+              title: "Historique d'investissement",
+              score: "58/100",
+              summary: "2 participations citées et 3 signaux comparables relevés",
+              keyLabel: "Participations citées",
+              keyValue: "Lydia · Younited Credit",
+              scopeLabel: "Signaux comparables",
+              scopeValue: "SaaS · FinTech · IA",
+              evidenceLabel: "Justification",
+              evidenceValue: "Ce sous-score s'appuie sur quelques références pertinentes, mais les comparables proches restent limités.",
+              tone: "rose",
+            },
+          ],
           strengthItems: ["Croissance mensuelle +14 %", "LTV/CAC supérieur à 3x", "Marge brute SaaS B2B de 78 %"],
-          riskItems: ["Runway inférieur à 12 mois", "Compatibilité ticket surtout avec des fonds Seed"],
+          riskItems: ["Runway inférieur à 12 mois", "Les meilleurs fits restent concentrés sur les fonds Seed à Série A"],
           bullets: [
             "Score de santé financière de 0 à 100",
-            "Justification courte pour chaque fonds recommandé",
+            "Logique de score lisible pour chaque fonds recommandé",
             "Rendu lisible à partager avec vos conseils ou vos investisseurs",
           ],
         };
@@ -140,9 +251,10 @@ export default function HowItWorksPage() {
                 <p className="eyebrow">{reportPreview.report}</p>
                 <p className="mt-2 text-lg font-semibold text-slate-900">{reportPreview.scorecard}</p>
               </div>
-              <div className="rounded-2xl bg-emerald-50 px-4 py-3 text-right ring-1 ring-emerald-100 min-w-[9rem]">
+              <div className="rounded-2xl bg-emerald-50 px-4 py-3 text-right ring-1 ring-emerald-100 min-w-[10rem]">
                 <p className="text-xs text-emerald-700">{reportPreview.score}</p>
                 <p className="text-2xl font-bold text-emerald-800">81/100</p>
+                <p className="mt-1 text-xs text-emerald-700">{reportPreview.readiness}</p>
               </div>
             </div>
 
@@ -176,26 +288,95 @@ export default function HowItWorksPage() {
               </div>
             </div>
 
-            <div className="mt-4 rounded-2xl border border-blue-100 bg-blue-50/90 p-4">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-700">
-                    {reportPreview.fit}
-                  </p>
-                  <p className="mt-1 text-[15px] leading-relaxed text-slate-700">{reportPreview.fitDesc}</p>
+            <div className="mt-4 overflow-hidden rounded-[28px] border border-slate-200/80 bg-white">
+              <div className="grid gap-4 border-b border-slate-200/80 bg-slate-950 px-4 py-4 sm:grid-cols-[minmax(0,1fr)_180px] sm:px-5">
+                <div className="min-w-0">
+                  <p className="eyebrow mb-3 text-slate-300">{reportPreview.fitLabel}</p>
+                  <h3 className="text-xl font-semibold tracking-tight text-white">{reportPreview.fitTitle}</h3>
+                  <div className="mt-4 grid gap-3 xl:grid-cols-3 sm:grid-cols-2">
+                    <div className="rounded-[1.15rem] border border-white/10 bg-white/[0.04] p-3">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                        {reportPreview.support}
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-slate-100">{reportPreview.supportText}</p>
+                    </div>
+                    <div className="rounded-[1.15rem] border border-white/10 bg-white/[0.04] p-3">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                        {reportPreview.reservation}
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-slate-100">{reportPreview.reservationText}</p>
+                    </div>
+                    <div className="rounded-[1.15rem] border border-white/10 bg-white/[0.04] p-3 sm:col-span-2 xl:col-span-1">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                        {reportPreview.quickRead}
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-slate-100">{reportPreview.quickReadText}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="shrink-0 rounded-full bg-white px-3 py-1 text-sm font-semibold text-blue-700 shadow-sm">
-                  {reportPreview.topFunds}
+                <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.06] p-4 text-right">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+                    {reportPreview.fitLabel}
+                  </p>
+                  <div className="mt-3 flex items-end justify-end gap-1">
+                    <span className="text-4xl font-semibold tracking-tight text-white">81</span>
+                    <span className="pb-1 text-sm text-slate-400">/100</span>
+                  </div>
+                  <div className="mt-4 h-2 rounded-full bg-white/10">
+                    <div className="h-2 w-[81%] rounded-full bg-blue-400" />
+                  </div>
                 </div>
               </div>
-              <div className="mt-4 space-y-2">
-                {["Partech", "Kima Ventures", "Alven"].map((fund, index) => (
-                  <div key={fund} className="flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-sm text-slate-700 shadow-sm ring-1 ring-slate-100">
-                    <span className="flex items-center gap-2">
-                      <Building2 className="w-4 h-4 text-blue-600" />
-                      {fund}
-                    </span>
-                    <span className="font-semibold text-slate-900">{92 - index * 5}/100</span>
+
+              <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-5">
+                {reportPreview.factors.map((factor) => (
+                  <div
+                    key={factor.title}
+                    className={`rounded-[1.35rem] border p-4 ${
+                      factor.tone === "rose" ? "border-rose-200/80 bg-white" : "border-blue-200/80 bg-white"
+                    }`}
+                  >
+                    <div className="mb-2 flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-slate-900">{factor.title}</p>
+                        <p className="mt-1 text-[11px] leading-5 text-slate-500">{factor.summary}</p>
+                      </div>
+                      <span
+                        className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-semibold ${
+                          factor.tone === "rose"
+                            ? "border-rose-200 bg-rose-50 text-rose-700"
+                            : "border-blue-200 bg-blue-50 text-blue-700"
+                        }`}
+                      >
+                        {factor.score}
+                      </span>
+                    </div>
+                    <div className="mb-4 h-1.5 rounded-full bg-slate-100">
+                      <div
+                        className={`h-1.5 rounded-full ${factor.tone === "rose" ? "bg-rose-500" : "bg-blue-500"}`}
+                        style={{ width: factor.score }}
+                      />
+                    </div>
+                    <dl className="space-y-3">
+                      <div>
+                        <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                          {factor.keyLabel}
+                        </dt>
+                        <dd className="mt-1 text-sm leading-6 text-slate-700">{factor.keyValue}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                          {factor.scopeLabel}
+                        </dt>
+                        <dd className="mt-1 text-sm leading-6 text-slate-700">{factor.scopeValue}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                          {factor.evidenceLabel}
+                        </dt>
+                        <dd className="mt-1 text-sm leading-6 text-slate-700">{factor.evidenceValue}</dd>
+                      </div>
+                    </dl>
                   </div>
                 ))}
               </div>
