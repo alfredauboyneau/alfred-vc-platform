@@ -21,6 +21,20 @@ import { MarketingFooter } from "@/components/marketing-footer";
 export default function Home() {
   const { t, lang } = useLanguage();
   const l = t.landing;
+  const vcWordmarks = [
+    "Partech",
+    "Eurazeo",
+    "Kima Ventures",
+    "Alven",
+    "Elaia",
+    "Serena",
+    "Daphni",
+    "XAnge",
+    "ISAI",
+    "Frst",
+    "Singular",
+    "Founders Future",
+  ];
   const methodItems =
     lang === "en"
       ? [
@@ -231,6 +245,37 @@ export default function Home() {
                 <span>{heroPanel.note}</span>
                 <ArrowRight className="w-4 h-4 text-blue-300" />
               </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="overflow-hidden border-y border-slate-200/70 bg-slate-950">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-blue-300">
+              {l.vcRibbon.eyebrow}
+            </p>
+            <p className="max-w-2xl text-sm leading-6 text-slate-300 sm:text-right">
+              {l.vcRibbon.title}
+            </p>
+          </div>
+
+          <div className="logo-marquee">
+            <div className="logo-marquee-track">
+              {[...vcWordmarks, ...vcWordmarks].map((name, index) => (
+                <div
+                  key={`${name}-${index}`}
+                  className="flex shrink-0 items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-5 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-sm"
+                >
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.26em] text-slate-500">
+                    VC
+                  </span>
+                  <span className="text-sm font-semibold tracking-[0.08em] text-white/90">
+                    {name}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </div>

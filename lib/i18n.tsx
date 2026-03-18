@@ -85,6 +85,10 @@ export const translations = {
         ],
         cta: "Lire la politique de confidentialité",
       },
+      vcRibbon: {
+        eyebrow: "Fonds déjà référencés",
+        title: "Leurs thèses sont déjà prises en compte pour orienter votre recherche d'investisseurs.",
+      },
       footerStartups: "Startups",
       footerInvestors: "Investisseurs",
       footerCopyright: "© 2026 Alfred · Plateforme de qualification VC x Startup · France",
@@ -651,6 +655,10 @@ export const translations = {
           "Data remains attached to your account until deletion",
         ],
         cta: "Read the privacy policy",
+      },
+      vcRibbon: {
+        eyebrow: "Funds already indexed",
+        title: "Their investment theses are already factored in to guide your investor outreach.",
       },
       footerStartups: "Startups",
       footerInvestors: "Investors",
