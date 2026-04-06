@@ -25,6 +25,7 @@ export const translations = {
       vcRegister: "Alfred · Inscription VC",
       about: "Qui sommes-nous",
       howItWorks: "Fonctionnement",
+      news: "News",
     },
     landing: {
       badge: "Revue financière et matching VC pour le marché français",
@@ -614,6 +615,7 @@ export const translations = {
       vcRegister: "Alfred · VC registration",
       about: "About",
       howItWorks: "How it works",
+      news: "News",
     },
     landing: {
       badge: "Financial review and VC matching for the French market",

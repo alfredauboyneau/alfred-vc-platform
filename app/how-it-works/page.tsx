@@ -200,6 +200,9 @@ export default function HowItWorksPage() {
             <Link href="/how-it-works">
               <Button variant="ghost" size="sm" className="text-blue-600 font-semibold">{t.nav.howItWorks}</Button>
             </Link>
+            <Link href="/news">
+              <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900">{t.nav.news}</Button>
+            </Link>
             <Link href="/about">
               <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900">{t.nav.about}</Button>
             </Link>

@@ -38,6 +38,9 @@ export function MarketingFooter() {
             <Link href="/how-it-works" className="hover:text-slate-900 transition-colors">
               {t.nav.howItWorks}
             </Link>
+            <Link href="/news" className="hover:text-slate-900 transition-colors">
+              {t.nav.news}
+            </Link>
             <Link href="/about" className="hover:text-slate-900 transition-colors">
               {t.nav.about}
             </Link>
