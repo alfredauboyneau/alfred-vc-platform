@@ -6,6 +6,18 @@
     },
     "app/api/analyze/route.ts": {
       "maxDuration": 120
+    },
+    "app/api/news-feed/route.ts": {
+      "maxDuration": 30
+    },
+    "app/api/news-refresh/route.ts": {
+      "maxDuration": 30
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/news-refresh",
+      "schedule": "0 6 * * *"
+    }
+  ]
 }

@@ -1,79 +1,127 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
-import { ArrowUpRight, CalendarDays, Newspaper, Radio, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowUpRight, CalendarDays, Newspaper, Radio, RefreshCcw, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle, useLanguage } from "@/lib/i18n";
 import { NavbarLoginButton } from "@/components/navbar-login-button";
 import { MarketingFooter } from "@/components/marketing-footer";
 import {
-  FUNDING_NEWS_UPDATED_AT,
-  fundingNewsArticles,
+  FUNDING_NEWS_FALLBACK_UPDATED_AT,
+  FundingNewsArticle,
+  fundingNewsFallbackArticles,
   fundingNewsSources,
 } from "@/lib/news-feed";
 
 export default function NewsPage() {
   const { t, lang } = useLanguage();
   const locale = lang === "en" ? "en-US" : "fr-FR";
+  const [articles, setArticles] = useState<FundingNewsArticle[]>(fundingNewsFallbackArticles);
+  const [updatedAt, setUpdatedAt] = useState(FUNDING_NEWS_FALLBACK_UPDATED_AT);
+  const [liveMode, setLiveMode] = useState(false);
 
   useEffect(() => {
     document.title = lang === "en" ? "Alfred · Funding news" : "Alfred · News des levées";
   }, [lang]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadLiveNews() {
+      try {
+        const response = await fetch("/api/news-feed", { cache: "no-store" });
+
+        if (!response.ok) {
+          throw new Error(`News feed failed with status ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (cancelled || !Array.isArray(data.articles) || data.articles.length === 0) {
+          return;
+        }
+
+        setArticles(data.articles);
+        setUpdatedAt(typeof data.updatedAt === "string" ? data.updatedAt : FUNDING_NEWS_FALLBACK_UPDATED_AT);
+        setLiveMode(Boolean(data.live));
+      } catch (error) {
+        console.error("[news-page] feed load failed", error);
+      }
+    }
+
+    loadLiveNews();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const copy =
     lang === "en"
       ? {
           badge: "Funding news",
-          title: "Recent funding news worth tracking",
+          title: "A funding watchlist that refreshes automatically",
           subtitle:
-            "A short editorial selection of recent rounds, with direct links to the main outlets covering the French and European startup market.",
-          updated: "Updated",
-          sectionArticles: "Recent rounds",
-          sectionArticlesTitle: "Recent stories we would actually keep on a founder watchlist",
+            "This page now refreshes from selected editorial feeds, with a preference for widely recognized outlets and strong startup coverage when they have the most relevant recent stories.",
+          updated: "Last refresh",
+          refreshCadence: "Automatic refresh",
+          refreshCadenceValue: "At least daily",
+          modeLive: "Live editorial feed",
+          modeFallback: "Editorial fallback",
+          sectionArticles: "Recent coverage",
+          sectionArticlesTitle: "Recent funding stories worth tracking right now",
           sectionArticlesDesc:
-            "These links open the original media coverage. The goal here is not to be exhaustive, but to keep a readable market pulse.",
-          topic: "Topic",
-          source: "Source",
+            "The list is refreshed automatically from selected media feeds. Titles and excerpts stay in the original source language to avoid weak translations.",
           openArticle: "Open article",
+          sourceLabel: "Source",
+          languageFr: "French source",
+          languageEn: "English source",
+          automated: "Auto-refreshed",
+          curated: "Editorial fallback",
           sectionSources: "Main outlets",
-          sectionSourcesTitle: "A short list of outlets worth keeping open",
+          sectionSourcesTitle: "Priority outlets we keep in the mix",
           sectionSourcesDesc:
-            "If you want to keep this useful over time, these are the publications that matter most for French startup funding coverage.",
+            "The automated flow prioritizes recognized outlets such as Financial Times, TechCrunch, Tech.eu, Maddyness and FrenchWeb. Les Echos Start remains listed below even when its feed cannot be ingested cleanly.",
           note:
-            "Editorial note: this page is a curated press selection, not investment advice or a live market feed.",
+            "This page is designed as a daily press watch, not as financial advice or a real-time market terminal.",
           cta: "Run an analysis",
         }
       : {
           badge: "News des levées",
-          title: "Les levées récentes à garder dans le radar",
+          title: "Une veille levées qui se met à jour automatiquement",
           subtitle:
-            "Une sélection éditoriale courte des tours récents, avec des liens directs vers les principaux médias qui couvrent le marché startup français et européen.",
-          updated: "Dernière mise à jour",
-          sectionArticles: "Levées récentes",
-          sectionArticlesTitle: "Des articles récents qu'on garderait vraiment dans une veille fondateur",
+            "La page se rafraîchit désormais à partir de flux éditoriaux sélectionnés, en priorisant des médias connus et une couverture startup solide quand ce sont eux qui remontent les actus les plus pertinentes.",
+          updated: "Dernier rafraîchissement",
+          refreshCadence: "Rythme de mise à jour",
+          refreshCadenceValue: "Au moins une fois par jour",
+          modeLive: "Flux éditorial automatique",
+          modeFallback: "Sélection éditoriale de secours",
+          sectionArticles: "Couverture récente",
+          sectionArticlesTitle: "Les articles récents qui valent le coup d'être gardés sous les yeux",
           sectionArticlesDesc:
-            "Ces liens ouvrent les articles source. L'objectif n'est pas d'être exhaustif, mais de garder une lecture marché lisible.",
-          topic: "Sujet",
-          source: "Source",
+            "La liste se met à jour automatiquement depuis des flux médias sélectionnés. Les titres et extraits restent dans leur langue source pour éviter des traductions faibles.",
           openArticle: "Lire l'article",
-          sectionSources: "Médias à suivre",
-          sectionSourcesTitle: "Les journaux à garder ouverts pour suivre les levées",
+          sourceLabel: "Source",
+          languageFr: "Source FR",
+          languageEn: "Source EN",
+          automated: "Mise à jour auto",
+          curated: "Sélection éditoriale",
+          sectionSources: "Médias prioritaires",
+          sectionSourcesTitle: "Les sources qu'on garde en priorité dans la veille",
           sectionSourcesDesc:
-            "Si tu veux que cette veille reste utile dans le temps, ce sont les publications les plus pertinentes à suivre pour les levées startup en France.",
+            "Le flux automatique privilégie des médias reconnus comme Financial Times, TechCrunch, Tech.eu, Maddyness et FrenchWeb. Les Echos Start reste proposé ci-dessous même quand son flux n'est pas exploitable proprement.",
           note:
-            "Note éditoriale : cette page est une sélection de presse, pas un flux temps réel ni un conseil en investissement.",
+            "Cette page est pensée comme une veille presse quotidienne, pas comme un terminal temps réel ni comme un conseil financier.",
           cta: "Analyser ma startup",
         };
-
-  const articles = [...fundingNewsArticles].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 
   const formatDate = (date: string) =>
     new Intl.DateTimeFormat(locale, {
       year: "numeric",
       month: "long",
       day: "numeric",
-    }).format(new Date(`${date}T12:00:00Z`));
+    }).format(new Date(date));
 
   return (
     <div className="min-h-screen bg-white">
@@ -147,11 +195,23 @@ export default function NewsPage() {
             {copy.subtitle}
           </p>
 
-          <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/90 px-4 py-2 text-sm text-slate-600 shadow-sm">
-            <CalendarDays className="h-4 w-4 text-blue-600" />
-            <span>
-              {copy.updated} {formatDate(FUNDING_NEWS_UPDATED_AT)}
-            </span>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/90 px-4 py-2 text-sm text-slate-600 shadow-sm">
+              <CalendarDays className="h-4 w-4 text-blue-600" />
+              <span>
+                {copy.updated} {formatDate(updatedAt)}
+              </span>
+            </div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/90 px-4 py-2 text-sm text-slate-600 shadow-sm">
+              <RefreshCcw className="h-4 w-4 text-blue-600" />
+              <span>
+                {copy.refreshCadence} · {copy.refreshCadenceValue}
+              </span>
+            </div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/90 px-4 py-2 text-sm text-slate-600 shadow-sm">
+              <Newspaper className="h-4 w-4 text-blue-600" />
+              <span>{liveMode ? copy.modeLive : copy.modeFallback}</span>
+            </div>
           </div>
         </div>
       </section>
@@ -169,7 +229,7 @@ export default function NewsPage() {
           <div className="grid gap-6 lg:grid-cols-2">
             {articles.map((article) => (
               <article
-                key={`${article.source}-${article.company}-${article.publishedAt}`}
+                key={article.id}
                 className="premium-card rounded-[28px] border border-slate-200/70 p-7 shadow-[0_18px_60px_rgba(15,23,42,0.05)]"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
@@ -180,31 +240,29 @@ export default function NewsPage() {
                   <span className="text-sm text-slate-400">{formatDate(article.publishedAt)}</span>
                 </div>
 
-                <div className="mt-6">
-                  <h3 className="text-2xl font-semibold tracking-tight text-slate-950">
-                    {lang === "en" ? article.headlineEn : article.headlineFr}
-                  </h3>
-                  <p className="mt-3 text-base leading-7 text-slate-500">
-                    {lang === "en" ? article.summaryEn : article.summaryFr}
-                  </p>
-                </div>
-
-                <div className="mt-6 flex flex-wrap gap-2">
+                <div className="mt-5 flex flex-wrap gap-2">
                   <span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700">
-                    {article.company}
-                  </span>
-                  <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700">
-                    {lang === "en" ? article.amountEn : article.amountFr}
+                    {article.sourceLang === "fr" ? copy.languageFr : copy.languageEn}
                   </span>
                   <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600">
-                    {copy.topic}: {lang === "en" ? article.topicEn : article.topicFr}
+                    {article.automated ? copy.automated : copy.curated}
                   </span>
+                </div>
+
+                <div className="mt-5">
+                  <h3 className="text-2xl font-semibold tracking-tight text-slate-950">{article.title}</h3>
+                  <p className="mt-3 text-base leading-7 text-slate-500">{article.excerpt}</p>
                 </div>
 
                 <div className="mt-7 flex items-center justify-between gap-4 border-t border-slate-100 pt-5">
-                  <div className="text-sm text-slate-400">
-                    {copy.source}: {article.source}
-                  </div>
+                  <a
+                    href={article.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sm text-slate-400 transition-colors hover:text-slate-600"
+                  >
+                    {copy.sourceLabel}: {article.source}
+                  </a>
                   <a
                     href={article.articleUrl}
                     target="_blank"
@@ -250,6 +308,11 @@ export default function NewsPage() {
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-blue-50 transition-colors group-hover:bg-blue-100">
                     <Radio className="h-4.5 w-4.5 text-blue-700" />
                   </div>
+                </div>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600">
+                    {source.automated ? copy.automated : copy.curated}
+                  </span>
                 </div>
                 <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-blue-700">
                   {source.name}
