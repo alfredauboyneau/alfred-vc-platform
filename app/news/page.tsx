@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowUpRight, CalendarDays, Newspaper, Radio, RefreshCcw, Zap } from "lucide-react";
+import { ArrowUpRight, Newspaper, Radio, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle, useLanguage } from "@/lib/i18n";
 import { NavbarLoginButton } from "@/components/navbar-login-button";
 import { MarketingFooter } from "@/components/marketing-footer";
 import {
-  FUNDING_NEWS_FALLBACK_UPDATED_AT,
   FundingNewsArticle,
   fundingNewsFallbackArticles,
   fundingNewsSources,
@@ -16,10 +15,7 @@ import {
 
 export default function NewsPage() {
   const { t, lang } = useLanguage();
-  const locale = lang === "en" ? "en-US" : "fr-FR";
   const [articles, setArticles] = useState<FundingNewsArticle[]>(fundingNewsFallbackArticles);
-  const [updatedAt, setUpdatedAt] = useState(FUNDING_NEWS_FALLBACK_UPDATED_AT);
-  const [liveMode, setLiveMode] = useState(false);
 
   useEffect(() => {
     document.title = lang === "en" ? "Alfred · Funding news" : "Alfred · News des levées";
@@ -43,8 +39,6 @@ export default function NewsPage() {
         }
 
         setArticles(data.articles);
-        setUpdatedAt(typeof data.updatedAt === "string" ? data.updatedAt : FUNDING_NEWS_FALLBACK_UPDATED_AT);
-        setLiveMode(Boolean(data.live));
       } catch (error) {
         console.error("[news-page] feed load failed", error);
       }
@@ -64,11 +58,6 @@ export default function NewsPage() {
           title: "A funding watchlist that refreshes automatically",
           subtitle:
             "This page now refreshes from selected editorial feeds, with a preference for widely recognized outlets and strong startup coverage when they have the most relevant recent stories.",
-          updated: "Last refresh",
-          refreshCadence: "Automatic refresh",
-          refreshCadenceValue: "At least daily",
-          modeLive: "Live editorial feed",
-          modeFallback: "Editorial fallback",
           sectionArticles: "Recent coverage",
           sectionArticlesTitle: "Recent funding stories worth tracking right now",
           sectionArticlesDesc:
@@ -92,11 +81,6 @@ export default function NewsPage() {
           title: "Une veille levées qui se met à jour automatiquement",
           subtitle:
             "La page se rafraîchit désormais à partir de flux éditoriaux sélectionnés, en priorisant des médias connus et une couverture startup solide quand ce sont eux qui remontent les actus les plus pertinentes.",
-          updated: "Dernier rafraîchissement",
-          refreshCadence: "Rythme de mise à jour",
-          refreshCadenceValue: "Au moins une fois par jour",
-          modeLive: "Flux éditorial automatique",
-          modeFallback: "Sélection éditoriale de secours",
           sectionArticles: "Couverture récente",
           sectionArticlesTitle: "Les articles récents qui valent le coup d'être gardés sous les yeux",
           sectionArticlesDesc:
@@ -117,7 +101,7 @@ export default function NewsPage() {
         };
 
   const formatDate = (date: string) =>
-    new Intl.DateTimeFormat(locale, {
+    new Intl.DateTimeFormat(lang === "en" ? "en-US" : "fr-FR", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -194,25 +178,6 @@ export default function NewsPage() {
           <p className="mx-auto max-w-3xl text-lg leading-relaxed text-slate-500 sm:text-xl">
             {copy.subtitle}
           </p>
-
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/90 px-4 py-2 text-sm text-slate-600 shadow-sm">
-              <CalendarDays className="h-4 w-4 text-blue-600" />
-              <span>
-                {copy.updated} {formatDate(updatedAt)}
-              </span>
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/90 px-4 py-2 text-sm text-slate-600 shadow-sm">
-              <RefreshCcw className="h-4 w-4 text-blue-600" />
-              <span>
-                {copy.refreshCadence} · {copy.refreshCadenceValue}
-              </span>
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/90 px-4 py-2 text-sm text-slate-600 shadow-sm">
-              <Newspaper className="h-4 w-4 text-blue-600" />
-              <span>{liveMode ? copy.modeLive : copy.modeFallback}</span>
-            </div>
-          </div>
         </div>
       </section>
 
