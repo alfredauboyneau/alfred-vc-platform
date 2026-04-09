@@ -15,7 +15,6 @@ export type FundingNewsSource = {
   url: string;
   focusFr: string;
   focusEn: string;
-  automated: boolean;
 };
 
 export type FundingNewsFeedSource = {
@@ -140,41 +139,35 @@ export const fundingNewsSources: FundingNewsSource[] = [
     url: "https://www.ft.com/",
     focusFr: "Référence business internationale utile pour les tours majeurs, les mouvements de marché et les signaux macro VC.",
     focusEn: "A strong international business source for major rounds, market moves and macro VC signals.",
-    automated: true,
   },
   {
     name: "Les Echos Start",
     url: "https://start.lesechos.fr/",
     focusFr: "Très bon point d'entrée pour une lecture plus business, corporate et écosystème sur la scène française.",
     focusEn: "A strong business-oriented source for broader French startup and corporate ecosystem coverage.",
-    automated: false,
   },
   {
     name: "TechCrunch",
     url: "https://techcrunch.com/",
     focusFr: "Source internationale reconnue pour les levées tech, en particulier quand un dossier français a une portée globale.",
     focusEn: "A widely known outlet for tech funding rounds, especially when a French company has global relevance.",
-    automated: true,
   },
   {
     name: "Tech.eu",
     url: "https://tech.eu/",
     focusFr: "Très utile pour suivre les levées européennes et les mouvements transfrontaliers.",
     focusEn: "Very useful for European rounds and cross-border ecosystem moves.",
-    automated: true,
   },
   {
     name: "Maddyness",
     url: "https://www.maddyness.com/actu/",
     focusFr: "Référence startup française pour les levées, baromètres mensuels et veille French Tech.",
     focusEn: "A French startup reference for funding rounds, monthly barometers and French Tech monitoring.",
-    automated: true,
   },
   {
     name: "FrenchWeb",
     url: "https://www.frenchweb.fr/",
     focusFr: "Média solide pour suivre les levées early-stage, B2B et les profils fondateurs.",
     focusEn: "A solid source for early-stage, B2B and founder-focused funding coverage.",
-    automated: true,
   },
 ];

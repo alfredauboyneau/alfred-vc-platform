@@ -55,48 +55,44 @@ export default function NewsPage() {
     lang === "en"
       ? {
           badge: "Funding news",
-          title: "A funding watchlist that refreshes automatically",
+          title: "Funding news",
           subtitle:
-            "This page now refreshes from selected editorial feeds, with a preference for widely recognized outlets and strong startup coverage when they have the most relevant recent stories.",
-          sectionArticles: "Recent coverage",
-          sectionArticlesTitle: "Recent funding stories worth tracking right now",
+            "A simple selection of recent funding stories and useful reading for founders following the French and European startup market.",
+          sectionArticles: "Recent news",
+          sectionArticlesTitle: "Recent funding stories worth reading",
           sectionArticlesDesc:
-            "The list is refreshed automatically from selected media feeds. Titles and excerpts stay in the original source language to avoid weak translations.",
+            "A simple press selection with direct links to the original articles.",
           openArticle: "Open article",
           sourceLabel: "Source",
-          languageFr: "French source",
-          languageEn: "English source",
-          automated: "Auto-refreshed",
-          curated: "Editorial fallback",
-          sectionSources: "Main outlets",
-          sectionSourcesTitle: "Priority outlets we keep in the mix",
+          languageFr: "FR source",
+          languageEn: "EN source",
+          sectionSources: "Useful sources",
+          sectionSourcesTitle: "Publications worth keeping open",
           sectionSourcesDesc:
-            "The automated flow prioritizes recognized outlets such as Financial Times, TechCrunch, Tech.eu, Maddyness and FrenchWeb. Les Echos Start remains listed below even when its feed cannot be ingested cleanly.",
+            "A short list of media covering startup funding and the broader tech ecosystem.",
           note:
-            "This page is designed as a daily press watch, not as financial advice or a real-time market terminal.",
+            "This page is a press selection intended to help visitors keep an eye on recent funding news.",
           cta: "Run an analysis",
         }
       : {
           badge: "News des levées",
-          title: "Une veille levées qui se met à jour automatiquement",
+          title: "News des levées",
           subtitle:
-            "La page se rafraîchit désormais à partir de flux éditoriaux sélectionnés, en priorisant des médias connus et une couverture startup solide quand ce sont eux qui remontent les actus les plus pertinentes.",
-          sectionArticles: "Couverture récente",
-          sectionArticlesTitle: "Les articles récents qui valent le coup d'être gardés sous les yeux",
+            "Une sélection simple d'articles récents et de lectures utiles pour les fondateurs qui suivent le marché startup français et européen.",
+          sectionArticles: "Articles récents",
+          sectionArticlesTitle: "Les levées récentes à lire",
           sectionArticlesDesc:
-            "La liste se met à jour automatiquement depuis des flux médias sélectionnés. Les titres et extraits restent dans leur langue source pour éviter des traductions faibles.",
+            "Une sélection de presse simple, avec un lien direct vers l'article source.",
           openArticle: "Lire l'article",
           sourceLabel: "Source",
           languageFr: "Source FR",
           languageEn: "Source EN",
-          automated: "Mise à jour auto",
-          curated: "Sélection éditoriale",
-          sectionSources: "Médias prioritaires",
-          sectionSourcesTitle: "Les sources qu'on garde en priorité dans la veille",
+          sectionSources: "Sources utiles",
+          sectionSourcesTitle: "Quelques médias à garder ouverts",
           sectionSourcesDesc:
-            "Le flux automatique privilégie des médias reconnus comme Financial Times, TechCrunch, Tech.eu, Maddyness et FrenchWeb. Les Echos Start reste proposé ci-dessous même quand son flux n'est pas exploitable proprement.",
+            "Une courte liste de médias qui couvrent les levées et, plus largement, l'écosystème tech.",
           note:
-            "Cette page est pensée comme une veille presse quotidienne, pas comme un terminal temps réel ni comme un conseil financier.",
+            "Cette page propose simplement une sélection de presse utile pour suivre les levées récentes.",
           cta: "Analyser ma startup",
         };
 
@@ -209,9 +205,6 @@ export default function NewsPage() {
                   <span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700">
                     {article.sourceLang === "fr" ? copy.languageFr : copy.languageEn}
                   </span>
-                  <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600">
-                    {article.automated ? copy.automated : copy.curated}
-                  </span>
                 </div>
 
                 <div className="mt-5">
@@ -275,9 +268,15 @@ export default function NewsPage() {
                   </div>
                 </div>
                 <div className="mt-5 flex flex-wrap gap-2">
-                  <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600">
-                    {source.automated ? copy.automated : copy.curated}
-                  </span>
+                  {source.name === "Financial Times" || source.name === "Les Echos Start" ? (
+                    <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600">
+                      {lang === "en" ? "Business press" : "Presse business"}
+                    </span>
+                  ) : (
+                    <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600">
+                      {lang === "en" ? "Tech press" : "Presse tech"}
+                    </span>
+                  )}
                 </div>
                 <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-blue-700">
                   {source.name}
