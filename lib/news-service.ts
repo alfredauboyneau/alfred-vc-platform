@@ -17,6 +17,7 @@ const FUNDING_KEYWORDS = [
   "levée",
   "tour de table",
   "financement",
+  "obtient",
   "seed",
   "série a",
   "série b",
@@ -24,6 +25,7 @@ const FUNDING_KEYWORDS = [
   "raises",
   "raised",
   "funding",
+  "round",
   "series a",
   "series b",
   "series c",
@@ -61,6 +63,23 @@ const EXCLUDE_KEYWORDS = [
   "classement",
   "agenda",
   "people moves",
+];
+
+const TITLE_FUNDING_KEYWORDS = [
+  "lève",
+  "levée",
+  "tour de table",
+  "financement",
+  "obtient",
+  "seed",
+  "série",
+  "raises",
+  "raised",
+  "funding",
+  "series",
+  "round",
+  "valuation",
+  "backed",
 ];
 
 type LiveFundingNewsPayload = {
@@ -171,6 +190,25 @@ function scoreArticle(text: string) {
   return score;
 }
 
+function hasTitleFundingSignal(title: string) {
+  const normalizedTitle = title.toLowerCase();
+
+  if (TITLE_FUNDING_KEYWORDS.some((keyword) => normalizedTitle.includes(keyword))) {
+    return true;
+  }
+
+  const hasAmountSignal =
+    /[€$£]/.test(title) || /\b\d+(?:[.,]\d+)?\s?(?:m|bn|md|million|millions|milliard|milliards)\b/i.test(title);
+
+  if (!hasAmountSignal) {
+    return false;
+  }
+
+  return ["startup", "tech", "ai", "ia", "fintech", "deeptech", "vc", "venture"].some((keyword) =>
+    normalizedTitle.includes(keyword)
+  );
+}
+
 async function fetchFeedXml(url: string) {
   const response = await fetch(url, {
     headers: RSS_HEADERS,
@@ -226,10 +264,10 @@ async function getLiveFundingNewsUncached(): Promise<LiveFundingNewsPayload> {
             continue;
           }
 
-          const text = `${item.title} ${item.excerpt}`;
-          const score = scoreArticle(text);
+          const titleScore = scoreArticle(item.title);
+          const combinedScore = scoreArticle(`${item.title} ${item.excerpt}`);
 
-          if (score < 6) {
+          if (!hasTitleFundingSignal(item.title) || titleScore < 3 || combinedScore < 7) {
             continue;
           }
 
@@ -243,7 +281,7 @@ async function getLiveFundingNewsUncached(): Promise<LiveFundingNewsPayload> {
             excerpt: item.excerpt,
             sourceLang: source.sourceLang,
             automated: true,
-            score,
+            score: combinedScore,
             priority: source.priority,
           });
         }
